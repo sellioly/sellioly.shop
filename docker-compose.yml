@@ -1,6 +1,6 @@
 version: '2'
 services:
-  db:
+  db_mysql:
     image: mysql:8.0
     restart: always
     environment:
@@ -21,14 +21,9 @@ services:
     ports:
       - "80:3000"
     depends_on:
-      - db
+      - db_mysql
     links:
-      - db
-    environment:
-      DB_USER: root
-      DB_NAME: sellioly_development
-      DB_PASSWORD: root
-      DB_HOST: db
+      - db_mysql
 volumes:
   sellioly:
     driver: local
