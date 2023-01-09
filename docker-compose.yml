@@ -4,10 +4,10 @@ services:
     image: mysql:8.0
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: sellioly_development
-      MYSQL_USER: root
-      MYSQL_PASSWORD: root
+      MYSQL_USER: sellioly
+      MYSQL_PASSWORD: sellioly
     ports:
       - "3306:3306"
   app:
