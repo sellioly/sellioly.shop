@@ -24,6 +24,11 @@ services:
       - db_mysql
     links:
       - db_mysql
+    environment:
+      DB_USER: root
+      DB_NAME: sellioly_development
+      DB_PASSWORD: root
+      DB_HOST: db_mysql
 volumes:
   sellioly:
     driver: local
