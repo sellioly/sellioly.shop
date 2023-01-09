@@ -9,6 +9,7 @@ services:
       MYSQL_USER: sellioly
       MYSQL_PASSWORD: sellioly
     volumes:
+      - /tmp/sellioly/mysqld.sock:/run/mysqld/mysqld.sock
       - mysql_db_data_container:/var/lib/mysql
     ports:
       - "3306:3306"
@@ -18,6 +19,7 @@ services:
     command: bundle exec rails s -p 3000 -b '0.0.0.0'
     volumes:
       - sellioly:/app
+      - /tmp/sellioly/mysqld.sock:/run/mysqld/mysqld.sock
     ports:
       - "80:3000"
     depends_on:
