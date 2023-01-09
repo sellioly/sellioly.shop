@@ -8,6 +8,8 @@ services:
       MYSQL_DATABASE: sellioly_development
       MYSQL_USER: sellioly
       MYSQL_PASSWORD: sellioly
+    volumes:
+      - mysql_db_data_container:/var/lib/mysql
     ports:
       - "3306:3306"
   app:
@@ -29,4 +31,6 @@ services:
       DB_HOST: db
 volumes:
   sellioly:
+    driver: local
+  mysql_db_data_container:
     driver: local
