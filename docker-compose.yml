@@ -23,12 +23,12 @@ services:
     depends_on:
       - db_mysql
     links:
-      - db_mysql
+      - db_mysql:mysql
     environment:
       DB_USER: root
       DB_NAME: sellioly_development
       DB_PASSWORD: root
-      DB_HOST: db_mysql
+      DB_HOST: mysql
 volumes:
   sellioly:
     driver: local
