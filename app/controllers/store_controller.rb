@@ -15,7 +15,10 @@ class StoreController < ApplicationController
       FileUtils.mkdir_p(@path)
     end
 
+
     @store.save
+
+    # upload local file template
 
     render json: { msg: 'Template in progress', id: @store.id }
   end
