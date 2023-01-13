@@ -2,7 +2,7 @@ class ShopController < ApplicationController
   public
 
   def index
-    @domain = request.domain
+    @domain = request.hostname
     render json: { msg: @domain }
     # exit(200)
     # @store = Store.where(app_domain: @domain).first()
