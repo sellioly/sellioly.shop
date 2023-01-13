@@ -12,7 +12,7 @@ class ShopController < ApplicationController
     @path = Rails.root.to_s + @store.template_path
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
     @template = Liquid::Template.parse(File.read(@path + '/layout/theme.liquid')) # Parses and compiles the template
-    @test = @template.render()
-    render :text =>  @test
+    @test = @template.render({})
+    render html: @test.html_safe
   end
 end
