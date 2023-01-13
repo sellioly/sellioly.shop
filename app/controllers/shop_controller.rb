@@ -2,10 +2,10 @@ class ShopController < ApplicationController
   public
 
   def index
-    @domain = request.base_url
+    @domain = request.host
     @store = Store.where(app_domain: @domain).first()
     unless @store
-      render json: { msg: 'Store not found', store: @store }
+      render json: { msg: 'Store not found', domain:  @domain, store: @store }
       return
     end
 
