@@ -15,7 +15,7 @@
     {{ 'app.css' | asset_url | stylesheet_tag }}
 </head>
 <body>
-
+ <h1>{{  page_title }}</h1>
 
 <script>
     window.shopUrl = '{{ request.origin }}';
