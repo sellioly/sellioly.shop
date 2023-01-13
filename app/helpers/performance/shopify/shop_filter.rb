@@ -2,7 +2,7 @@
 
 module ShopFilter
   def asset_url(input)
-    "/files/1/[shop_id]/[shop_id]/assets/#{input}"
+    "/files/1/assets/#{input}"
   end
 
   def global_asset_url(input)

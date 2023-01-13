@@ -3,7 +3,6 @@ class StoreController < ApplicationController
 
   def create
     # code here
-
     @store = Store.new({})
     @store.app_domain = params[:app_domain]
 
