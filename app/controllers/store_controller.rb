@@ -9,17 +9,13 @@ class StoreController < ApplicationController
 
     @subpath = "/storage/" + @store.app_domain + "/default"
     @path = Rails.root.to_s + @subpath
-
     @store.template_path = @subpath
-    unless File.directory?(@path)
-      FileUtils.mkdir_p(@path)
-    end
-
-
     @store.save
+
+    UploadLocalTemplateJob.perform_later @path, @store.app_domain
 
     # upload local file template
 
-    render json: { msg: 'Template in progress', id: @store.id }
+    render json: { msg: 'Template in progress', id: @store.id, theme_name: 'OutFill', theme_version: '1.0.0', theme_author: 'Sellioly', theme_support_url: '' }
   end
 end
