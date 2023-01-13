@@ -6,7 +6,7 @@ class ShopController < ApplicationController
     @store = Store.where(app_domain: @domain).first()
     unless @store
       render json: { msg: 'Store not found' }
-      exit(404)
+      return
     end
 
     @path = Rails.root.to_s + ("/storage/template")
