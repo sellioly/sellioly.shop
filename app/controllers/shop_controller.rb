@@ -5,7 +5,7 @@ class ShopController < ApplicationController
     @domain = request.base_url
     @store = Store.where(app_domain: @domain).first()
     unless @store
-      render json: { msg: 'Store not found' }
+      render json: { msg: 'Store not found', store: @store }
       return
     end
 
