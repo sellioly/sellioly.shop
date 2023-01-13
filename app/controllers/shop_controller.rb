@@ -15,7 +15,7 @@ class ShopController < ApplicationController
   end
 
 
-  def file_assets(filename)
+  def file_assets()
     @domain = request.host
     @store = Store.where(app_domain: @domain).first
     unless @store
@@ -23,7 +23,7 @@ class ShopController < ApplicationController
       return
     end
     @path = Rails.root.to_s + @store.template_path
-    @content  = File.read(@path + '/assets/' + filename)
+    @content  = File.read(@path + '/assets/' + params[:filename])
     render text: @content.to_s
   end
 end
