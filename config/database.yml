@@ -15,11 +15,14 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: <%= ENV.fetch("DB_USER") %>
   password: <%= ENV.fetch("DB_PASSWORD") %>
-  host: <%= ENV.fetch("DB_HOST") %>
+  host: 172.21.0.2
 
 development:
   <<: *default
   database: <%= ENV.fetch("DB_NAME") %>
+  username: <%= ENV.fetch("DB_USER") %>
+  password: <%= ENV.fetch("DB_PASSWORD") %>
+  host: 172.21.0.2
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -29,7 +32,7 @@ test:
   database: <%= ENV.fetch("DB_NAME") %>
   username: <%= ENV.fetch("DB_USER") %>
   password: <%= ENV.fetch("DB_PASSWORD") %>
-  host: <%= ENV.fetch("DB_HOST") %>
+  host: 172.21.0.2
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -56,4 +59,4 @@ production:
   database: <%= ENV.fetch("DB_NAME") %>
   username: <%= ENV.fetch("DB_USER") %>
   password: <%= ENV.fetch("DB_PASSWORD") %>
-  host: <%= ENV.fetch("DB_HOST") %>
+  host: 172.21.0.2
