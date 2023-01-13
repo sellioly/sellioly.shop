@@ -23,7 +23,7 @@ class ShopController < ApplicationController
       return
     end
     @path = Rails.root.to_s + @store.template_path
-    @content  = File.read(@path + '/assets/' + params[:filename])
+    @content  = File.read(@path + '/assets/' + params[:filename] + '.' + params[:format])
     render text: @content.to_s
   end
 end
