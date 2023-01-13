@@ -9,10 +9,10 @@ class ShopController < ApplicationController
       return
     end
 
-    @path = Rails.root.to_s + ("/storage/template")
+    @path = Rails.root.to_s + @store.template_path
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
-    @template = Liquid::Template.parse(File.read(@path + '/test.liquid')) # Parses and compiles the template
-    # @items = @template.root.nodelist
-    @test = @template.render('product' => { 'collection' => { 'name' => 'Computer' } }) # => "hi tobi"
+    @template = Liquid::Template.parse(File.read(@path + '/layout/theme.liquid')) # Parses and compiles the template
+    @test = @template.render()
+    render :text =>  @test
   end
 end
