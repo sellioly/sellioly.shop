@@ -1,4 +1,5 @@
 class ShopController < ApplicationController
+  protect_from_forgery except: :index
   def index
     @domain = request.host
     @store = Store.where(app_domain: @domain).first
