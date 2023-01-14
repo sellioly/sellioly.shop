@@ -15,6 +15,6 @@ class StoreController < ApplicationController
 
     # upload local file template
 
-    render json: { msg: 'Template in progress', id: @store.id, template_path: template_path, theme_name: 'OutFill', theme_version: '1.0.0', theme_author: 'Sellioly', theme_support_url: '' }
+    render json: { msg: 'Template in progress', id: @store.id, template_path: @subpath, theme_name: 'OutFill', theme_version: '1.0.0', theme_author: 'Sellioly', theme_support_url: '' }
   end
 end
