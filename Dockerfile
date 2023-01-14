@@ -5,5 +5,5 @@ WORKDIR /app
 ENV RAILS_ENV=production
 ADD Gemfile /app/Gemfile
 ADD Gemfile.lock /app/Gemfile.lock
-RUN bundle clean && bundle install
+RUN bundle clean
 ADD . /app
