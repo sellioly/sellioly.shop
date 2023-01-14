@@ -1,5 +1,11 @@
 Rails.application.routes.draw do
-  if request.host != 'shop.sellioly.com'
+  constraints host: 'shop.sellioly.com' do
+    post 'api/store/create', action: 'create', controller: 'store'
+    get '/', action: 'not_found', controller: 'shop'
+    get '/*path', action: 'not_found', controller: 'shop'
+  end
+
+  constraints lambda { |req| req.host != 'shop.sellioly.com'} do
     get '/collections/:collection', action: 'collection', controller: 'shop'
     get '/products/:product', action: 'product', controller: 'shop'
     get '/files/1/assets/:filename', action: 'file_assets', controller: 'shop'
@@ -9,9 +15,7 @@ Rails.application.routes.draw do
     # root "articles#index"
     get '/', action: 'index', controller: 'shop'
     get '/*path', action: 'page', controller: 'shop'
-  else
-    post 'api/store/create', action: 'create', controller: 'store'
-    get '/', action: 'not_found', controller: 'shop'
-    get '/*path', action: 'not_found', controller: 'shop'
   end
+
+  # end
 end
