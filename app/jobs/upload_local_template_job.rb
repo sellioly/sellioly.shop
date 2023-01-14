@@ -1,3 +1,5 @@
+require 'httparty'
+
 class UploadLocalTemplateJob < ApplicationJob
   queue_as :default
   include HTTParty
