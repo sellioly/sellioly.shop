@@ -1,6 +1,7 @@
 require_relative "boot"
 
 require "rails/all"
+require 'sidekiq'
 
 
 require_relative "../app/helpers/performance/shopify/shop_filter"
@@ -17,6 +18,7 @@ module Sellioly
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
+    config.active_job.queue_adapter = :sidekiq
 
     Liquid::Template.register_filter(JsonFilter)
     Liquid::Template.register_filter(MoneyFilter)
