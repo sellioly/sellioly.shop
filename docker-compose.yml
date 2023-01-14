@@ -13,7 +13,7 @@ services:
       - mysqld_data_container:/var/run/mysqld
     ports:
       - "3306:3306"
-  app:
+  app: &app_base
     build: .
     restart: always
     command: bundle exec rails s -p 3000 -b '0.0.0.0'
@@ -31,6 +31,12 @@ services:
       DB_NAME: sellioly_development
       DB_PASSWORD: sellioly
       DB_HOST: db_mysql
+  worker:
+    <<: *app_base
+    command: bundle exec sidekiq
+    ports: [ ]
+    depends_on:
+      - app
 volumes:
   sellioly:
     driver: local
