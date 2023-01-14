@@ -1,5 +1,5 @@
 class ShopController < ApplicationController
-  protect_from_forgery except: :index
+  protect_from_forgery except: :file_assets
   def index
     @domain = request.host
     @store = Store.where(app_domain: @domain).first
