@@ -1,4 +1,4 @@
-require "./http"
+require_relative "http"
 
 class UploadLocalTemplateJob < ApplicationJob
   queue_as :default
