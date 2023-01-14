@@ -3,7 +3,7 @@ class ShopController < ApplicationController
     @domain = request.host
     @store = Store.where(app_domain: @domain).first
     unless @store
-      render json: { msg: 'Store not found', domain: @domain, store: @store }
+      content_not_found
       return
     end
 
@@ -18,7 +18,7 @@ class ShopController < ApplicationController
     @domain = request.host
     @store = Store.where(app_domain: @domain).first
     unless @store
-      render json: { msg: 'Store not found', domain: @domain, store: @store }
+      content_not_found
       return
     end
     @path = Rails.root.to_s + @store.template_path
