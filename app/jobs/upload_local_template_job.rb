@@ -10,6 +10,8 @@ class UploadLocalTemplateJob < ApplicationJob
     @path = Rails.root.to_s + ("/storage/template/default")
     FileUtils.copy_entry @path, shop_path
 
-
+    response = HTTParty.post("https://api.sellioly.com/server/template-created",
+                             :body => { :app_domain => app_domain, :template_path => shop_path }.to_json,
+                             :headers => { 'Content-Type' => 'application/json' })
   end
 end
