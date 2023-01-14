@@ -11,9 +11,13 @@ class ShopController < ApplicationController
 
     @path = Rails.root.to_s + @store.template_path
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
+    @content_for_layout = ''
+    @template = Liquid::Template.parse(File.read(@path + '/sections/slideshow.liquid'))
+    @test = @template.render
+    @content_for_layout += @test
     @template = Liquid::Template.parse(File.read(@path + '/layout/theme.liquid')) # Parses and compiles the template
     @origin = request.base_url
-    @test = @template.render('request' => { 'origin' => @origin }, 'page_title' => @domain)
+    @test = @template.render('content_for_layout' => @content_for_layout, 'request' => { 'origin' => @origin }, 'page_title' => @domain)
     render html: @test.html_safe
   end
 
