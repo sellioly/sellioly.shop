@@ -36,6 +36,11 @@ gem "bootsnap", require: false
 gem 'sqlite3'
 
 gem 'liquid'
+
+gem 'sidekiq'
+
+gem 'sidekiq-scheduler'
+
 # Use Sass to process CSS
 # gem "sassc-rails"
 
