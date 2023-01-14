@@ -16,7 +16,7 @@
 </head>
 <body>
  <h1>{{  page_title }}</h1>
- {% section 'header' %}
+ {% render 'header' %}
  {{ content_for_layout }}
 <script>
     window.shopUrl = '{{ request.origin }}';
