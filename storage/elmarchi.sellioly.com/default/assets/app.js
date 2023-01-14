@@ -1,1 +1,1 @@
-alert('welcome to in the other world')
+console.log('welcome to in the other world')
