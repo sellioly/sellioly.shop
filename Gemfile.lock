@@ -12,7 +12,6 @@ GEM
       activerecord (= 7.0.4)
       activestorage (= 7.0.4)
       activesupport (= 7.0.4)
-      mail (>= 2.7.1)
       net-imap
       net-pop
       net-smtp
@@ -64,7 +63,6 @@ GEM
     activesupport (7.0.4)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
-      minitest (>= 5.1)
       tzinfo (~> 2.0)
     addressable (2.8.1)
       public_suffix (>= 2.0.2, < 6.0)
