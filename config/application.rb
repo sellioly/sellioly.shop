@@ -1,6 +1,7 @@
 require_relative "boot"
 
 require "rails/all"
+require 'sidekiq'
 
 
 require_relative "../app/helpers/performance/shopify/shop_filter"
