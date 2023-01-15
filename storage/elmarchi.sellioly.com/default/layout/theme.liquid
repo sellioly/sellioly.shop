@@ -16,6 +16,8 @@
 </head>
 <body>
 {% render 'sections/header' %}
+
+{{  logo | img_tag: "logo" }}
 <h1>{{ page_title }}</h1>
 <p>
     {{ logo }} {{ shop_description }}

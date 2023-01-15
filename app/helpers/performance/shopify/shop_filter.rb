@@ -96,11 +96,11 @@ module ShopFilter
 
   def to_handle(str)
     result = str.dup
-    # result.downcase!
-    # result.delete!("'\"()[]")
-    # result.gsub!(/\W+/, '-')
-    # result.gsub!(/-+\z/, '') if result[-1] == '-'
-    # result.gsub!(/\A-+/, '') if result[0] == '-'
+    result.downcase!
+    result.delete!("'\"()[]")
+    result.gsub!(/\W+/, '-')
+    result.gsub!(/-+\z/, '') if result[-1] == '-'
+    result.gsub!(/\A-+/, '') if result[0] == '-'
     result
   end
 end
