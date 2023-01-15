@@ -1,8 +1,6 @@
 require "http"
-require "sidekiq"
 
 class UploadLocalTemplateJob < ApplicationJob
-  include Sidekiq::Job
   queue_as :default
   def perform(shop_path, app_domain)
     sleep 999
