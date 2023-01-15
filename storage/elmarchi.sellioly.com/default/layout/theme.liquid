@@ -15,7 +15,7 @@
     {{ 'app.css' | asset_url | stylesheet_tag }}
 </head>
 <body>
-{% render 'sections/header' %}
+{% include 'sections/header' %}
 
 {{  logo | img_tag: "logo" }}
 <h1>{{ page_title }}</h1>
