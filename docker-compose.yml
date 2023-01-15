@@ -42,7 +42,7 @@ services:
       REDIS_CACHE_URL: redis://redis:6379/2
   worker:
     <<: *app_base
-    command: bundle exec sidekiq
+    command: bundle exec sidekiq -C config/sidekiq.yml
     ports: [ ]
     links:
       - redis
