@@ -61,3 +61,7 @@ group :test do
   gem "selenium-webdriver"
   gem "webdrivers"
 end
+
+gem "http", "~> 5.1"
+
+gem "sidekiq", "~> 7.0"
