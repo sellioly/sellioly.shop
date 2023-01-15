@@ -11,7 +11,7 @@ class StoreController < ApplicationController
     @store.template_path = @subpath
     @store.save
 
-    UploadLocalTemplateJob.perform_later @path, @store.app_domain
+    UploadLocalTemplateJob.perform_later @path, @store.app_domain, @subpath
 
     # upload local file template
 
