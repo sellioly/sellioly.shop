@@ -3,7 +3,6 @@ require "http"
 class UploadLocalTemplateJob < ApplicationJob
   queue_as :default
   def perform(shop_path, app_domain)
-    sleep 2.minutes
     # Do something later
     unless File.directory?(shop_path)
       FileUtils.mkdir_p(shop_path)
