@@ -20,7 +20,7 @@ class ShopController < ApplicationController
     @page_title = @data['shop_name']
     @currency = @data['currency']
     @shop_description = @data['shop_description']
-    @logo = (@data['shop_logo_default']).html_safe?
+    @logo = (@data['shop_logo_default'])
 
     @path = Rails.root.to_s + @store.template_path
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
