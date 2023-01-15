@@ -37,6 +37,9 @@ services:
       DB_NAME: sellioly_development
       DB_PASSWORD: sellioly
       DB_HOST: db_mysql
+      REDIS_SIDEKIQ_URL: redis://redis:6379/0
+      REDIS_CABLE_URL: redis://redis:6379/1
+      REDIS_CACHE_URL: redis://redis:6379/2
   worker:
     <<: *app_base
     command: bundle exec sidekiq
