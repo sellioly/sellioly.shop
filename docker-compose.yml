@@ -13,6 +13,10 @@ services:
       - mysqld_data_container:/var/run/mysqld
     ports:
       - "3306:3306"
+
+  redis:
+    image: redis:alpine
+
   app: &app_base
     build: .
     restart: always
@@ -26,6 +30,7 @@ services:
       - db_mysql
     links:
       - db_mysql
+      - redis
     environment:
       DB_USER: sellioly
       DB_NAME: sellioly_development
