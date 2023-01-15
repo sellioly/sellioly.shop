@@ -40,6 +40,8 @@ services:
     <<: *app_base
     command: bundle exec sidekiq
     ports: [ ]
+    links:
+      - redis
     depends_on:
       - app
 volumes:
