@@ -32,6 +32,9 @@ body{
     font-size: 25px;
     font-weight: bold;
 }
+.logo img {
+    width: 150px;
+}
 
 /* Change the background color on mouse-over */
 .header a:hover {
