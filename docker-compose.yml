@@ -20,8 +20,6 @@ services:
     volumes:
       - sellioly:/app
       - mysqld_data_container:/var/run/mysqld
-    ports:
-      - "80:3000"
     depends_on:
       - db_mysql
     links:
@@ -31,10 +29,11 @@ services:
       DB_NAME: sellioly_development
       DB_PASSWORD: sellioly
       DB_HOST: db_mysql
-  worker:
+  server:
     <<: *app_base
     command: bundle exec rails s -p 3000 -b '0.0.0.0'
-    ports: [ ]
+    ports:
+      - "80:3000"
     depends_on:
       - app
 volumes:
