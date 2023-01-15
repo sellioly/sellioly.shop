@@ -42,7 +42,7 @@ class ShopController < ApplicationController
       return
     end
     @path = Rails.root.to_s + @store.template_path
-    render file: @path + '/assets/' + params[:filename] + '.' + params[:format]
+    render file: @path + '/assets/' + params[:filename]
   end
 
   def not_found
