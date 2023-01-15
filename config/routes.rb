@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   constraints lambda { |req| req.host != 'shop.sellioly.com' } do
     get '/collections/:collection', action: 'collection', controller: 'shop'
     get '/products/:product', action: 'product', controller: 'shop'
-    get '/files/1/assets/:filename', action: 'file_assets', controller: 'shop', constraints: { filename: /[^\/]*/ }
+    get '/files/1/assets/:filename', to: 'shop#file_assets', constraints: { filename: /[^\/]+/ }
     # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
     # Defines the root path route ("/")
