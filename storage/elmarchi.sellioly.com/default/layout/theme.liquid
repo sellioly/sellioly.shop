@@ -12,9 +12,31 @@
 
     <title>{{ page_title }}</title>
 
-    {{ 'app.css' | asset_url | stylesheet_tag }}
+    {{ 'animate.min.css' | asset_url | stylesheet_tag }}
+    {{ 'custom-animation.css' | asset_url | stylesheet_tag }}
+    {{ 'bootstrap.min.css' | asset_url | stylesheet_tag }}
+    {{ 'swiper.min.css' | asset_url | stylesheet_tag }}
+    {{ 'nice-select.css' | asset_url | stylesheet_tag }}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    {{ 'main.css' | asset_url | stylesheet_tag }}
 </head>
 <body>
+<!-- Preloader -->
+<div id="preloader">
+    <div class="ctn-preloader" id="ctn-preloader">
+        <div class="round_spinner">
+            <div class="spinner"></div>
+            <div class="text">
+                {{ logo | img_tag: "logo" }}
+            </div>
+        </div>
+        <h2 class="head">DO GOOD FOR OTHERS</h2>
+        <p></p>
+    </div>
+</div>
+<!-- Preloader End -->
 {% include 'sections/header' %}
 <h1>{{ page_title }}</h1>
 <p>
@@ -24,6 +46,10 @@
 <script>
     window.shopUrl = '{{ request.origin }}';
 </script>
+<script src="{{ 'jquery.min.js' | asset_url }}"></script>
+<script src="{{ 'bootstrap.bundle.js' | asset_url }}"></script>
+<script src="{{ 'swiper.min.js' | asset_url }}"></script>
+<script src="{{ 'jquery.nice-select.min.js' | asset_url }}"></script>
 <script src="{{ 'app.js' | asset_url }}"></script>
 </body>
 </html>
