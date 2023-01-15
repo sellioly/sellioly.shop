@@ -28,6 +28,7 @@ services:
       - "80:3000"
     depends_on:
       - db_mysql
+      - redis
     links:
       - db_mysql
       - redis
