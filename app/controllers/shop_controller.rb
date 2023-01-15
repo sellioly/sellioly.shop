@@ -9,7 +9,7 @@ class ShopController < ApplicationController
       return
     end
 
-    @response = HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'app_domain' => app_domain })
+    @response = HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'app_domain' => @domain })
     unless (@response.status.success?)
       internal_server_error
       return
