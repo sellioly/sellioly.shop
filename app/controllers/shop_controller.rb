@@ -14,7 +14,7 @@ class ShopController < ApplicationController
       internal_server_error
       return
     end
-    abort @response.body.to_s
+    abort @response.body.inspect
     @data  = @response.body.parse
 
     @path = Rails.root.to_s + @store.template_path
