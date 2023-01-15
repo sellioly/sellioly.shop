@@ -14,7 +14,11 @@ class ShopController < ApplicationController
       internal_server_error
       return
     end
+
+
     @data = @response.parse
+
+    abort @data.inspect
     @page_title = @data['shop_name']
     @currency = @data['currency']
     @shop_description = @data['shop_description']
