@@ -14,8 +14,7 @@ class ShopController < ApplicationController
       internal_server_error
       return
     end
-    abort @response.body.parse
-    @data  = @response.body.parse
+    @data  = @response.parse
 
     @path = Rails.root.to_s + @store.template_path
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
