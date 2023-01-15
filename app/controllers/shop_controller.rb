@@ -17,8 +17,6 @@ class ShopController < ApplicationController
 
 
     @data = @response.parse
-
-    abort @data.inspect
     @page_title = @data['shop_name']
     @currency = @data['currency']
     @shop_description = @data['shop_description']
