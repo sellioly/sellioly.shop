@@ -16,7 +16,7 @@ services:
   app: &app_base
     build: .
     restart: always
-    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    command: bundle install
     volumes:
       - sellioly:/app
       - mysqld_data_container:/var/run/mysqld
@@ -33,7 +33,7 @@ services:
       DB_HOST: db_mysql
   worker:
     <<: *app_base
-    command: bundle exec sidekiq
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
     ports: [ ]
     depends_on:
       - app
