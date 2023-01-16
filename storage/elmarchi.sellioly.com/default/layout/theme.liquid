@@ -42,6 +42,11 @@
     {% include 'sections/header' %}
     {{ content_for_layout }}
 </main>
+
+<!-- CURSOR -->
+<div class="mouseCursor cursor-outer"></div>
+<div class="mouseCursor cursor-inner"></div>
+<!-- /CURSOR -->
 <script>
     window.shopUrl = '{{ request.origin }}';
 </script>
