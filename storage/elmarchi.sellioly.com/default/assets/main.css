@@ -2554,7 +2554,7 @@ html {
   z-index: 999;
 }
 
-.header--styleFive.sticky-on.sticky .header__logo__image {
+.header--styleFive.sticky-on.sticky .header__logo__image img {
   mix-blend-mode: difference;
 }
 
