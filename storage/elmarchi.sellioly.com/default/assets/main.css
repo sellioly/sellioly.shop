@@ -2558,6 +2558,10 @@ html {
   mix-blend-mode: difference;
 }
 
+.header__logo__image img{
+  width: 150px !important;
+}
+
 .hero {
   position: relative;
   padding-top: 190px;
