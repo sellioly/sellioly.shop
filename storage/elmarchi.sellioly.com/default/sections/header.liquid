@@ -68,33 +68,6 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="header__button">
-                            <a class="btn btn--styleOne btn--secondary it-btn" href="donation-listing.html">
-                                <span class="btn__text">donate now</span>
-                                <i class="fa-solid fa-heart btn__icon"></i>
-                                <span class="it-btn__inner">
-                                    <span class="it-btn__blobs">
-                                        <span class="it-btn__blob"></span>
-                    <span class="it-btn__blob"></span>
-                    <span class="it-btn__blob"></span>
-                    <span class="it-btn__blob"></span>
-                    </span>
-                    </span>
-                                <svg class="it-btn__animation" xmlns="http://www.w3.org/2000/svg" version="1.1">
-                                    <defs>
-                                        <filter>
-                                            <feGaussianBlur in="SourceGraphic" result="blur" stdDeviation="10">
-                                            </feGaussianBlur>
-                                            <feColorMatrix in="blur" mode="matrix"
-                                                           values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 21 -7"
-                                                           result="goo">
-                                            </feColorMatrix>
-                                            <feBlend in2="goo" in="SourceGraphic" result="mix"></feBlend>
-                                        </filter>
-                                    </defs>
-                                </svg>
-                            </a>
-                        </div>
                     </div>
                     <!-- Header Right Buttons Search Cart -->
                 </div>
@@ -282,7 +255,7 @@
                 <div class="hero__content">
               <span class="hero__title hero__title--small wow animate__fadeInUp animate__animated"
                     data-wow-duration="1200ms" data-wow-delay="200ms">
-                  <i class="fa-solid fa-heart btn__icon"></i>We Beleve That</span>
+                  <i class="fa-solid fa-heart btn__icon"></i>We Beleve That with {{ page_title | capitalize }}</span>
                     <h1 class="hero__title hero__title--big wow animate__fadeInUp animate__animated"
                         data-wow-duration="1200ms" data-wow-delay="300ms">BEST STORE IN THE WORLD</h1>
                     <p class="hero__text wow animate__fadeInUp animate__animated" data-wow-duration="1200ms"
