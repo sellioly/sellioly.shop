@@ -19,7 +19,8 @@
     {{ 'nice-select.css' | asset_url | stylesheet_tag }}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
     {{ 'main.css' | asset_url | stylesheet_tag }}
 </head>
 <body>
@@ -37,12 +38,14 @@
     </div>
 </div>
 <!-- Preloader End -->
-{% include 'sections/header' %}
-<h1>{{ page_title }}</h1>
-<p>
-    {{ shop_description }}
-</p>
-{{ content_for_layout }}
+<main class="main">
+    {% include 'sections/header' %}
+    <h1>{{ page_title }}</h1>
+    <p>
+        {{ shop_description }}
+    </p>
+    {{ content_for_layout }}
+</main>
 <script>
     window.shopUrl = '{{ request.origin }}';
 </script>
