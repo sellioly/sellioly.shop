@@ -11,8 +11,6 @@ services:
     volumes:
       - mysql_db_data_container:/var/lib/mysql
       - mysqld_data_container:/var/run/mysqld
-    ports:
-      - "3306:3306"
 
   redis:
     image: redis:alpine
