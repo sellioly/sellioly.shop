@@ -2648,8 +2648,6 @@ html {
 }
 
 .hero__figure {
-    -webkit-mask-image: url(../image/shapes/shapes2.svg);
-    mask-image: url(../image/shapes/shapes2.svg);
     -webkit-mask-size: 100%;
     mask-size: 100%;
     -webkit-mask-repeat: no-repeat;
