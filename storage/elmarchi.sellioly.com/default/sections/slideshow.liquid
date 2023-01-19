@@ -1,26 +1,22 @@
-<!-- Hero/Welcome Section Start -->
-<section class="hero hero--style1 overflow-hidden">
-    <div class="container container--custom">
-        <div class="row align-items-center justify-content-between">
-            <div class="col-xl-5 col-lg-8 mb-30">
-                <div class="hero__content">
-              <span class="hero__title hero__title--small wow animate__fadeInUp animate__animated"
-                    data-wow-duration="1200ms" data-wow-delay="200ms">
-                  <i class="fa-solid fa-heart btn__icon"></i>We Beleve That with elmarchi store</span>
-                    <h1 class="hero__title hero__title--big wow animate__fadeInUp animate__animated"
-                        data-wow-duration="1200ms" data-wow-delay="300ms">BEST STORE IN THE WORLD</h1>
-                    <p class="hero__text wow animate__fadeInUp animate__animated" data-wow-duration="1200ms"
-                       data-wow-delay="400ms">
-                        we are here to help you for creating your store
-                    </p>
+<section>
+    <div class="slick-slider mx-0 slider"
+         data-slick-options='{"slidesToShow": 1,"infinite":true,"autoplay":true,"dots":false,"arrows":false,"fade":true,"cssEase":"ease-in-out","speed":600}'>
+        {%- for block in section.blocks -%}
+            <div class="box px-0">
+                <div class="bg-img-cover-center py-12 pt-lg-18 pb-lg-17"
+                     style="background-image: url('{{ block.settings.image }}');">
+                    <div class="container container-xl py-7">
+                        <div class="text-center" style="max-width: 454px" data-animate="fadeInDown">
+                            <p class="text-primary fs-56 lh-113 mb-6 custom-font">{{ block.settings.heading }}</p>
+                            <h1 class="mb-4 fs-56 lh-128">{{ block.settings.subheading }}</h1>
+                            <p class="fs-18 lh-166 mb-7" style="max-width: 454px">{{ block.settings.description }}</p>
+                        </div>
+                        <div class="text-center" style="max-width: 454px" data-animate="fadeInUp">
+                            <a href="{{ block.settings.link }}" class="btn btn-secondary rounded bg-hover-primary border-0">{{ block.settings.button_label }}</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="col-xl-6 mb-30">
-                <figure class="hero__figure wow animate__zoomIn animate__animated" data-wow-duration="1200ms" data-wow-delay="600ms">
-                    {{ logo | img_tag: "logo" }}
-                </figure>
-            </div>
-        </div>
+        {%- endfor -%}
     </div>
 </section>
-<!-- Hero/Welcome Section End https://codercredit.com/tf/gainioz/index.html -->

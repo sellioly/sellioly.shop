@@ -9,11 +9,18 @@ class ShopController < ApplicationController
       return
     end
 
+    @path = Rails.root.to_s + @store.template_path
+    Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
+
     @response = HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'app_domain' => @domain })
     unless (@response.status.success?)
       internal_server_error
       return
     end
+    @content_for_layout = ''
+
+    file = File.read(@path + '/templates/index.json')
+    data = JSON.load file
 
     @data = @response.parse
     @page_title = @data['shop_name']
@@ -24,13 +31,20 @@ class ShopController < ApplicationController
     args['logo'] = @logo
     args['page_title'] = @page_title
     args['shop_description'] = @shop_description
+    data["order"].each { |section_id|
+      section_data = data["sections"][section_id]
+      section_settings = section_data['settings']
+      section_blocks = []
+      section_data['block_order'].each { |block_id|
+        section_blocks.push(section_data['blocks'][block_id])
+      }
+      args['section'] = { settings: section_settings, blocks: section_blocks }
+      @template = Liquid::Template.parse(File.read(@path + '/sections/' + section_data['type'] + '.liquid'))
+      @test = @template.render!(args)
+      @content_for_layout += @test
+    }
+    args.delete('section')
 
-    @path = Rails.root.to_s + @store.template_path
-    Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
-    @content_for_layout = ''
-    @template = Liquid::Template.parse(File.read(@path + '/sections/slideshow.liquid'))
-    @test = @template.render!(args)
-    @content_for_layout += @test
     @template = Liquid::Template.parse(File.read(@path + '/layout/theme.liquid')) # Parses and compiles the template
     @origin = request.base_url
     args['content_for_layout'] = @content_for_layout
@@ -47,6 +61,9 @@ class ShopController < ApplicationController
       return
     end
     @path = Rails.root.to_s + @store.template_path
+    unless File.exist?(@path + '/assets/' + params[:filename])
+      not_found
+    end
     render file: @path + '/assets/' + params[:filename]
   end
 
