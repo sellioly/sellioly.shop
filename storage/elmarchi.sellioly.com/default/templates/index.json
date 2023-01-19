@@ -51,9 +51,44 @@
         "show_text_below": true,
         "accessibility_info": "Slideshow about our brand"
       }
+    },
+    "featured-products": {
+      "type": "featured-products",
+      "blocks": {
+        "product-0": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-01.jpg",
+            "discount": 20,
+            "price": 29.00,
+            "price_before_discount": 39.00,
+            "title": "Facial cleanser",
+            "rating": 5,
+            "reviews": 2947
+          }
+        }
+      },
+      "block_order": [
+        "product-0",
+        "product-1",
+        "product-2",
+        "product-3",
+        "product-4",
+        "product-5"
+      ],
+      "settings": {
+        "title": "Shop our Feature products",
+        "sub_title": "Made using clean, non-toxic ingredients, our products are designed for everyone.",
+        "collection_image": "https://templates.g5plus.net/glowing/images/banner-32.jpg",
+        "collection_top_heading": "Essenstial Items",
+        "collection_heading": "Empower Yourself",
+        "collection_link_text": "Explore More",
+        "collection_link": "#"
+      }
     }
   },
   "order": [
-    "slideshow"
+    "slideshow",
+    "featured-products"
   ]
 }
