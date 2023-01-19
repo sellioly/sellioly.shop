@@ -1,0 +1,23 @@
+<section class="mt-lg-10 mt-8 pt-xl-15 pb-xl-14 py-11"
+         style="background-color: {{ section.settings.background_color }}">
+    <div class="container">
+        <div class="slick-slider section-01"
+             data-slick-options='{"slidesToShow": 1,"dots":false,"arrows":false,"asNavFor":".section-02"}'>
+            {% for block in section.blocks %}
+                <div class="box" data-animate="fadeInUp">
+                    <h4 class="mx-auto text-center mw-750 mb-11">“ {{ block.settings.text }} ”</h4>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="slick-slider section-02 client-logo"
+             data-slick-options='{"slidesToShow": 6,"asNavFor":".section-01","focusOnSelect":true,"dots":false,"arrows":false,"responsive":[{"breakpoint": 992,"settings": {"slidesToShow":4,"dots":true}},{"breakpoint": 768,"settings": {"slidesToShow": 3,"dots":true}},{"breakpoint": 576,"settings": {"slidesToShow": 2,"dots":true}}]}'>
+            {% for block in section.blocks %}
+                <div class="box" data-animate="fadeInUp">
+                    <div class="d-block mw-150 mx-auto">
+                        <img src="{{ block.settings.image }}" alt="{{ block.settings.text }}" class="opacity-3 opacity-hover-10 cursor-pointer">
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

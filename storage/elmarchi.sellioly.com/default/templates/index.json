@@ -233,7 +233,7 @@
       ],
       "settings": {
         "direction": "rtl",
-        "title": "Shop our Feature products",
+        "title": "Customer Favorite Beauty Essentials",
         "sub_title": "Made using clean, non-toxic ingredients, our products are designed for everyone.",
         "collection_image": "https://templates.g5plus.net/glowing/images/bg-slider-09.jpg",
         "collection_top_heading": "Essenstial Items",
@@ -241,11 +241,70 @@
         "collection_link_text": "Explore More",
         "collection_link": "#"
       }
+    },
+    "banner-brand": {
+      "type": "banner-brand",
+      "blocks": {
+        "banner-0": {
+          "type": "banner",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/client-logo-01.png",
+            "text": "Millions of combinations, meaning you get a totally unique piece of furniture exactly the way you want it."
+          }
+        },
+        "banner-1": {
+          "type": "banner",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/client-logo-02.png",
+            "text": "Great tags, Millie has got used to it, nothing like the old tin tags of years gone by. Light weight and great colours available."
+          }
+        },
+        "banner-2": {
+          "type": "banner",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/client-logo-03.png",
+            "text": "Amazing product. The results are so transformative in texture and my face feels plump and healthy. Highly recommend!"
+          }
+        },
+        "banner-3": {
+          "type": "banner",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/client-logo-04.png",
+            "text": "Millions of combinations, meaning you get a totally unique piece of furniture exactly the way you want it."
+          }
+        },
+        "banner-4": {
+          "type": "banner",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/client-logo-05.png",
+            "text": "Great tags, Millie has got used to it, nothing like the old tin tags of years gone by. Light weight and great colours available."
+          }
+        },
+        "banner-5": {
+          "type": "banner",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/client-logo-06.png",
+            "text": "Amazing product. The results are so transformative in texture and my face feels plump and healthy. Highly recommend!"
+          }
+        }
+      },
+      "block_order": [
+        "banner-0",
+        "banner-1",
+        "banner-2",
+        "banner-3",
+        "banner-4",
+        "banner-5"
+      ],
+      "settings": {
+        "background_color": "#EDF1F0"
+      }
     }
   },
   "order": [
     "slideshow",
     "featured-products-0",
+    "banner-brand",
     "featured-products-1"
   ]
 }
