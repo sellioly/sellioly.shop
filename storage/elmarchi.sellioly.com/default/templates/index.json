@@ -58,7 +58,7 @@
         "product-0": {
           "type": "product",
           "settings": {
-            "image": "https://templates.g5plus.net/glowing/images/product-01.jpg",
+            "image": "https://templates.g5plus.net/glowing/images/product-08.jpg",
             "discount": 20,
             "price": 29.00,
             "price_before_discount": 39.00,
@@ -235,7 +235,7 @@
         "direction": "rtl",
         "title": "Shop our Feature products",
         "sub_title": "Made using clean, non-toxic ingredients, our products are designed for everyone.",
-        "collection_image": "https://templates.g5plus.net/glowing/images/product-08.jpg",
+        "collection_image": "https://templates.g5plus.net/glowing/images/bg-slider-09.jpg",
         "collection_top_heading": "Essenstial Items",
         "collection_heading": "Empower Yourself",
         "collection_link_text": "Explore More",
