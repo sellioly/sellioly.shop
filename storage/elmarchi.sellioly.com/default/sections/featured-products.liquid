@@ -75,22 +75,23 @@
                                         <span>${{ block.settings.price | round: 2 }}</span>
                                     </p>
                                     <h2 class="card-title fs-15 font-weight-500 mb-2"><a
-                                                href="product-detail-01.html">{{ block.settings.title }}</a>
+                                                href="#">{{ block.settings.title }}</a>
                                     </h2>
                                     <div class="d-flex align-items-center justify-content-center flex-wrap">
                                         <ul class="list-inline mb-0 lh-1">
-                                            {% assign unrated = 5 %}
+                                            {% assign unrated = 5 | minus: block.settings.rating %}
                                             {% for i in (1..block.settings.rating) %}
                                                 <li class="list-inline-item fs-12 text-primary mr-0"><i
                                                             class="fas fa-star"></i>
                                                 </li>
-                                                {% decrement unrated %}
                                             {% endfor %}
-                                            {% for i in (1..unrated) %}
-                                                <li class="list-inline-item fs-12 text-primary mr-0"><i
-                                                            class="far fa-star"></i>
-                                                </li>
-                                            {% endfor %}
+                                            {% if unrated > 0 %}
+                                                {% for i in (1..unrated) %}
+                                                    <li class="list-inline-item fs-12 text-primary mr-0"><i
+                                                                class="far fa-star"></i>
+                                                    </li>
+                                                {% endfor %}
+                                            {% endif %}
                                         </ul>
                                         <span class="card-text fs-14 font-weight-400 pl-2 lh-1">{{ block.settings.reviews }} reviews</span>
                                     </div>

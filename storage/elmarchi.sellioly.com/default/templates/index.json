@@ -66,6 +66,66 @@
             "rating": 5,
             "reviews": 2947
           }
+        },
+        "product-1": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-02.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Bio-shroom Rejuvenating Serum",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-2": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-03.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Coffee Bean Caffeine Eye Cream",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-3": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-04.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Facial mousse cleanser",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-4": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-05.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Glowing",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-5": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-06.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Cream Glowing",
+            "rating": 5,
+            "reviews": 2947
+          }
         }
       },
       "block_order": [
