@@ -1,0 +1,19 @@
+<section class="pt-7 pt-lg-10 pt-xl-14">
+    <div class="container container-xl">
+        <div class="row">
+            {% for block in section.blocks %}
+                <div class="col-lg-4 mb-6 mb-lg-0" data-animate="fadeInUp">
+                    <div class="media border-0">
+                        <div class="mw-90 mr-6">
+                            <img src="{{ block.settings.image }}" alt="{{ block.settings.text }}">
+                        </div>
+                        <div class="media-body">
+                            <h3 class="fs-24 mb-3">{{ block.settings.title }}</h3>
+                            <p class="mb-0 pr-lg-8">{{ block.settings.text }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

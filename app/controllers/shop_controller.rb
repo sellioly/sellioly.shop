@@ -23,13 +23,14 @@ class ShopController < ApplicationController
     data = JSON.load file
 
     @data = @response.parse
-    @page_title = @data['shop_name']
+    @shop_name = @data['shop_name']
     @currency = @data['currency']
     @shop_description = @data['shop_description']
     @logo = (@data['shop_logo_default'])
     args = {}
     args['logo'] = @logo
-    args['page_title'] = @page_title
+    args['shop_name'] = @shop_name
+    args['page_title'] = 'HOME - ' + @shop_name
     args['shop_description'] = @shop_description
     data["order"].each { |section_id|
       section_data = data["sections"][section_id]

@@ -6,7 +6,7 @@
     <meta name="description" content="Glowing Shop Html Template">
     <meta name="author" content="">
     <meta name="generator" content="Jekyll">
-    <title>Home 09 - Glowing</title>
+    <title>{{ page_title }}</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,6 +29,8 @@
 <main id="content">
     {{ content_for_layout }}
 </main>
+
+{% include 'sections/footer' %}
 
 <script>
     window.shopUrl = '{{ request.origin }}';

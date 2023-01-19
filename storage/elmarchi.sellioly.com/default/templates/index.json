@@ -299,12 +299,51 @@
       "settings": {
         "background_color": "#EDF1F0"
       }
+    },
+    "product-benefits": {
+      "type": "product-benefits",
+      "blocks": {
+        "benefit-0": {
+          "type": "benefit",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/image-box-18.jpg",
+            "title": "Guaranteed PURE",
+            "text": "All Grace formulations adhere to strict purity standards and will never contain harsh or toxic ingredients"
+          }
+        },
+        "benefit-1": {
+          "type": "benefit",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/image-box-19.jpg",
+            "title": "Completely Cruelty-Free",
+            "text": "All Grace formulations adhere to strict purity standards and will never contain harsh or toxic ingredients"
+          }
+        },
+        "benefit-2": {
+          "type": "benefit",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/image-box-20.jpg",
+            "title": "Ingredient Sourcing",
+            "text": "All Grace formulations adhere to strict purity standards and will never contain harsh or toxic ingredients"
+          }
+        }
+      },
+      "block_order": [
+        "benefit-0",
+        "benefit-1",
+        "benefit-2"
+      ],
+      "settings": {
+
+      }
+
     }
   },
   "order": [
     "slideshow",
     "featured-products-0",
     "banner-brand",
-    "featured-products-1"
+    "featured-products-1",
+    "product-benefits"
   ]
 }
