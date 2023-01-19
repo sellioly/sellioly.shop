@@ -38,7 +38,7 @@ class ShopController < ApplicationController
       section_data['block_order'].each { |block_id|
         section_blocks.push(section_data['blocks'][block_id])
       }
-      args['section'] = { settings: section_settings, blocks: section_blocks }
+      args['section'] = { 'settings' => section_settings, 'blocks' => section_blocks }
       @template = Liquid::Template.parse(File.read(@path + '/sections/' + section_data['type'] + '.liquid'))
       @test = @template.render!(args)
       @content_for_layout += @test
