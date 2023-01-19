@@ -52,7 +52,7 @@
         "accessibility_info": "Slideshow about our brand"
       }
     },
-    "featured-products": {
+    "featured-products-0": {
       "type": "featured-products",
       "blocks": {
         "product-0": {
@@ -137,9 +137,105 @@
         "product-5"
       ],
       "settings": {
+        "direction": "ltr",
         "title": "Shop our Feature products",
         "sub_title": "Made using clean, non-toxic ingredients, our products are designed for everyone.",
-        "collection_image": "https://templates.g5plus.net/glowing/images/banner-32.jpg",
+        "collection_image": "https://www.twelab.it/images/instagram-04.jpg",
+        "collection_top_heading": "Essenstial Items",
+        "collection_heading": "Empower Yourself",
+        "collection_link_text": "Explore More",
+        "collection_link": "#"
+      }
+    },
+    "featured-products-1": {
+      "type": "featured-products",
+      "blocks": {
+        "product-0": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-01.jpg",
+            "discount": 20,
+            "price": 29.00,
+            "price_before_discount": 39.00,
+            "title": "Facial cleanser",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-1": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-02.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Bio-shroom Rejuvenating Serum",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-2": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-03.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Coffee Bean Caffeine Eye Cream",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-3": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-04.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Facial mousse cleanser",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-4": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-05.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Glowing",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-5": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-06.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Cream Glowing",
+            "rating": 5,
+            "reviews": 2947
+          }
+        }
+      },
+      "block_order": [
+        "product-0",
+        "product-1",
+        "product-2",
+        "product-3",
+        "product-4",
+        "product-5"
+      ],
+      "settings": {
+        "direction": "rtl",
+        "title": "Shop our Feature products",
+        "sub_title": "Made using clean, non-toxic ingredients, our products are designed for everyone.",
+        "collection_image": "https://www.twelab.it/images/instagram-04.jpg",
         "collection_top_heading": "Essenstial Items",
         "collection_heading": "Empower Yourself",
         "collection_link_text": "Explore More",
@@ -149,6 +245,7 @@
   },
   "order": [
     "slideshow",
-    "featured-products"
+    "featured-products-0",
+    "featured-products-1"
   ]
 }
