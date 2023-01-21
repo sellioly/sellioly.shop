@@ -69,7 +69,7 @@ class ShopController < ApplicationController
       not_found
     end
 
-    send_data File.read(@path + '/assets/' + params[:filename]), disposition: 'inline', status: 200
+    render file: @path + '/assets/' + params[:filename], status: 200
   end
 
   def not_found
