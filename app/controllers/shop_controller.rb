@@ -69,7 +69,7 @@ class ShopController < ApplicationController
       not_found
     end
 
-    render file: @path + '/assets/' + params[:filename], status: 200
+    render file: @path + '/assets/' + params[:filename], cached: true
   end
 
   def not_found
