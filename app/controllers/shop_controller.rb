@@ -74,7 +74,7 @@ class ShopController < ApplicationController
 
   public def preview
     @path = Rails.root.to_s + '/stroage/' + params[:shop_id] + '/' + params[:template_id]
-    render :text => @path
+    render json: { msg: @path }
     return
     unless File.directory?(@path)
       content_not_found
