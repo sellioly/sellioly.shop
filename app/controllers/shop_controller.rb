@@ -122,4 +122,8 @@ class ShopController < ApplicationController
     @test = @template.render!(args)
     render html: @test.html_safe
   end
+
+  def page
+    render text: 'other page'
+  end
 end

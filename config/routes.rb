@@ -6,8 +6,8 @@ Rails.application.routes.draw do
   end
 
   constraints host: 'preview.sellioly.com' do
-    post 'screenshots/:shop_id/:template_id', action: 'preview', controller: 'store'
-    post 'preview/:shop_id/:template_id', action: 'preview', controller: 'shop'
+    get '/screenshots/:shop_id/:template_id', action: 'preview', controller: 'store'
+    get '/preview/:shop_id/:template_id', action: 'preview', controller: 'shop'
   end
 
   constraints lambda { |req| req.host != 'shop.sellioly.com' &&  req.host != 'preview.sellioly.com' } do
