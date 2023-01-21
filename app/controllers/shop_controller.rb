@@ -32,18 +32,22 @@ class ShopController < ApplicationController
     args['shop_name'] = @shop_name
     args['page_title'] = 'HOME - ' + @shop_name
     args['shop_description'] = @shop_description
-    data["order"].each { |section_id|
-      section_data = data["sections"][section_id]
-      section_settings = section_data['settings']
-      section_blocks = []
-      section_data['block_order'].each { |block_id|
-        section_blocks.push(section_data['blocks'][block_id])
+    if data["order"].kind_of?(Array)
+      data["order"].each { |section_id|
+        section_data = data["sections"][section_id]
+        section_settings = section_data['settings']
+        section_blocks = []
+        if section_data['block_order'].kind_of?(Array)
+          section_data['block_order'].each { |block_id|
+            section_blocks.push(section_data['blocks'][block_id])
+          }
+        end
+        args['section'] = { 'settings' => section_settings, 'blocks' => section_blocks }
+        @template = Liquid::Template.parse(File.read(@path + '/sections/' + section_data['type'] + '.liquid'))
+        @test = @template.render!(args)
+        @content_for_layout += @test
       }
-      args['section'] = { 'settings' => section_settings, 'blocks' => section_blocks }
-      @template = Liquid::Template.parse(File.read(@path + '/sections/' + section_data['type'] + '.liquid'))
-      @test = @template.render!(args)
-      @content_for_layout += @test
-    }
+    end
     args.delete('section')
 
     @template = Liquid::Template.parse(File.read(@path + '/layout/theme.liquid')) # Parses and compiles the template
