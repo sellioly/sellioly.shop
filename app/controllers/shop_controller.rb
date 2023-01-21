@@ -73,14 +73,11 @@ class ShopController < ApplicationController
   end
 
   public def preview
-    @path = Rails.root.to_s + '/stroage/' + params[:shop_id] + '/' + params[:template_id]
+    @path = Rails.root.to_s + '/storage/' + params[:shop_id] + '/' + params[:template_id]
     unless File.directory?(@path)
       content_not_found
       return
     end
-
-    render json: { msg: @path }
-    return
 
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
 
