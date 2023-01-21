@@ -2,12 +2,7 @@ class ShopController < ApplicationController
   protect_from_forgery except: :file_assets
 
   def index
-    @domain = request.host
-    @store = Store.where(app_domain: @domain).first
-    unless @store
-      content_not_found
-      return
-    end
+    check_store
 
     @path = Rails.root.to_s + @store.template_path
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
@@ -65,6 +60,9 @@ class ShopController < ApplicationController
       return
     end
 
+    $shop_id =  params[:shop_id]
+    $template_id = params[:template_id]
+
     unless File.exist?(@path + '/assets/' + params[:filename])
       not_found
     end
@@ -82,6 +80,9 @@ class ShopController < ApplicationController
       content_not_found
       return
     end
+
+    $shop_id =  params[:shop_id]
+    $template_id = params[:template_id]
 
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
 
