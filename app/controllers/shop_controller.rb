@@ -55,13 +55,12 @@ class ShopController < ApplicationController
   end
 
   def file_assets()
-    @domain = request.host
-    @store = Store.where(app_domain: @domain).first
-    unless @store
+    @path = Rails.root.to_s + '/storage/' + params[:shop_id] + '/' + params[:template_id]
+    unless File.directory?(@path)
       content_not_found
       return
     end
-    @path = Rails.root.to_s + @store.template_path
+
     unless File.exist?(@path + '/assets/' + params[:filename])
       not_found
     end
