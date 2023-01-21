@@ -16,6 +16,6 @@ class UploadLocalTemplateJob < ApplicationJob
     data = JSON.load file
 
 
-    @response = HTTP.post("https://api.sellioly.com/server/template-created", :form => { 'app_domain' => app_domain, 'template_path' => sub_path, 'theme_name' => data['theme_name'], 'theme_version' => data['theme_version'], 'theme_author' => data['theme_author'], 'theme_support_url' => data['theme_support_url'] })
+    @response = HTTP.post("https://api.sellioly.com/server/template-created", :form => { 'app_domain' => app_domain, 'template_path' => sub_path, 'theme_name' => data['theme_name'].to_s, 'theme_version' => data['theme_version'].to_s, 'theme_author' => data['theme_author'].to_s, 'theme_support_url' => data['theme_support_url'].to_s })
   end
 end
