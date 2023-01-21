@@ -13,12 +13,9 @@ class StoreController < ApplicationController
 
     UploadLocalTemplateJob.perform_later @path, @store.app_domain, @subpath
 
-    # upload local file template
+    # upload local file template  /app/storage/63/28/config/settings_schema.json
 
-    file = File.read(@path + '/config/settings_schema.json')
-    data = JSON.load file
-
-    render json: { msg: 'Template in progress', id: @store.id, template_path: @subpath, theme_name: data['theme_name'], theme_version: data['theme_version'], theme_author: data['theme_author'], theme_support_url: data['theme_support_url'] }
+    render json: { msg: 'Template in progress', id: @store.id, template_path: @subpath}
   end
 
   public def preview
