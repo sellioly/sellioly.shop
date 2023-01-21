@@ -68,7 +68,8 @@ class ShopController < ApplicationController
     unless File.exist?(@path + '/assets/' + params[:filename])
       not_found
     end
-    render status: 200, file: @path + '/assets/' + params[:filename]
+
+    send_data File.open(@path + '/assets/' + params[:filename]), disposition: 'inline', status: 200
   end
 
   def not_found
