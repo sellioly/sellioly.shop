@@ -1,9 +1,9 @@
 Rails.application.routes.draw do
-  constraints host: 'shop.sellioly.com' do
-    post 'api/store/create', action: 'create', controller: 'store'
-    get '/', action: 'not_found', controller: 'shop'
-    get '/*path', action: 'not_found', controller: 'shop'
-  end
+  # constraints host: 'shop.sellioly.com' do
+  #   post 'api/store/create', action: 'create', controller: 'store'
+  #   get '/', action: 'not_found', controller: 'shop'
+  #   get '/*path', action: 'not_found', controller: 'shop'
+  # end
 
   constraints host: 'preview.sellioly.com' do
     get '/screenshots/:shop_id/:template_id', action: 'preview', controller: 'store'
