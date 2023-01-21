@@ -24,6 +24,8 @@ class StoreController < ApplicationController
     @resize_width = params[:rw].to_s
     @resize_height = params[:rh].to_s
     @response = HTTP.get("https://node-api.sellioly.com/take-screenshot?url=https://preview.sellioly.com/preview/" + params[:shop_id].to_s + "/" + params[:template_id].to_s + '&w=' + @width + '&h=' + @height + '&rw=' + @resize_width + '&rh=' + @resize_height)
+
+    expires_in 3.minutes, :public => true
     send_data @response.body, :filename => 'screenshot.jpeg', :type => 'image/jpeg', disposition: 'inline'
   end
 end
