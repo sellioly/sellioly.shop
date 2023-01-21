@@ -1,7 +1,5 @@
 class StoreController < ApplicationController
-  public
-
-  def create
+  public def create
     # code here
     @store = Store.new({})
     @store.app_domain = params[:app_domain]
@@ -23,7 +21,7 @@ class StoreController < ApplicationController
     render json: { msg: 'Template in progress', id: @store.id, template_path: @subpath, theme_name: data['theme_name'], theme_version: data['theme_version'], theme_author: data['theme_author'], theme_support_url: data['theme_support_url'] }
   end
 
-  def preview
+  public def preview
     @width = params[:w]
     @height = params[:h]
     @resize_width = params[:rw]

@@ -72,7 +72,7 @@ class ShopController < ApplicationController
     content_not_found
   end
 
-  def preview
+  public def preview
     @path = Rails.root.to_s + '/stroage/' + params[:shop_id] + '/' + params[:template_id]
     unless File.directory?(@path)
       content_not_found
@@ -123,7 +123,15 @@ class ShopController < ApplicationController
     render html: @test.html_safe
   end
 
-  def page
+  public def page
     render text: 'other page'
+  end
+
+  public def product
+    # code here
+  end
+
+  public def collection
+    # code here
   end
 end
