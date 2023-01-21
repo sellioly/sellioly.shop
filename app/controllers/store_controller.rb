@@ -22,10 +22,10 @@ class StoreController < ApplicationController
   end
 
   public def preview
-    @width = params[:w]
-    @height = params[:h]
-    @resize_width = params[:rw]
-    @resize_height = params[:rh]
+    @width = params[:w].to_s
+    @height = params[:h].to_s
+    @resize_width = params[:rw].to_s
+    @resize_height = params[:rh].to_s
     @response = HTTP.get("https://node-api.sellioly.com/take-screenshot?url=https://preview.sellioly.com/" + params[:shop_id].to_s + "/" + params[:template_id].to_s + '&w=' + @width + '&h=' + @height + '&rw=' + @resize_width + '&rh=' + @resize_height)
     render status: 200, text:  @response.body
   end
