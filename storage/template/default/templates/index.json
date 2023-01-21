@@ -6,52 +6,34 @@
         "slide-0": {
           "type": "slide",
           "settings": {
-            "heading": "Slideshow",
-            "heading_size": "h1",
-            "subheading": "Introduce a product or collection you'd like to highlight.",
+            "heading": "Made for you",
+            "subheading": "Beauty Inspired by Real Life",
+            "description": "Made using clean, non-toxic ingredients,\nour\nproducts are designed for\neveryone.",
             "button_label": "Shop now",
             "link": "",
-            "button_style_secondary": false,
-            "box_align": "middle-left",
-            "show_text_box": true,
-            "text_alignment": "left",
-            "image_overlay_opacity": 10,
-            "color_scheme": "background-2",
-            "text_alignment_mobile": "left"
+            "image": "https://templates.g5plus.net/glowing/images/bg-slider-18.jpg"
           }
         },
         "slide-1": {
           "type": "slide",
           "settings": {
-            "heading": "Slideshow",
-            "heading_size": "h1",
-            "subheading": "Introduce a product or collection you'd like to highlight.",
+            "heading": "Made for you",
+            "subheading": "Beauty Inspired by Real Life",
+            "description": "Made using clean, non-toxic ingredients,\nour\nproducts are designed for\neveryone.",
             "button_label": "Shop now",
             "link": "",
-            "button_style_secondary": false,
-            "box_align": "middle-right",
-            "show_text_box": true,
-            "text_alignment": "left",
-            "image_overlay_opacity": 10,
-            "color_scheme": "background-2",
-            "text_alignment_mobile": "left"
+            "image": "https://templates.g5plus.net/glowing/images/bg-slider-19.jpg"
           }
         },
         "slide-2": {
           "type": "slide",
           "settings": {
-            "heading": "Slideshow",
-            "heading_size": "h1",
-            "subheading": "Introduce a product or collection you'd like to highlight.",
+            "heading": "Made for you",
+            "subheading": "Beauty Inspired by Real Life",
+            "description": "Made using clean, non-toxic ingredients,\nour\nproducts are designed for\neveryone.",
             "button_label": "Shop now",
             "link": "",
-            "button_style_secondary": false,
-            "box_align": "middle-center",
-            "show_text_box": true,
-            "text_alignment": "center",
-            "image_overlay_opacity": 10,
-            "color_scheme": "background-2",
-            "text_alignment_mobile": "left"
+            "image": "https://templates.g5plus.net/glowing/images/bg-slider-20.jpg"
           }
         }
       },
@@ -70,451 +52,298 @@
         "accessibility_info": "Slideshow about our brand"
       }
     },
-    "featured-collection-0": {
-      "type": "featured-collection",
-      "settings": {
-        "title": "Describe your featured collection",
-        "heading_size": "h2",
-        "description": "",
-        "show_description": false,
-        "description_style": "body",
-        "collection": "all",
-        "products_to_show": 4,
-        "columns_desktop": 4,
-        "full_width": false,
-        "show_view_all": false,
-        "view_all_style": "solid",
-        "enable_desktop_slider": false,
-        "color_scheme": "background-1",
-        "image_ratio": "portrait",
-        "show_secondary_image": false,
-        "show_vendor": false,
-        "show_rating": false,
-        "enable_quick_add": true,
-        "columns_mobile": "2",
-        "swipe_on_mobile": false,
-        "padding_top": 60,
-        "padding_bottom": 60
-      }
-    },
-    "multicolumn-0": {
-      "type": "multicolumn",
+    "featured-products-0": {
+      "type": "featured-products",
       "blocks": {
-        "column-0": {
-          "type": "column",
+        "product-0": {
+          "type": "product",
           "settings": {
-            "title": "Share a review or testimonial about your brand. Consider adding images to each column for more visual interest.",
-            "text": "",
-            "link_label": "",
-            "link": ""
+            "image": "https://templates.g5plus.net/glowing/images/product-08.jpg",
+            "discount": 20,
+            "price": 29.00,
+            "price_before_discount": 39.00,
+            "title": "Facial cleanser",
+            "rating": 5,
+            "reviews": 2947
           }
         },
-        "column-1": {
-          "type": "column",
+        "product-1": {
+          "type": "product",
           "settings": {
-            "title": "Share a review or testimonial about your brand.",
-            "text": "",
-            "link_label": "",
-            "link": ""
+            "image": "https://templates.g5plus.net/glowing/images/product-02.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Bio-shroom Rejuvenating Serum",
+            "rating": 5,
+            "reviews": 2947
           }
         },
-        "column-2": {
-          "type": "column",
+        "product-2": {
+          "type": "product",
           "settings": {
-            "title": "Share a review or testimonial about your brand.",
-            "text": "",
-            "link_label": "",
-            "link": ""
+            "image": "https://templates.g5plus.net/glowing/images/product-03.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Coffee Bean Caffeine Eye Cream",
+            "rating": 5,
+            "reviews": 2947
           }
         },
-        "column-3": {
-          "type": "column",
+        "product-3": {
+          "type": "product",
           "settings": {
-            "title": "Share a review or testimonial about your brand. Consider featuring praise for your bestselling products.",
-            "text": "",
-            "link_label": "",
-            "link": ""
+            "image": "https://templates.g5plus.net/glowing/images/product-04.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Facial mousse cleanser",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-4": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-05.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Glowing",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-5": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-06.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Cream Glowing",
+            "rating": 5,
+            "reviews": 2947
           }
         }
       },
       "block_order": [
-        "column-0",
-        "column-1",
-        "column-2",
-        "column-3"
+        "product-0",
+        "product-1",
+        "product-2",
+        "product-3",
+        "product-4",
+        "product-5"
       ],
       "settings": {
-        "title": "",
-        "heading_size": "h1",
-        "image_width": "half",
-        "image_ratio": "adapt",
-        "columns_desktop": 4,
-        "column_alignment": "center",
-        "background_style": "none",
-        "button_label": "",
-        "button_link": "",
-        "color_scheme": "background-1",
-        "columns_mobile": "1",
-        "swipe_on_mobile": true,
-        "padding_top": 32,
-        "padding_bottom": 92
+        "direction": "ltr",
+        "title": "Shop our Feature products",
+        "sub_title": "Made using clean, non-toxic ingredients, our products are designed for everyone.",
+        "collection_image": "https://www.twelab.it/images/instagram-04.jpg",
+        "collection_top_heading": "Essenstial Items",
+        "collection_heading": "Empower Yourself",
+        "collection_link_text": "Explore More",
+        "collection_link": "#"
       }
     },
-    "image-with-text-0": {
-      "type": "image-with-text",
+    "featured-products-1": {
+      "type": "featured-products",
       "blocks": {
-        "heading": {
-          "type": "heading",
+        "product-0": {
+          "type": "product",
           "settings": {
-            "heading": "Image with text",
-            "heading_size": "h0"
+            "image": "https://templates.g5plus.net/glowing/images/product-01.jpg",
+            "discount": 20,
+            "price": 29.00,
+            "price_before_discount": 39.00,
+            "title": "Facial cleanser",
+            "rating": 5,
+            "reviews": 2947
           }
         },
-        "text": {
-          "type": "text",
+        "product-1": {
+          "type": "product",
           "settings": {
-            "text": "<p>Introduce one of your collections. Describe some of its benefits to encourage your customers to explore more. <\/p>",
-            "text_style": "body"
+            "image": "https://templates.g5plus.net/glowing/images/product-02.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Bio-shroom Rejuvenating Serum",
+            "rating": 5,
+            "reviews": 2947
           }
         },
-        "button": {
-          "type": "button",
+        "product-2": {
+          "type": "product",
           "settings": {
-            "button_label": "Shop now",
-            "button_link": ""
+            "image": "https://templates.g5plus.net/glowing/images/product-03.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Coffee Bean Caffeine Eye Cream",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-3": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-04.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Facial mousse cleanser",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-4": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-05.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Glowing",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-5": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-06.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Cream Glowing",
+            "rating": 5,
+            "reviews": 2947
           }
         }
       },
       "block_order": [
-        "heading",
-        "text",
-        "button"
+        "product-0",
+        "product-1",
+        "product-2",
+        "product-3",
+        "product-4",
+        "product-5"
       ],
       "settings": {
-        "height": "adapt",
-        "desktop_image_width": "medium",
-        "layout": "text_first",
-        "desktop_content_position": "middle",
-        "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "color_scheme": "background-2",
-        "mobile_content_alignment": "left",
-        "padding_top": 0,
-        "padding_bottom": 60
+        "direction": "rtl",
+        "title": "Customer Favorite Beauty Essentials",
+        "sub_title": "Made using clean, non-toxic ingredients, our products are designed for everyone.",
+        "collection_image": "https://templates.g5plus.net/glowing/images/bg-slider-09.jpg",
+        "collection_top_heading": "Essenstial Items",
+        "collection_heading": "Empower Yourself",
+        "collection_link_text": "Explore More",
+        "collection_link": "#"
       }
     },
-    "image-with-text-1": {
-      "type": "image-with-text",
+    "banner-brand": {
+      "type": "banner-brand",
       "blocks": {
-        "heading": {
-          "type": "heading",
+        "banner-0": {
+          "type": "banner",
           "settings": {
-            "heading": "Image with text",
-            "heading_size": "h0"
+            "image": "https://templates.g5plus.net/glowing/images/client-logo-01.png",
+            "text": "Millions of combinations, meaning you get a totally unique piece of furniture exactly the way you want it."
           }
         },
-        "text": {
-          "type": "text",
+        "banner-1": {
+          "type": "banner",
           "settings": {
-            "text": "<p>Introduce another one of your collections. Describe some of its benefits to encourage your customers to explore more. <\/p>",
-            "text_style": "body"
+            "image": "https://templates.g5plus.net/glowing/images/client-logo-02.png",
+            "text": "Great tags, Millie has got used to it, nothing like the old tin tags of years gone by. Light weight and great colours available."
           }
         },
-        "button": {
-          "type": "button",
+        "banner-2": {
+          "type": "banner",
           "settings": {
-            "button_label": "Shop now",
-            "button_link": ""
+            "image": "https://templates.g5plus.net/glowing/images/client-logo-03.png",
+            "text": "Amazing product. The results are so transformative in texture and my face feels plump and healthy. Highly recommend!"
+          }
+        },
+        "banner-3": {
+          "type": "banner",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/client-logo-04.png",
+            "text": "Millions of combinations, meaning you get a totally unique piece of furniture exactly the way you want it."
+          }
+        },
+        "banner-4": {
+          "type": "banner",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/client-logo-05.png",
+            "text": "Great tags, Millie has got used to it, nothing like the old tin tags of years gone by. Light weight and great colours available."
+          }
+        },
+        "banner-5": {
+          "type": "banner",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/client-logo-06.png",
+            "text": "Amazing product. The results are so transformative in texture and my face feels plump and healthy. Highly recommend!"
           }
         }
       },
       "block_order": [
-        "heading",
-        "text",
-        "button"
+        "banner-0",
+        "banner-1",
+        "banner-2",
+        "banner-3",
+        "banner-4",
+        "banner-5"
       ],
       "settings": {
-        "height": "adapt",
-        "desktop_image_width": "small",
-        "layout": "image_first",
-        "desktop_content_position": "middle",
-        "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "color_scheme": "background-2",
-        "mobile_content_alignment": "left",
-        "padding_top": 0,
-        "padding_bottom": 60
+        "background_color": "#EDF1F0"
       }
     },
-    "image-with-text-2": {
-      "type": "image-with-text",
+    "product-benefits": {
+      "type": "product-benefits",
       "blocks": {
-        "heading": {
-          "type": "heading",
+        "benefit-0": {
+          "type": "benefit",
           "settings": {
-            "heading": "Image with text",
-            "heading_size": "h0"
+            "image": "https://templates.g5plus.net/glowing/images/image-box-18.jpg",
+            "title": "Guaranteed PURE",
+            "text": "All Grace formulations adhere to strict purity standards and will never contain harsh or toxic ingredients"
           }
         },
-        "text": {
-          "type": "text",
+        "benefit-1": {
+          "type": "benefit",
           "settings": {
-            "text": "<p>Introduce another one of your collections. Describe some of its benefits to encourage your customers to explore more. <\/p>",
-            "text_style": "body"
+            "image": "https://templates.g5plus.net/glowing/images/image-box-19.jpg",
+            "title": "Completely Cruelty-Free",
+            "text": "All Grace formulations adhere to strict purity standards and will never contain harsh or toxic ingredients"
           }
         },
-        "button": {
-          "type": "button",
+        "benefit-2": {
+          "type": "benefit",
           "settings": {
-            "button_label": "Shop now",
-            "button_link": ""
+            "image": "https://templates.g5plus.net/glowing/images/image-box-20.jpg",
+            "title": "Ingredient Sourcing",
+            "text": "All Grace formulations adhere to strict purity standards and will never contain harsh or toxic ingredients"
           }
         }
       },
       "block_order": [
-        "heading",
-        "text",
-        "button"
+        "benefit-0",
+        "benefit-1",
+        "benefit-2"
       ],
       "settings": {
-        "height": "adapt",
-        "desktop_image_width": "medium",
-        "layout": "text_first",
-        "desktop_content_position": "middle",
-        "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "color_scheme": "background-2",
-        "mobile_content_alignment": "left",
-        "padding_top": 0,
-        "padding_bottom": 60
+
       }
-    },
-    "image-with-text-3": {
-      "type": "image-with-text",
-      "blocks": {
-        "heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Image with text",
-            "heading_size": "h0"
-          }
-        },
-        "text": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Introduce another one of your collections. Describe some of its benefits to encourage your customers to explore more. <\/p>",
-            "text_style": "body"
-          }
-        },
-        "button": {
-          "type": "button",
-          "settings": {
-            "button_label": "Shop now",
-            "button_link": ""
-          }
-        }
-      },
-      "block_order": [
-        "heading",
-        "text",
-        "button"
-      ],
-      "settings": {
-        "height": "adapt",
-        "desktop_image_width": "small",
-        "layout": "image_first",
-        "desktop_content_position": "middle",
-        "desktop_content_alignment": "left",
-        "content_layout": "no-overlap",
-        "color_scheme": "background-2",
-        "mobile_content_alignment": "left",
-        "padding_top": 0,
-        "padding_bottom": 60
-      }
-    },
-    "featured-collection-1": {
-      "type": "featured-collection",
-      "settings": {
-        "title": "",
-        "heading_size": "h2",
-        "description": "",
-        "show_description": false,
-        "description_style": "body",
-        "collection": "all",
-        "products_to_show": 4,
-        "columns_desktop": 4,
-        "full_width": false,
-        "show_view_all": false,
-        "view_all_style": "solid",
-        "enable_desktop_slider": false,
-        "color_scheme": "background-1",
-        "image_ratio": "portrait",
-        "show_secondary_image": false,
-        "show_vendor": false,
-        "show_rating": false,
-        "enable_quick_add": true,
-        "columns_mobile": "2",
-        "swipe_on_mobile": false,
-        "padding_top": 0,
-        "padding_bottom": 60
-      }
-    },
-    "rich-text": {
-      "type": "rich-text",
-      "blocks": {
-        "text": {
-          "type": "text",
-          "settings": {
-            "text": "<p>INTRODUCE YOUR BRAND<\/p>"
-          }
-        },
-        "heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "<p>Describe what sets your brand apart from your competitors.<\/p>",
-            "heading_size": "h1"
-          }
-        }
-      },
-      "block_order": [
-        "text",
-        "heading"
-      ],
-      "settings": {
-        "desktop_content_position": "center",
-        "content_alignment": "center",
-        "color_scheme": "accent-2",
-        "full_width": true,
-        "padding_top": 60,
-        "padding_bottom": 60
-      }
-    },
-    "multicolumn-1": {
-      "type": "multicolumn",
-      "blocks": {
-        "column-0": {
-          "type": "column",
-          "settings": {
-            "title": "Multicolumn",
-            "text": "<p>Use a combination of images and text to share your brand values. <\/p>",
-            "link_label": "",
-            "link": ""
-          }
-        },
-        "column-1": {
-          "type": "column",
-          "settings": {
-            "title": "Multicolumn",
-            "text": "<p>Use a combination of images and text to share your brand values. <\/p>",
-            "link_label": "",
-            "link": ""
-          }
-        },
-        "column-2": {
-          "type": "column",
-          "settings": {
-            "title": "Multicolumn",
-            "text": "<p>Use a combination of images and text to share your brand values. <\/p>",
-            "link_label": "",
-            "link": ""
-          }
-        },
-        "column-3": {
-          "type": "column",
-          "settings": {
-            "title": "Multicolumn",
-            "text": "<p>Use a combination of images and text to share your brand values. <\/p>",
-            "link_label": "",
-            "link": ""
-          }
-        }
-      },
-      "block_order": [
-        "column-0",
-        "column-1",
-        "column-2",
-        "column-3"
-      ],
-      "settings": {
-        "title": "",
-        "heading_size": "h1",
-        "image_width": "third",
-        "image_ratio": "adapt",
-        "columns_desktop": 4,
-        "column_alignment": "center",
-        "background_style": "none",
-        "button_label": "",
-        "button_link": "",
-        "color_scheme": "accent-2",
-        "columns_mobile": "1",
-        "swipe_on_mobile": false,
-        "padding_top": 0,
-        "padding_bottom": 60
-      }
-    },
-    "featured-blog": {
-      "type": "featured-blog",
-      "settings": {
-        "heading": "Blog posts",
-        "heading_size": "h2",
-        "blog": "news",
-        "post_limit": 3,
-        "columns_desktop": 3,
-        "color_scheme": "background-1",
-        "show_image": true,
-        "show_date": true,
-        "show_author": false,
-        "show_view_all": true,
-        "padding_top": 60,
-        "padding_bottom": 60
-      }
-    },
-    "newsletter": {
-      "type": "newsletter",
-      "blocks": {
-        "heading": {
-          "type": "heading",
-          "settings": {
-            "heading": "Subscribe to our emails",
-            "heading_size": "h1"
-          }
-        },
-        "paragraph": {
-          "type": "paragraph",
-          "settings": {
-            "text": "<p>Be the first to know about new collections and exclusive offers.<\/p>"
-          }
-        },
-        "email-form": {
-          "type": "email_form",
-          "settings": {}
-        }
-      },
-      "block_order": [
-        "heading",
-        "paragraph",
-        "email-form"
-      ],
-      "settings": {
-        "color_scheme": "accent-2",
-        "full_width": true,
-        "padding_top": 60,
-        "padding_bottom": 0
-      }
+
     }
   },
   "order": [
     "slideshow",
-    "featured-collection-0",
-    "multicolumn-0",
-    "image-with-text-0",
-    "image-with-text-1",
-    "image-with-text-2",
-    "image-with-text-3",
-    "featured-collection-1",
-    "rich-text",
-    "multicolumn-1",
-    "featured-blog",
-    "newsletter"
+    "featured-products-0",
+    "banner-brand",
+    "featured-products-1",
+    "product-benefits"
   ]
 }

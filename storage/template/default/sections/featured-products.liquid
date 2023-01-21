@@ -1,0 +1,105 @@
+<section>
+    <div class="container container-xl">
+        <div class="row mt-10 mt-lg-13 mb-6">
+            <div class="col-12 text-center" data-animate="fadeInUp">
+                <h2 class="mb-3">{{ section.settings.title }}</h2>
+                <p class="fs-18 mx-auto lh-166" style="max-width: 462px">{{ section.settings.sub_title }}</p>
+            </div>
+        </div>
+        <div class="row" style="direction: {{ section.settings.direction }};">
+            <div class="col-lg-5 mb-8 mb-lg-0" data-animate="fadeInLeft">
+                <div class="card border-0 hover-shine hover-zoom-in banner banner-04">
+                    <div class="card-img bg-img-cover-center"
+                         style="background-image: url({{ section.settings.collection_image }});"></div>
+                    <div class="card-img-overlay d-inline-flex flex-column justify-content-end p-8">
+                        <h6 class="card-subtitle mb-1 text-white custom-font fs-48 lh-166 font-weight-normal">{{ section.settings.collection_top_heading }}</h6>
+                        <h3 class="card-title fs-40 lh-13 text-white mb-6">{{ section.settings.collection_heading }}</h3>
+                        <div>
+                            <a href="{{ section.settings.collection_link }}"
+                               class="fs-16 font-weight-600 btn text-secondary hover-white bg-white bg-hover-secondary shadow-1">{{ section.settings.collection_link_text }}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="row">
+                    {%- for block in section.blocks -%}
+                        <div class="col-md-4 col-sm-6 mb-3" data-animate="fadeInRight" style="direction: ltr;">
+                            <div class="card border-0 product">
+                                <div class="position-relative">
+                                    <img src="{{ block.settings.image }}" alt="Facial cleanser">
+                                    <div class="card-img-overlay d-flex p-3">
+                                        {% if block.settings.discount > 0 %}
+                                            <div>
+                                                <span class="badge badge-primary">-{{ block.settings.discount }}%</span>
+                                            </div>
+                                        {% endif %}
+                                        <div class="my-auto w-100 content-change-vertical">
+                                            <a href="#" data-toggle="tooltip" data-placement="left"
+                                               title="View products"
+                                               class="add-to-cart ml-auto d-flex align-items-center justify-content-center text-secondary bg-white hover-white bg-hover-secondary w-48px h-48px rounded-circle mb-2">
+                                                <svg class="icon icon-shopping-bag-open-light fs-24">
+                                                    <use xlink:href="#icon-shopping-bag-open-light"></use>
+                                                </svg>
+                                            </a>
+                                            <a href="#" data-toggle="tooltip" data-placement="left" title="Quick view"
+                                               class="preview ml-auto d-md-flex align-items-center justify-content-center cursor-pointer text-secondary bg-white hover-white bg-hover-secondary w-48px h-48px rounded-circle mb-2 d-none">
+<span data-toggle="modal" data-target="#quick-view">
+<svg class="icon icon-eye-light fs-24">
+<use xlink:href="#icon-eye-light"></use>
+ </svg>
+</span>
+                                            </a>
+                                            <a href="#" data-toggle="tooltip" data-placement="left"
+                                               title="Add to wishlist"
+                                               class="add-to-wishlist ml-auto d-flex align-items-center justify-content-center text-secondary bg-white hover-white bg-hover-secondary w-48px h-48px rounded-circle mb-2">
+                                                <svg class="icon icon-star-light fs-24">
+                                                    <use xlink:href="#icon-star-light"></use>
+                                                </svg>
+                                            </a>
+                                            <a href="#" data-toggle="tooltip" data-placement="left" title="Compare"
+                                               class="add-to-compare ml-auto d-flex align-items-center justify-content-center text-secondary bg-white hover-white bg-hover-secondary w-48px h-48px rounded-circle">
+                                                <svg class="icon icon-arrows-left-right-light fs-24">
+                                                    <use xlink:href="#icon-arrows-left-right-light"></use>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-body px-0 pt-4 text-center">
+                                    <p class="card-text font-weight-bold fs-16 mb-1 text-secondary">
+                                        {% if block.settings.discount > 0 %}
+                                            <span class="fs-13 font-weight-500 text-decoration-through text-body pr-1">${{ block.settings.price_before_discount | round: 2 }}</span>
+                                        {% endif %}
+
+                                        <span>${{ block.settings.price | round: 2 }}</span>
+                                    </p>
+                                    <h2 class="card-title fs-15 font-weight-500 mb-2"><a
+                                                href="#">{{ block.settings.title }}</a>
+                                    </h2>
+                                    <div class="d-flex align-items-center justify-content-center flex-wrap">
+                                        <ul class="list-inline mb-0 lh-1">
+                                            {% assign unrated = 5 | minus: block.settings.rating %}
+                                            {% for i in (1..block.settings.rating) %}
+                                                <li class="list-inline-item fs-12 text-primary mr-0"><i
+                                                            class="fas fa-star"></i>
+                                                </li>
+                                            {% endfor %}
+                                            {% if unrated > 0 %}
+                                                {% for i in (1..unrated) %}
+                                                    <li class="list-inline-item fs-12 text-primary mr-0"><i
+                                                                class="far fa-star"></i>
+                                                    </li>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </ul>
+                                        <span class="card-text fs-14 font-weight-400 pl-2 lh-1">{{ block.settings.reviews }} reviews</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {%- endfor -%}
+                </div>
+            </div>
+        </div>
+</section>
