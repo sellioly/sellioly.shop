@@ -20,8 +20,7 @@ services:
     restart: always
     command: bundle exec rails s -p 3000 -b '0.0.0.0'
     volumes:
-      - sellioly:/app
-      - ./config/routes.rb:/app/config/routes.rb:ro
+      - ./config:/app/config
       - ./app:/app/app
       - ./storage:/app/storage
       - ./db:/app/db
