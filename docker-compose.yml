@@ -20,7 +20,6 @@ services:
     restart: always
     command: bundle exec rails s -p 3000 -b '0.0.0.0'
     volumes:
-      - ./config:/app/config
       - ./app:/app/app
       - ./storage:/app/storage
       - ./db:/app/db
