@@ -20,7 +20,7 @@ services:
     restart: always
     command: bundle exec rails s -p 3000 -b '0.0.0.0'
     volumes:
-      - jenkins_jenkins/workspace/sellioly:/app
+      - sellioly:/app
       - mysqld_data_container:/var/run/mysqld
     ports:
       - "80:3000"
@@ -47,8 +47,8 @@ services:
     depends_on:
       - app
 volumes:
-  jenkins_jenkins:
-    external: true
+  sellioly:
+    driver: local
   mysql_db_data_container:
     driver: local
   mysqld_data_container:
