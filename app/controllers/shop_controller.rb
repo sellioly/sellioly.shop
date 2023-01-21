@@ -68,8 +68,8 @@ class ShopController < ApplicationController
     unless File.exist?(@path + '/assets/' + params[:filename])
       not_found
     end
-
-    render file: @path + '/assets/' + params[:filename], cached: true
+    expires_in 24.hours, :public => true
+    render file: @path + '/assets/' + params[:filename], status: 200
   end
 
   def not_found
