@@ -5,7 +5,12 @@ Rails.application.routes.draw do
     get '/*path', action: 'not_found', controller: 'shop'
   end
 
-  constraints lambda { |req| req.host != 'shop.sellioly.com' } do
+  constraints host: 'preview.sellioly.com' do
+    post 'screenshots/:shop_id/:template_id', action: 'preview', controller: 'store'
+    post 'preview/:shop_id/:template_id', action: 'preview', controller: 'shop'
+  end
+
+  constraints lambda { |req| req.host != 'shop.sellioly.com' &&  req.host != 'preview.sellioly.com' } do
     get '/collections/:collection', action: 'collection', controller: 'shop'
     get '/products/:product', action: 'product', controller: 'shop'
     get '/files/1/assets/:filename', to: 'shop#file_assets', constraints: { filename: /[^\/]+/ }
