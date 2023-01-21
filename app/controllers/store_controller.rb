@@ -6,7 +6,7 @@ class StoreController < ApplicationController
     @store.template_id = params[:template_id].to_i
     @store.shop_id = params[:shop_id].to_i
 
-    @subpath = "/storage/" + @store.shop_id + "/" + @store.template_id
+    @subpath = "/storage/" + @store.shop_id.to_s + "/" + @store.template_id.to_s
     @path = Rails.root.to_s + @subpath
     @store.template_path = @subpath
     @store.save
