@@ -3,8 +3,8 @@ class StoreController < ApplicationController
     # code here
     @store = Store.new({})
     @store.app_domain = params[:app_domain]
-    @store.template_id = params[:template_id]
-    @store.shop_id = params[:shop_id]
+    @store.template_id = params[:template_id].to_i
+    @store.shop_id = params[:shop_id].to_i
 
     @subpath = "/storage/" + @store.shop_id + "/" + @store.template_id
     @path = Rails.root.to_s + @subpath
