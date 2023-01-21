@@ -11,17 +11,17 @@ Rails.application.routes.draw do
     get '/preview', action: 'page', controller: 'shop'
   end
 
-  constraints lambda { |req| req.host != 'shop.sellioly.com' &&  req.host != 'preview.sellioly.com' } do
-    get '/collections/:collection', action: 'collection', controller: 'shop'
-    get '/products/:product', action: 'product', controller: 'shop'
-    get '/files/1/assets/:filename', to: 'shop#file_assets', constraints: { filename: /[^\/]+/ }
-    # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-    # Defines the root path route ("/")
-    # root "articles#index"
-    get '/', action: 'index', controller: 'shop'
-    get '/*path', action: 'page', controller: 'shop'
-  end
+  # constraints lambda { |req| req.host != 'shop.sellioly.com' &&  req.host != 'preview.sellioly.com' } do
+  #   get '/collections/:collection', action: 'collection', controller: 'shop'
+  #   get '/products/:product', action: 'product', controller: 'shop'
+  #   get '/files/1/assets/:filename', to: 'shop#file_assets', constraints: { filename: /[^\/]+/ }
+  #   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  #
+  #   # Defines the root path route ("/")
+  #   # root "articles#index"
+  #   get '/', action: 'index', controller: 'shop'
+  #   get '/*path', action: 'page', controller: 'shop'
+  # end
 
   # end
 end
