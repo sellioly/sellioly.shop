@@ -15,7 +15,7 @@ class StoreController < ApplicationController
 
     # upload local file template  /app/storage/63/28/config/settings_schema.json
 
-    render json: { msg: 'Template in progress', id: @store.id, template_path: @subpath }
+    render json: { msg: 'Template in progress', id: @store.id, template_path: @subpath}
   end
 
   public def preview
@@ -29,9 +29,10 @@ class StoreController < ApplicationController
     # headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
     # headers['Access-Control-Request-Method'] = '*'
     # headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-    @path = Rails.root.to_s + '/storage/toto.jpeg'
+    @path = Rails.root.to_s + '/storage/screenshot.jpeg'
 
-    data = read_binary(@path)
-    send_data data, :type => "image/jpeg", :disposition => "inline", status: 200
+    File.open(@path, 'rb') do |f|
+      send_data f.read, :type => "image/jpeg", :disposition => "inline", status: 200
+    end
   end
 end
