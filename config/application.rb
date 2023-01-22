@@ -2,12 +2,11 @@ require_relative "boot"
 
 require "rails/all"
 
-
-require_relative "../app/helpers/performance/shopify/shop_filter"
-require_relative "../app/helpers/performance/shopify/json_filter"
-require_relative "../app/helpers/performance/shopify/money_filter"
-require_relative "../app/helpers/performance/shopify/weight_filter"
-require_relative "../app/helpers/performance/shopify/tag_filter"
+require_relative "../performance/shopify/shop_filter"
+require_relative "../performance/shopify/json_filter"
+require_relative "../performance/shopify/money_filter"
+require_relative "../performance/shopify/weight_filter"
+require_relative "../performance/shopify/tag_filter"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
