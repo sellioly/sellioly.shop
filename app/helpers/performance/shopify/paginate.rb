@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 class Paginate < Liquid::Block
-  Syntax = /(#{Liquid::QuotedFragment})\s*(by\s*(\d+))?/
+  SYNTAX = /(#{Liquid::QuotedFragment})\s*(by\s*(\d+))?/
 
   def initialize(tag_name, markup, options)
     super
 
-    if markup =~ Syntax
+    if markup =~ SYNTAX
       @collection_name = Regexp.last_match(1)
       @page_size       = if Regexp.last_match(2)
         Regexp.last_match(3).to_i
