@@ -23,16 +23,17 @@ class StoreController < ApplicationController
     @height = params[:h].to_s
     @resize_width = params[:rw].to_s
     @resize_height = params[:rh].to_s
-    # @response = HTTP.get("https://node-api.sellioly.com/api/screenshot/take-screenshot?url=https://preview.sellioly.com/preview/" + params[:shop_id].to_s + "/" + params[:template_id].to_s + '&w=' + @width + '&h=' + @height + '&rw=' + @resize_width + '&rh=' + @resize_height)
-    #
-    # headers['Access-Control-Allow-Origin'] = '*'
-    # headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
-    # headers['Access-Control-Request-Method'] = '*'
-    # headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-    @path = Rails.root.to_s + '/storage/screenshot.jpeg'
+    @response = HTTP.get("https://node-api.sellioly.com/api/screenshot/take-screenshot?url=https://preview.sellioly.com/preview/" + params[:shop_id].to_s + "/" + params[:template_id].to_s + '&w=' + @width + '&h=' + @height + '&rw=' + @resize_width + '&rh=' + @resize_height)
 
-    File.open(@path, 'rb') do |f|
-      send_data f.read, :type => "image/jpeg", :disposition => "inline", status: 200
-    end
+    headers['Access-Control-Allow-Origin'] = '*'
+    headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
+    headers['Access-Control-Request-Method'] = '*'
+    headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    send_data @response.body, :type => "image/jpeg", :disposition => "inline", status: 200
+    # @path = Rails.root.to_s + '/storage/screenshot.jpeg'
+    #
+    # File.open(@path, 'rb') do |f|
+    #   send_data f.read, :type => "image/jpeg", :disposition => "inline", status: 200
+    # end
   end
 end
