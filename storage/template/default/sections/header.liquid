@@ -7,7 +7,11 @@
                         <div class="w-50">
                             <div class="d-flex mt-3 mt-xl-0 align-items-center w-100">
                                 <a class="navbar-brand d-inline-block py-0" href="index.html">
-                                    {{ logo | img_tag: 'Sellioly' }}
+                                    {% if logo %}
+                                        {{ logo | img_tag: 'Sellioly' }}
+                                    {% else %}
+                                        {{ page_title | capitalize }}
+                                    {% endif %}
                                 </a>
                             </div>
                         </div>
@@ -488,9 +492,15 @@
                             data-canvas-options='{"width":"250px","container":".sidenav"}'>
                         <span class="fs-24 toggle-icon"></span>
                     </button>
-                    <div class="mx-auto"><a class="navbar-brand d-inline-block mr-0 py-5" href="index.html">
-                            <img src="images/logo-black.png" alt="Glowing">
-                        </a></div>
+                    <div class="mx-auto">
+                        <a class="navbar-brand d-inline-block mr-0 py-5" href="index.html">
+                            {% if logo %}
+                                {{ logo | img_tag: 'Sellioly' }}
+                            {% else %}
+                                {{ page_title | capitalize }}
+                            {% endif %}
+                        </a>
+                    </div>
                     <a href="#search-popup" data-gtf-mfp="true"
                        data-mfp-options='{"type":"inline","focus": "#keyword","mainClass": "mfp-search-form mfp-move-from-top mfp-align-top"}'
                        class="nav-search d-flex align-items-center">
