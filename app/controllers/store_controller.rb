@@ -31,7 +31,8 @@ class StoreController < ApplicationController
     # headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
     @path = Rails.root.to_s + '/storage/toto.jpeg'
 
-
-    send_data File.read(@path), :filename => 'screenshot.jpeg', :type => 'image/jpeg', disposition: 'inline', status: 200
+    File.open(@path, 'rb') do |f|
+      send_data f.read, :type => "image/jpeg", :disposition => "inline", status: 200
+    end
   end
 end
