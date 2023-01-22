@@ -4,7 +4,7 @@ class ShopController < ApplicationController
   def index
     check_store
 
-    @path = Rails.root.to_s + @store.template_path
+    @path = Rails.root.to_s + @store.template_path.to_s
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
 
     @response = HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'app_domain' => @domain })
