@@ -25,7 +25,6 @@ class StoreController < ApplicationController
     @resize_height = params[:rh].to_s
     @response = HTTP.get("https://node-api.sellioly.com/api/screenshot/take-screenshot?url=https://preview.sellioly.com/preview/" + params[:shop_id].to_s + "/" + params[:template_id].to_s + '&w=' + @width + '&h=' + @height + '&rw=' + @resize_width + '&rh=' + @resize_height)
 
-    expires_in 3.minutes, :public => true
     headers['Access-Control-Allow-Origin'] = '*'
     headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
     headers['Access-Control-Request-Method'] = '*'
