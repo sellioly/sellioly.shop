@@ -23,7 +23,7 @@ class StoreController < ApplicationController
     @height = params[:h].to_s
     @resize_width = params[:rw].to_s
     @resize_height = params[:rh].to_s
-    @response = HTTP.get("https://node-api.sellioly.com/api/screenshot/take-screenshot?url=https://preview.sellioly.com/preview/" + params[:shop_id].to_s + "/" + params[:template_id].to_s + '&w=' + @width + '&h=' + @height + '&rw=' + @resize_width + '&rh=' + @resize_height)
+    @response = Faraday.get("https://node-api.sellioly.com/api/screenshot/take-screenshot?url=https://preview.sellioly.com/preview/" + params[:shop_id].to_s + "/" + params[:template_id].to_s + '&w=' + @width + '&h=' + @height + '&rw=' + @resize_width + '&rh=' + @resize_height)
 
     headers['Access-Control-Allow-Origin'] = '*'
     headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
