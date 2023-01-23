@@ -75,6 +75,12 @@ class ShopController < ApplicationController
   end
 
   public def preview
+
+    headers['Access-Control-Allow-Origin'] = '*'
+    headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
+    headers['Access-Control-Request-Method'] = '*'
+    headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+
     @path = Rails.root.to_s + '/storage/' + params[:shop_id] + '/' + params[:template_id]
     unless File.directory?(@path)
       content_not_found
