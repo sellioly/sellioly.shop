@@ -29,7 +29,8 @@ class StoreController < ApplicationController
     headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
     headers['Access-Control-Request-Method'] = '*'
     headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-    send_data @response.body, :type => "image/jpeg", :disposition => "inline", status: 200
+    render :text => @response.body
+    # send_data @response.body, :type => "image/jpeg", :disposition => "inline", status: 200
     # @path = Rails.root.to_s + '/storage/screenshot.jpeg'
     #
     # File.open(@path, 'rb') do |f|
