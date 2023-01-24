@@ -20,15 +20,15 @@ class StoreController < ApplicationController
 
   public def import_template
     #data
-    @shop_id = params[:template_id].to_i
-    @template_id = params[:shop_id].to_i
+    @shop_id = params[:shop_id].to_i
+    @template_id = params[:template_id].to_i
     @url_theme = params[:url_theme].to_s
 
     #traitement
     GetTemplateFromAwsJob.perform_later @shop_id, @template_id, @url_theme
 
     #result
-    render json: { msg: 'Wait for checking template', id: @store.id, template_path: @subpath }
+    render json: { msg: 'Wait for checking template', template_path: @subpath }
   end
   public def publish_template
     #data

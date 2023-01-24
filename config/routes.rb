@@ -23,6 +23,4 @@ Rails.application.routes.draw do
     get '/', action: 'index', controller: 'shop'
     get '/*path', action: 'page', controller: 'shop'
   end
-
-  # end
 end
