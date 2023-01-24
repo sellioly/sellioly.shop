@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
   constraints host: 'shop.sellioly.com' do
     post 'api/store/create', action: 'create', controller: 'store'
-    post 'api/import/template', action: 'import_template', controller: 'store'
-    post 'api/publish/template', action: 'publish_template', controller: 'store'
+    post 'api/template/import', action: 'import_template', controller: 'store'
+    post 'api/template/publish', action: 'publish_template', controller: 'store'
     get '/', action: 'not_found', controller: 'shop'
     get '/*path', action: 'not_found', controller: 'shop'
   end
