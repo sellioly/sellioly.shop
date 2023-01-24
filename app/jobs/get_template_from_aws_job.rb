@@ -67,43 +67,43 @@ class GetTemplateFromAwsJob < ApplicationJob
 
         zipfile.glob('assets/*.css').each do
         |entry|
-          entry.extract(@path + '/assets/' + entry.name)
+          entry.extract(@path + '/' + entry.name)
         end
 
         zipfile.glob('assets/*.js').each do
         |entry|
-          entry.extract(@path + '/assets/' + entry.name)
+          entry.extract(@path + '/' + entry.name)
         end
 
         zipfile.glob('config/*.json').each do
         |entry|
           next unless %w[settings_templates.json settings_data.json settings_schema.json].include? entry.name
-          entry.extract(@path + '/config/' + entry.name)
+          entry.extract(@path + '/' + entry.name)
         end
 
         zipfile.glob('layout/*.liquid').each do
         |entry|
-          entry.extract(@path + '/layout/' + entry.name)
+          entry.extract(@path + '/' + entry.name)
         end
 
         zipfile.glob('locales/*.json').each do
         |entry|
-          entry.extract(@path + '/locales/' + entry.name)
+          entry.extract(@path + '/' + entry.name)
         end
 
         zipfile.glob('schemas/*.json').each do
         |entry|
-          entry.extract(@path + '/schemas/' + entry.name)
+          entry.extract(@path + '/' + entry.name)
         end
 
         zipfile.glob('snippets/*.liquid').each do
         |entry|
-          entry.extract(@path + '/snippets/' + entry.name)
+          entry.extract(@path + '/' + entry.name)
         end
 
         zipfile.glob('templates/*.liquid').each do
         |entry|
-          entry.extract(@path + '/templates/' + entry.name)
+          entry.extract(@path + '/' + entry.name)
         end
 
         file = File.read(@path + '/config/settings_schema.json')
