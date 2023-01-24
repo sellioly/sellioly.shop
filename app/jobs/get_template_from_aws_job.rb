@@ -1,3 +1,5 @@
+require "zip"
+
 class GetTemplateFromAwsJob < ApplicationJob
   queue_as :default
 
