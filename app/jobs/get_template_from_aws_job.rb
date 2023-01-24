@@ -104,8 +104,15 @@ class GetTemplateFromAwsJob < ApplicationJob
           entry.extract(@path + '/templates/' + entry.name)
         end
 
+        file = File.read(@path + '/config/settings_schema.json')
+        @data = JSON.load file
+        @theme_name = @data[0]['theme_name']
+        @theme_version = @data[0]['theme_version']
+        @theme_author = @data[0]['theme_author']
+        @theme_support_url = @data[0]['theme_support_url']
+
         @response = HTTP.post("https://api.sellioly.com/server/template/verify/success",
-                              :form => { 'shop_id' => shop_id, 'template_id' => template_id, template_path: @sub_path })
+                              :form => { 'shop_id' => shop_id, 'template_id' => template_id, 'template_path' => @sub_path, 'theme_name' => @theme_name, 'theme_version' => @theme_version, 'theme_author' => @theme_author, 'theme_support_url' => @theme_support_url })
       else
         @response = HTTP.post("https://api.sellioly.com/server/template/verify/failed",
                               :form => { 'shop_id' => shop_id, 'template_id' => template_id, 'reason' => @error })
