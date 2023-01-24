@@ -28,7 +28,7 @@ class StoreController < ApplicationController
     GetTemplateFromAwsJob.perform_later @shop_id, @template_id, @url_theme
 
     #result
-    render json: { msg: 'Wait for checking template', template_path: @subpath }
+    render json: { msg: 'Wait for checking template'}
   end
   public def publish_template
     #data
