@@ -65,6 +65,10 @@ class GetTemplateFromAwsJob < ApplicationJob
           FileUtils.mkdir_p(@path)
         end
 
+        unless File.directory?(@path + '/assets')
+          FileUtils.mkdir_p(@path + '/assets')
+        end
+
         zipfile.glob('assets/*.css').each do
         |entry|
           entry.extract(@path + '/' + entry.name)
@@ -75,10 +79,18 @@ class GetTemplateFromAwsJob < ApplicationJob
           entry.extract(@path + '/' + entry.name)
         end
 
+        unless File.directory?(@path + '/config')
+          FileUtils.mkdir_p(@path + '/config')
+        end
+
         zipfile.glob('config/*.json').each do
         |entry|
           next unless %w[settings_templates.json settings_data.json settings_schema.json].include? entry.name
           entry.extract(@path + '/' + entry.name)
+        end
+
+        unless File.directory?(@path + '/layout')
+          FileUtils.mkdir_p(@path + '/layout')
         end
 
         zipfile.glob('layout/*.liquid').each do
@@ -86,21 +98,33 @@ class GetTemplateFromAwsJob < ApplicationJob
           entry.extract(@path + '/' + entry.name)
         end
 
+        unless File.directory?(@path + '/locales')
+          FileUtils.mkdir_p(@path + '/locales')
+        end
         zipfile.glob('locales/*.json').each do
         |entry|
           entry.extract(@path + '/' + entry.name)
         end
 
+        unless File.directory?(@path + '/schemas')
+          FileUtils.mkdir_p(@path + '/schemas')
+        end
         zipfile.glob('schemas/*.json').each do
         |entry|
           entry.extract(@path + '/' + entry.name)
         end
 
+        unless File.directory?(@path + '/snippets')
+          FileUtils.mkdir_p(@path + '/snippets')
+        end
         zipfile.glob('snippets/*.liquid').each do
         |entry|
           entry.extract(@path + '/' + entry.name)
         end
 
+        unless File.directory?(@path + '/templates')
+          FileUtils.mkdir_p(@path + '/templates')
+        end
         zipfile.glob('templates/*.liquid').each do
         |entry|
           entry.extract(@path + '/' + entry.name)
