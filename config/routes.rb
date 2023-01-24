@@ -1,12 +1,13 @@
 Rails.application.routes.draw do
   constraints host: 'shop.sellioly.com' do
     post 'api/store/create', action: 'create', controller: 'store'
+    post 'api/import/template', action: 'import_template', controller: 'store'
+    post 'api/publish/template', action: 'publish_template', controller: 'store'
     get '/', action: 'not_found', controller: 'shop'
     get '/*path', action: 'not_found', controller: 'shop'
   end
 
   constraints host: 'preview.sellioly.com' do
-    get '/screenshots/:shop_id/:template_id', action: 'preview', controller: 'store'
     get '/preview/:shop_id/:template_id', action: 'preview', controller: 'shop'
     get '/files/1/:shop_id/:template_id/assets/:filename', to: 'shop#file_assets', constraints: { filename: /[^\/]+/ }
   end

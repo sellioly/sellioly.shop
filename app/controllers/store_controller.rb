@@ -15,26 +15,36 @@ class StoreController < ApplicationController
 
     # upload local file template  /app/storage/63/28/config/settings_schema.json
 
-    render json: { msg: 'Template in progress', id: @store.id, template_path: @subpath}
+    render json: { msg: 'Template in progress', id: @store.id, template_path: @subpath }
   end
 
-  public def preview
-    @width = params[:w].to_s
-    @height = params[:h].to_s
-    @resize_width = params[:rw].to_s
-    @resize_height = params[:rh].to_s
-    @response = Faraday.get("https://node-api.sellioly.com/api/screenshot/take-screenshot?url=https://preview.sellioly.com/preview/" + params[:shop_id].to_s + "/" + params[:template_id].to_s + '&w=' + @width + '&h=' + @height + '&rw=' + @resize_width + '&rh=' + @resize_height)
+  public def import_template
+    #data
+    @shop_id = params[:template_id].to_i
+    @template_id = params[:shop_id].to_i
+    @url_theme = params[:url_theme].to_s
 
-    headers['Access-Control-Allow-Origin'] = '*'
-    headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
-    headers['Access-Control-Request-Method'] = '*'
-    headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-    abort @response.body.inspect
-    # send_data @response.body, :type => "image/jpeg", :disposition => "inline", status: 200
-    # @path = Rails.root.to_s + '/storage/screenshot.jpeg'
-    #
-    # File.open(@path, 'rb') do |f|
-    #   send_data f.read, :type => "image/jpeg", :disposition => "inline", status: 200
-    # end
+    #traitement
+    GetTemplateFromAwsJob.perform_later @shop_id, @template_id, @url_theme
+
+    #result
+    render json: { msg: 'Wait for checking template', id: @store.id, template_path: @subpath }
+  end
+  public def publish_template
+    #data
+    @shop_id = params[:shop_id].to_i
+    @template_id = params[:template_id].to_i
+    @domain = params[:app_domain].to_s
+
+    #traitement
+    @store = Store.where(app_domain: @domain).first
+    @store.template_id = params[:template_id].to_i
+    @store.shop_id = params[:shop_id].to_i
+    @sub_path = "/storage/" + @store.shop_id.to_s + "/" + @store.template_id.to_s
+    @store.template_path = @sub_path
+    @store.save
+
+    #result
+    render json: { msg: 'template has been published', id: @store.id, template_path: @sub_path }
   end
 end
