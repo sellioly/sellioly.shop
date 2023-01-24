@@ -24,6 +24,7 @@ gem "redis", "~> 4.0"
 gem 'faraday'
 
 gem 'zip'
+gem 'rubyzip'
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
