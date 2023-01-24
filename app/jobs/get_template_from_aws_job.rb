@@ -135,16 +135,16 @@ class GetTemplateFromAwsJob < ApplicationJob
         @theme_author = @data[0]['theme_author']
         @theme_support_url = @data[0]['theme_support_url']
 
-        @response = HTTP.post("https://api.sellioly.com/server/template/verify/success",
-                              :form => { 'shop_id' => shop_id, 'template_id' => template_id, 'template_path' => @sub_path, 'theme_name' => @theme_name, 'theme_version' => @theme_version, 'theme_author' => @theme_author, 'theme_support_url' => @theme_support_url })
+        @response = HTTP.post("https://api.sellioly.com/server/template-uploaded/success",
+                              :form => { 'user_id' => shop_id, 'template_id' => template_id, 'template_path' => @sub_path, 'theme_name' => @theme_name, 'theme_version' => @theme_version, 'theme_author' => @theme_author, 'theme_support_url' => @theme_support_url })
       else
-        @response = HTTP.post("https://api.sellioly.com/server/template/verify/failed",
-                              :form => { 'shop_id' => shop_id, 'template_id' => template_id, 'reason' => @error })
+        @response = HTTP.post("https://api.sellioly.com/server/template-uploaded/failed",
+                              :form => { 'user_id' => shop_id, 'template_id' => template_id, 'reason' => @error })
       end
     else
       @error = ['Cannot open your zip file!']
-      @response = HTTP.post("https://api.sellioly.com/server/template/verify/failed",
-                            :form => { 'shop_id' => shop_id, 'template_id' => template_id, 'reason' => @error })
+      @response = HTTP.post("https://api.sellioly.com/server/template-uploaded/failed",
+                            :form => { 'user_id' => shop_id, 'template_id' => template_id, 'reason' => @error })
     end
   end
 end
