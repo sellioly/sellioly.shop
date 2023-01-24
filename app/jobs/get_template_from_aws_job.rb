@@ -5,7 +5,7 @@ class GetTemplateFromAwsJob < ApplicationJob
     @response = Faraday.get(url_theme)
 
     @zip_buffer = @response.body
-    zipfile = Zip::File.open_buffer(@zip_buffer)
+    zipfile = ::Zip::File.open_buffer(@zip_buffer)
     if zipfile
       @error = []
       settings_templates = zipfile.find_entry("config/settings_templates.json")
