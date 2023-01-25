@@ -42,6 +42,10 @@ class ShopController < ApplicationController
           }
         end
         args['section'] = { 'settings' => section_settings, 'blocks' => section_blocks }
+        unless File.file? @path + '/sections/' + section_data['type'] + '.liquid'
+          render json: ['message' => 'could not found sections/' + section_data['type'] + '.liquid file missing!']
+          return
+        end
         @template = Liquid::Template.parse(File.read(@path + '/sections/' + section_data['type'] + '.liquid'))
         @test = @template.render!(args)
         @content_for_layout += @test
@@ -127,6 +131,11 @@ class ShopController < ApplicationController
           }
         end
         args['section'] = { 'settings' => section_settings, 'blocks' => section_blocks }
+
+        unless File.file? @path + '/sections/' + section_data['type'] + '.liquid'
+          render json: ['message' => 'could not found sections/' + section_data['type'] + '.liquid file missing!']
+          return
+        end
         @template = Liquid::Template.parse(File.read(@path + '/sections/' + section_data['type'] + '.liquid'))
         @test = @template.render!(args)
         @content_for_layout += @test
