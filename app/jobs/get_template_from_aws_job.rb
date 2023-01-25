@@ -47,6 +47,11 @@ class GetTemplateFromAwsJob < ApplicationJob
         @error.push('schemas folder is missing!')
       end
 
+      section_folder = zipfile.find_entry("sections")
+      unless section_folder
+        @error.push('sections folder is missing!')
+      end
+
       snippets_folder = zipfile.find_entry("snippets")
       unless snippets_folder
         @error.push('snippets folder is missing!')
@@ -107,6 +112,14 @@ class GetTemplateFromAwsJob < ApplicationJob
         unless File.directory?(@path + '/schemas')
           FileUtils.mkdir_p(@path + '/schemas')
           zipfile.glob('schemas/*.json').each do
+          |entry|
+            entry.extract(@path + '/' + entry.name)
+          end
+        end
+
+        unless File.directory?(@path + '/sections')
+          FileUtils.mkdir_p(@path + '/sections')
+          zipfile.glob('sections/*.liquid').each do
           |entry|
             entry.extract(@path + '/' + entry.name)
           end
