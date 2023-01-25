@@ -43,7 +43,8 @@ class ShopController < ApplicationController
         end
         args['section'] = { 'settings' => section_settings, 'blocks' => section_blocks }
         unless File.file? @path + '/sections/' + section_data['type'] + '.liquid'
-          abort 'could not found sections/' + section_data['type'] + '.liquid file missing!'
+          render text: 'could not found sections/' + section_data['type'] + '.liquid file missing!', status: 400
+          return
         end
         @template = Liquid::Template.parse(File.read(@path + '/sections/' + section_data['type'] + '.liquid'))
         @test = @template.render!(args)
@@ -67,7 +68,7 @@ class ShopController < ApplicationController
       return
     end
 
-    $shop_id =  params[:shop_id]
+    $shop_id = params[:shop_id]
     $template_id = params[:template_id]
 
     unless File.exist?(@path + '/assets/' + params[:filename])
@@ -94,7 +95,7 @@ class ShopController < ApplicationController
       return
     end
 
-    $shop_id =  params[:shop_id]
+    $shop_id = params[:shop_id]
     $template_id = params[:template_id]
 
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
@@ -132,7 +133,8 @@ class ShopController < ApplicationController
         args['section'] = { 'settings' => section_settings, 'blocks' => section_blocks }
 
         unless File.file? @path + '/sections/' + section_data['type'] + '.liquid'
-          abort 'could not found sections/' + section_data['type'] + '.liquid file missing!'
+          render text:  'could not found sections/' + section_data['type'] + '.liquid file missing!', status: 400
+          return
         end
         @template = Liquid::Template.parse(File.read(@path + '/sections/' + section_data['type'] + '.liquid'))
         @test = @template.render!(args)
