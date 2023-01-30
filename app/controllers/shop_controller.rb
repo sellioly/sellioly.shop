@@ -47,7 +47,7 @@ class ShopController < ApplicationController
           return
         end
         @template = Liquid::Template.parse(File.read(@path + '/sections/' + section_data['type'] + '.liquid'))
-        @test = @template.render!(args)
+        @test = @template.render(args)
         @content_for_layout += @test
       }
     end
@@ -57,7 +57,7 @@ class ShopController < ApplicationController
     @origin = request.base_url
     args['content_for_layout'] = @content_for_layout
     args['request'] = { 'origin' => @origin }
-    @test = @template.render!(args)
+    @test = @template.render(args)
     render html: @test.html_safe
     return
   end
@@ -139,7 +139,7 @@ class ShopController < ApplicationController
           return
         end
         @template = Liquid::Template.parse(File.read(@path + '/sections/' + section_data['type'] + '.liquid'))
-        @test = @template.render!(args)
+        @test = @template.render(args)
         @content_for_layout += @test
       }
     end
@@ -149,7 +149,7 @@ class ShopController < ApplicationController
     @origin = request.base_url
     args['content_for_layout'] = @content_for_layout
     args['request'] = { 'origin' => @origin }
-    @test = @template.render!(args)
+    @test = @template.render(args)
     render html: @test.html_safe
     return
   end
