@@ -59,6 +59,7 @@ class ShopController < ApplicationController
     args['request'] = { 'origin' => @origin }
     @test = @template.render!(args)
     render html: @test.html_safe
+    return
   end
 
   def file_assets()
@@ -76,6 +77,7 @@ class ShopController < ApplicationController
     end
     expires_in 24.hours, :public => true
     render file: @path + '/assets/' + params[:filename], status: 200
+    return
   end
 
   def not_found
@@ -149,10 +151,12 @@ class ShopController < ApplicationController
     args['request'] = { 'origin' => @origin }
     @test = @template.render!(args)
     render html: @test.html_safe
+    return
   end
 
   public def page
     render text: 'other page'
+    return
   end
 
   public def product
