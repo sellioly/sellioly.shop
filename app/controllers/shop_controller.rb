@@ -154,7 +154,6 @@ class ShopController < ApplicationController
   public def page
     render text: 'other page'
   end
-
   public def product
     # code here
   end
