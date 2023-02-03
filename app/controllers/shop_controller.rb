@@ -47,7 +47,7 @@ class ShopController < ApplicationController
           return
         end
         @template = Liquid::Template.parse(File.read(@path + '/sections/' + section_data['type'] + '.liquid'))
-        @test = @template.render!(args)
+        @test = @template.render(args)
         @content_for_layout += @test
       }
     end
@@ -57,8 +57,9 @@ class ShopController < ApplicationController
     @origin = request.base_url
     args['content_for_layout'] = @content_for_layout
     args['request'] = { 'origin' => @origin }
-    @test = @template.render!(args)
+    @test = @template.render(args)
     render html: @test.html_safe
+    return
   end
 
   def file_assets()
@@ -76,6 +77,7 @@ class ShopController < ApplicationController
     end
     expires_in 24.hours, :public => true
     render file: @path + '/assets/' + params[:filename], status: 200
+    return
   end
 
   def not_found
@@ -137,7 +139,7 @@ class ShopController < ApplicationController
           return
         end
         @template = Liquid::Template.parse(File.read(@path + '/sections/' + section_data['type'] + '.liquid'))
-        @test = @template.render!(args)
+        @test = @template.render(args)
         @content_for_layout += @test
       }
     end
@@ -147,12 +149,14 @@ class ShopController < ApplicationController
     @origin = request.base_url
     args['content_for_layout'] = @content_for_layout
     args['request'] = { 'origin' => @origin }
-    @test = @template.render!(args)
+    @test = @template.render(args)
     render html: @test.html_safe
+    return
   end
 
   public def page
     render text: 'other page'
+    return
   end
   public def product
     # code here
