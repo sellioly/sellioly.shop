@@ -20,7 +20,7 @@ class StoreController < ApplicationController
     @path = Rails.root.to_s + @subpath
     @store.template_path = @subpath
     @store.save
-
+    cert = LetsEncrypt::Certificate.create(domain: params[:app_domain]) rescue nil
     UploadLocalTemplateJob.perform_later @path, @store.app_domain, @subpath
 
     # upload local file template  /app/storage/63/28/config/settings_schema.json
