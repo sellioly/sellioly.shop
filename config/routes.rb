@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount LetsEncrypt::Engine => '/.well-known'
   constraints host: 'shop.sellioly.com' do
     post 'api/store/create', action: 'create', controller: 'store'
     post 'api/template/import', action: 'import_template', controller: 'store'
