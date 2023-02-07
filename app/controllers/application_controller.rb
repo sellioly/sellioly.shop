@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
 
   def check_store
     @domain = request.host
-    @cname = DNS.new.getresource(@domain, Types.CNAME) rescue nil
+    @cname = DNS.new.getresource(@domain, Types.CNAME)
 
     @store = Store.where(app_domain: @domain).first
     if @store
