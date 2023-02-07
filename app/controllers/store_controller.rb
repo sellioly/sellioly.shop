@@ -1,4 +1,8 @@
 class StoreController < ApplicationController
+  public def generate_ssl()
+    cert = LetsEncrypt::Certificate.create(domain: params[:app_domain])
+    cert.get # alias  `verify && issue`
+  end
   public def create
     # code here
     @store = Store.new({})
