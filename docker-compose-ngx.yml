@@ -5,6 +5,7 @@ services:
     restart: always
     volumes:
       - nginx_conf:/usr/local/nginx/conf
+      - other_nginx_conf:/etc/nginx
       - nginx_hook:/usr/local/nginx/hook
     ports:
       - "80:80"
