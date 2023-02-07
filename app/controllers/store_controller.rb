@@ -2,7 +2,11 @@ class StoreController < ApplicationController
   public def generate_ssl()
     cert = LetsEncrypt::Certificate.create(domain: params[:app_domain])
     # alias  `verify && issue`
-    render :json => {:msg =>  cert.get.verify }
+    if cert.get.verify
+      render :json => { :msg => 'OK' }
+    else
+      render :json => { :msg => 'NOT OK' }
+    end
     return
   end
   public def create
@@ -25,24 +29,24 @@ class StoreController < ApplicationController
   end
 
   public def import_template
-    #data
+    # data
     @shop_id = params[:shop_id].to_i
     @template_id = params[:template_id].to_i
     @url_theme = params[:url_theme].to_s
 
-    #traitement
+    # traitement
     GetTemplateFromAwsJob.perform_later @shop_id, @template_id, @url_theme
 
-    #result
-    render json: { msg: 'Wait for checking template'}
+    # result
+    render json: { msg: 'Wait for checking template' }
   end
   public def publish_template
-    #data
+    # data
     @shop_id = params[:shop_id].to_i
     @template_id = params[:template_id].to_i
     @domain = params[:app_domain].to_s
 
-    #traitement
+    # traitement
     @store = Store.where(app_domain: @domain).first
     @store.template_id = params[:template_id].to_i
     @store.shop_id = params[:shop_id].to_i
@@ -50,7 +54,7 @@ class StoreController < ApplicationController
     @store.template_path = @sub_path
     @store.save
 
-    #result
+    # result
     render json: { msg: 'template has been published', id: @store.id, template_path: @sub_path }
   end
 end
