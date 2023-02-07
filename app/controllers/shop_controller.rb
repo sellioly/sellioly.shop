@@ -29,7 +29,7 @@ class ShopController < ApplicationController
     args = {}
     args['logo'] = @logo
     args['shop_name'] = @shop_name
-    args['page_title'] = 'HOME - ' + @shop_name
+    args['page_title'] = "HOME - #{@shop_name}"
     args['shop_description'] = @shop_description
     if data["order"].kind_of?(Array)
       data["order"].each { |section_id|
@@ -120,7 +120,7 @@ class ShopController < ApplicationController
     args = {}
     args['logo'] = @logo
     args['shop_name'] = @shop_name
-    args['page_title'] = 'HOME - ' + @shop_name
+    args['page_title'] = "HOME - #{@shop_name}"
     args['shop_description'] = @shop_description
     if data["order"].kind_of?(Array)
       data["order"].each { |section_id|
