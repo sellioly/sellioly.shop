@@ -12,7 +12,10 @@ class ApplicationController < ActionController::Base
 
   def check_store
     @domain = request.host
-    @cname = Resolv::DNS.new.getresource(@domain, 5)
+    @cname = Resolv::DNS.new.getresource(@domain, Resolv::DNS::Resource::IN::CNAME) rescue nil
+    if @cname
+      @domain = @cname.name.to_s
+    end
 
     @store = Store.where(app_domain: @domain).first
     if @store
