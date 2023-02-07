@@ -18,6 +18,8 @@ services:
 volumes:
   nginx_conf:
     driver: local
+  other_nginx_conf:
+    driver: local
   nginx_hook:
     driver: local
 
