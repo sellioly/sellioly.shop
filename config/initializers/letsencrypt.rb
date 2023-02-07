@@ -1,7 +1,7 @@
 LetsEncrypt.config do |config|
   # Using Let's Encrypt staging server or not
   # Default only `Rails.env.production? == true` will use Let's Encrypt production server.
-  config.use_staging = true
+  config.use_staging = false
 
   # Set the private key path
   # Default is locate at config/letsencrypt.key
@@ -15,12 +15,11 @@ LetsEncrypt.config do |config|
   # Should sync certificate into redis
   # When using ngx_mruby to dynamic load certificate, this will be helpful
   # Default is false
-  config.save_to_redis = false
+  config.save_to_redis = true
 
   # The redis server url
   # Default is nil
   config.redis_url = ENV['REDIS_CABLE_URL']
-  config.save_to_redis = true
 
   # Enable it if you want to customize the model
   # Default is LetsEncrypt::Certificate
