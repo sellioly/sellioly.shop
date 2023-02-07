@@ -1,7 +1,7 @@
 version: '2'
 services:
   ngx:
-    image: classi/ngx_mruby:2.2.4
+    image: ngx-2020:1.0
     restart: always
     volumes:
       - nginx_conf:/usr/local/nginx/conf
