@@ -6,6 +6,9 @@ services:
     volumes:
       - nginx_conf:/usr/local/nginx/conf
       - nginx_hook:/usr/local/nginx/hook
+    ports:
+      - "80:80"
+      - "443:443"
     external_links:
       - sellioly-redis-1:redis
       - sellioly-app-1:ruby_app
