@@ -1,7 +1,7 @@
 version: '2'
 services:
   ngx:
-    image: matsumotory/ngx_mruby:master
+    image: classi/ngx_mruby
     restart: always
     volumes:
       - nginx_conf:/usr/local/nginx/conf
