@@ -2,7 +2,8 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 
   def content_not_found
-    render file: "#{Rails.root}/public/404.html", layout: true, status: :not_found
+    # render file: "#{Rails.root}/public/404.html", layout: true, status: :not_found
+    render  json: {domain: 'not found! ' + @domain + ' ' + @cname}
   end
 
   def internal_server_error
@@ -11,9 +12,9 @@ class ApplicationController < ActionController::Base
 
   def check_store
     @domain = request.host
-    cname = DNS.new.getresource(@domain, Types.CNAME) rescue nil
-    if cname
-      @domain = cname.name.to_s
+    @cname = DNS.new.getresource(@domain, Types.CNAME) rescue nil
+    if @cname
+      @domain = @cname.name.to_s
     end
 
     @store = Store.where(app_domain: @domain).first
