@@ -1,0 +1,23 @@
+version: '2'
+services:
+  ngx:
+    image: matsumotory/ngx_mruby:master
+    restart: always
+    volumes:
+      - nginx_conf:/usr/local/nginx/conf
+      - nginx_hook:/usr/local/nginx/hook
+    external_links:
+      - sellioly-redis-1:redis
+      - sellioly-app-1:ruby_app
+    networks:
+      - web
+volumes:
+  nginx_conf:
+    driver: local
+  nginx_hook:
+    driver: local
+
+networks:
+  web:
+    external:
+      name: sellioly_default
