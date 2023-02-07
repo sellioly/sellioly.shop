@@ -20,6 +20,7 @@ LetsEncrypt.config do |config|
   # The redis server url
   # Default is nil
   config.redis_url = 'redis://localhost:6379/1'
+  config.save_to_redis = true
 
   # Enable it if you want to customize the model
   # Default is LetsEncrypt::Certificate
