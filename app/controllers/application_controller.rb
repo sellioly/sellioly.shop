@@ -11,7 +11,14 @@ class ApplicationController < ActionController::Base
 
   def check_store
     @domain = request.host
-    @store = Store.where(app_domain: @domain).first
+    cname = DNS.new.getresource(@domain, Types.CNAME) rescue nil
+    @store = Store.where(app_domain: @domain)
+    if cname
+      cname = cname.name.to_s
+      @store = @store.or.where(app_domain: cname)
+    end
+
+    @store  = @store.first
     if @store
       $shop_id = @store.shop_id
       $template_id = @store.template_id
