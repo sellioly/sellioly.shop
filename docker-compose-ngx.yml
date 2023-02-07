@@ -1,7 +1,7 @@
 version: '2'
 services:
   ngx:
-    image: classi/ngx_mruby
+    image: yano3/nginx-ngx_mruby
     restart: always
     volumes:
       - nginx_conf:/usr/local/nginx/conf
