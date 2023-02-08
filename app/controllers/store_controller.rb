@@ -3,6 +3,7 @@ class StoreController < ApplicationController
     cert = LetsEncrypt::Certificate.create(domain: params[:app_domain])
     # alias  `verify && issue`
     if cert.get
+      LetsEncrypt::RenewCertificatesJob.perform_later
       render :json => { :msg => 'OK' }
     else
       render :json => { :msg => 'NOT OK' }
@@ -14,6 +15,7 @@ class StoreController < ApplicationController
     cert = LetsEncrypt::Certificate.find_by(domain: params[:app_domain])
     # alias  `verify && issue`
     if cert.renew
+      LetsEncrypt::RenewCertificatesJob.perform_later
       render :json => { :msg => 'OK' }
     else
       render :json => { :msg => 'NOT OK' }
@@ -45,6 +47,8 @@ class StoreController < ApplicationController
     @store.save
     cert = LetsEncrypt::Certificate.create(domain: params[:app_domain]) rescue nil
     cert.get if cert
+
+    LetsEncrypt::RenewCertificatesJob.perform_later
     UploadLocalTemplateJob.perform_later @path, @store.app_domain, @subpath
 
     # upload local file template  /app/storage/63/28/config/settings_schema.json
