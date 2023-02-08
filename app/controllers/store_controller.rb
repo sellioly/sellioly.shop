@@ -11,9 +11,21 @@ class StoreController < ApplicationController
   end
 
   public def renew_ssl()
-    cert = LetsEncrypt::Certificate.create(domain: params[:app_domain])
+    cert = LetsEncrypt::Certificate.find_by(domain: params[:app_domain])
     # alias  `verify && issue`
     if cert.renew
+      render :json => { :msg => 'OK' }
+    else
+      render :json => { :msg => 'NOT OK' }
+    end
+    return
+  end
+
+
+  public def verify_ssl()
+    cert = LetsEncrypt::Certificate.find_by(domain: params[:app_domain])
+    # alias  `verify && issue`
+    if cert.verify
       render :json => { :msg => 'OK' }
     else
       render :json => { :msg => 'NOT OK' }
