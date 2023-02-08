@@ -1,22 +1,5 @@
 version: '2'
 services:
-  ngx:
-    image: ngx-2020:1.0
-    restart: always
-    volumes:
-      - nginx_conf:/usr/local/nginx/conf
-      - other_nginx_conf:/etc/nginx
-      - nginx_hook:/usr/local/nginx/hook
-    ports:
-      - "80:80"
-      - "443:443"
-    links:
-      - redis
-      - app:ruby_app
-    depends_on:
-      - app
-      - redis
-
 
   db_mysql:
     image: mysql:8.0
