@@ -59,6 +59,12 @@ services:
     links:
       - redis
       - app:ruby_app
+    environment:
+      DB_USER: sellioly
+      DB_NAME: sellioly_development
+      DB_PASSWORD: sellioly
+      DB_HOST: db_mysql
+      redis: redis
     depends_on:
       - worker
 
