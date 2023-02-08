@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   mount LetsEncrypt::Engine => '/.well-known'
   constraints host: 'shop.sellioly.com' do
     get 'api/ssl/publish', action: 'generate_ssl', controller: 'store'
+    get 'api/ssl/renew', action: 'renew_ssl', controller: 'store'
     post 'api/store/create', action: 'create', controller: 'store'
     post 'api/template/import', action: 'import_template', controller: 'store'
     post 'api/template/publish', action: 'publish_template', controller: 'store'
