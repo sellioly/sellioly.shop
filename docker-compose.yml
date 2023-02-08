@@ -1,6 +1,5 @@
 version: '2'
 services:
-
   db_mysql:
     image: mysql:8.0
     restart: always
@@ -13,14 +12,13 @@ services:
       - mysql_db_data_container:/var/lib/mysql
       - mysqld_data_container:/var/run/mysqld
 
-
   redis:
     image: redis:alpine
 
   app: &app_base
     build: .
     restart: always
-    command:  bash -c "rm /app/tmp/pids && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     volumes:
       - sellioly:/app
       - mysqld_data_container:/var/run/mysqld
@@ -39,7 +37,6 @@ services:
       REDIS_CABLE_URL: redis://redis:6379/1
       REDIS_CACHE_URL: redis://redis:6379/2
 
-
   worker:
     <<: *app_base
     command: bundle exec sidekiq -C config/sidekiq.yml
@@ -49,6 +46,21 @@ services:
     depends_on:
       - app
 
+  ngx:
+    image: ngx-2020:1.0
+    restart: always
+    volumes:
+      - nginx_conf:/usr/local/nginx/conf
+      - other_nginx_conf:/etc/nginx
+      - nginx_hook:/usr/local/nginx/hook
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - redis
+      - app:ruby_app
+    depends_on:
+      - app
 
 volumes:
   nginx_conf:
