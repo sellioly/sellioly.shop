@@ -21,6 +21,7 @@ class StoreController < ApplicationController
     @store.template_path = @subpath
     @store.save
     cert = LetsEncrypt::Certificate.create(domain: params[:app_domain]) rescue nil
+    cert.get if cert
     UploadLocalTemplateJob.perform_later @path, @store.app_domain, @subpath
 
     # upload local file template  /app/storage/63/28/config/settings_schema.json
