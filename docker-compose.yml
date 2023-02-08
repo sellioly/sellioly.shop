@@ -60,7 +60,7 @@ services:
       - redis
       - app:ruby_app
     depends_on:
-      - app
+      - worker
 
 volumes:
   nginx_conf:
