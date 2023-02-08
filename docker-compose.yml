@@ -16,6 +16,8 @@ services:
     depends_on:
       - app
       - redis
+
+
   db_mysql:
     image: mysql:8.0
     restart: always
@@ -27,6 +29,7 @@ services:
     volumes:
       - mysql_db_data_container:/var/lib/mysql
       - mysqld_data_container:/var/run/mysqld
+
 
   redis:
     image: redis:alpine
@@ -52,6 +55,8 @@ services:
       REDIS_SIDEKIQ_URL: redis://redis:6379/0
       REDIS_CABLE_URL: redis://redis:6379/1
       REDIS_CACHE_URL: redis://redis:6379/2
+
+
   worker:
     <<: *app_base
     command: bundle exec sidekiq -C config/sidekiq.yml
@@ -60,6 +65,8 @@ services:
       - redis
     depends_on:
       - app
+
+
 volumes:
   nginx_conf:
     driver: local
