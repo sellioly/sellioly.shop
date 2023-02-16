@@ -6,7 +6,7 @@ class StoreController < ApplicationController
       LetsEncrypt::RenewCertificatesJob.perform_later
       render :json => { :msg => 'OK' }
     else
-      render :json => { :msg => 'NOT OK' }
+      render :json => { :msg => 'NOT OK' }, status: 400
     end
     return
   end
@@ -18,7 +18,7 @@ class StoreController < ApplicationController
       LetsEncrypt::RenewCertificatesJob.perform_later
       render :json => { :msg => 'OK' }
     else
-      render :json => { :msg => 'NOT OK' }
+      render :json => { :msg => 'NOT OK' }, status: 400
     end
     return
   end
@@ -28,9 +28,9 @@ class StoreController < ApplicationController
     cert = LetsEncrypt::Certificate.find_by(domain: params[:app_domain])
     # alias  `verify && issue`
     if cert.verify
-      render :json => { :msg => 'OK' }
+      render :json => { :msg => 'OK' }, status: 200
     else
-      render :json => { :msg => 'NOT OK' }
+      render :json => { :msg => 'NOT OK' }, status: 400
     end
     return
   end
