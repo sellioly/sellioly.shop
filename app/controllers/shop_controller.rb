@@ -135,7 +135,7 @@ class ShopController < ApplicationController
         args['section'] = { 'settings' => section_settings, 'blocks' => section_blocks }
 
         unless File.file? @path + '/sections/' + section_data['type'] + '.liquid'
-          render plain:  'could not found sections/' + section_data['type'] + '.liquid file missing!', status: 400
+          render plain: 'could not found sections/' + section_data['type'] + '.liquid file missing!', status: 400
           return
         end
         @template = Liquid::Template.parse(File.read(@path + '/sections/' + section_data['type'] + '.liquid'))
@@ -155,14 +155,18 @@ class ShopController < ApplicationController
   end
 
   public def page
-    render text: 'other page'
+    render :text => 'this part will be available so soon!', status: 404
     return
   end
   public def product
     # code here
+    not_found
+    return
   end
 
   public def collection
     # code here
+    not_found
+    return
   end
 end
