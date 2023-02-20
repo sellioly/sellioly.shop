@@ -155,7 +155,7 @@ class ShopController < ApplicationController
   end
 
   public def page
-    render :text => 'this part will be available so soon!', status: 404
+    render :html => 'this part will be available so soon!', status: 404
     return
   end
   public def product
