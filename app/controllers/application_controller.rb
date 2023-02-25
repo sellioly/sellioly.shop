@@ -4,10 +4,12 @@ class ApplicationController < ActionController::Base
   def content_not_found
     render file: "#{Rails.root}/public/404.html", layout: true, status: :not_found
     # render  json: {domain: "not found! #{@domain}  #{@cname.inspect}"}
+    true
   end
 
   def internal_server_error
     render file: "#{Rails.root}/public/500.html", layout: true, status: :not_found
+    true
   end
 
   def check_store
@@ -18,12 +20,12 @@ class ApplicationController < ActionController::Base
       @response = HTTP.post("https://api.sellioly.com/server/domain/verify", :form => { 'domain' => @domain, 'app_domain' => @cname })
       unless @response.status.success?
         content_not_found
-        head(404)
+        return false
       end
       @domain = @cname
     elsif not (@domain =~ /^[A-za-z0-9-.]+.sellioly.com$/)
       content_not_found
-      head(404)
+      return false
     end
 
     @store = Store.where(app_domain: @domain).first
@@ -31,5 +33,7 @@ class ApplicationController < ActionController::Base
       $shop_id = @store.shop_id
       $template_id = @store.template_id
     end
+
+    true
   end
 end

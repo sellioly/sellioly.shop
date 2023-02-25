@@ -2,7 +2,10 @@ class ShopController < ApplicationController
   protect_from_forgery except: :file_assets
 
   def index
-    check_store
+    unless check_store
+      return
+    end
+
     unless @store
       content_not_found
       return
@@ -73,15 +76,11 @@ class ShopController < ApplicationController
     $template_id = params[:template_id]
 
     unless File.exist?(@path + '/assets/' + params[:filename])
-      not_found
+      content_not_found
+      return
     end
     expires_in 24.hours, :public => true
     render file: @path + '/assets/' + params[:filename], status: 200
-    return
-  end
-
-  def not_found
-    content_not_found
   end
 
   public def preview
@@ -151,22 +150,18 @@ class ShopController < ApplicationController
     args['request'] = { 'origin' => @origin }
     @test = @template.render(args)
     render html: @test.html_safe
-    return
   end
 
   public def page
     render :html => 'this part will be available so soon!', status: 404
-    return
   end
   public def product
     # code here
     not_found
-    return
   end
 
   public def collection
     # code here
     not_found
-    return
   end
 end

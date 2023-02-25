@@ -8,7 +8,6 @@ class StoreController < ApplicationController
     else
       render :json => { :msg => 'NOT OK' }, status: 400
     end
-    return
   end
 
   public def renew_ssl()
@@ -20,7 +19,6 @@ class StoreController < ApplicationController
     else
       render :json => { :msg => 'NOT OK' }, status: 400
     end
-    return
   end
 
 
@@ -32,7 +30,6 @@ class StoreController < ApplicationController
     else
       render :json => { :msg => 'NOT OK' }, status: 400
     end
-    return
   end
   public def create
     # code here
