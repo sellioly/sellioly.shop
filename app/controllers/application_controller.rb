@@ -14,7 +14,6 @@ class ApplicationController < ActionController::Base
     @domain = request.host
     @cname = Resolv::DNS.new.getresource(@domain, Resolv::DNS::Resource::IN::CNAME) rescue nil
     if @cname
-      @domain = @cname.name.to_s
       @cname = @cname.name.to_s
     end
 
@@ -22,6 +21,10 @@ class ApplicationController < ActionController::Base
     unless @response.status.success?
       content_not_found
       return
+    end
+
+    if @cname
+      @domain = @cname.name.to_s
     end
 
     @store = Store.where(app_domain: @domain).first
