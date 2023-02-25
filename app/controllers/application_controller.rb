@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
     end
 
     if @cname
-      @domain = @cname.name.to_s
+      @domain = @cname
     end
 
     @store = Store.where(app_domain: @domain).first
