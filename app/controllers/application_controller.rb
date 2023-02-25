@@ -15,6 +15,13 @@ class ApplicationController < ActionController::Base
     @cname = Resolv::DNS.new.getresource(@domain, Resolv::DNS::Resource::IN::CNAME) rescue nil
     if @cname
       @domain = @cname.name.to_s
+      @cname = @cname.name.to_s
+    end
+
+    @response = HTTP.post("https://api.sellioly.com/server/domain/verify", :form => { 'domain' => @domain, 'app_domain' => @cname })
+    unless @response.status.success?
+      content_not_found
+      return
     end
 
     @store = Store.where(app_domain: @domain).first
