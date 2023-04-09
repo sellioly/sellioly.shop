@@ -1,6 +1,9 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    acme-client (2.0.13)
+      faraday (>= 1.0, < 3.0.0)
+      faraday-retry (>= 1.0, < 3.0.0)
     actioncable (7.0.4)
       actionpack (= 7.0.4)
       activesupport (= 7.0.4)
@@ -91,6 +94,12 @@ GEM
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     erubi (1.12.0)
+    faraday (2.7.4)
+      faraday-net_http (>= 2.0, < 3.1)
+      ruby2_keywords (>= 0.0.4)
+    faraday-net_http (3.0.2)
+    faraday-retry (2.0.0)
+      faraday (~> 2.0)
     ffi (1.15.5-x64-mingw-ucrt)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
@@ -172,6 +181,10 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.4.4)
       loofah (~> 2.19, >= 2.19.1)
+    rails-letsencrypt (0.10.1)
+      acme-client (~> 2.0.0)
+      rails (>= 5.0)
+      redis
     railties (7.0.4)
       actionpack (= 7.0.4)
       activesupport (= 7.0.4)
@@ -187,6 +200,7 @@ GEM
     reline (0.3.2)
       io-console (~> 0.5)
     rexml (3.2.5)
+    ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
     selenium-webdriver (4.7.1)
       rexml (~> 3.2, >= 3.2.5)
@@ -237,6 +251,7 @@ DEPENDENCIES
   bootsnap
   capybara
   debug
+  faraday
   http (~> 5.1)
   jbuilder
   json-schema
@@ -244,7 +259,9 @@ DEPENDENCIES
   mysql2 (~> 0.5.4)
   puma (~> 5.0)
   rails (~> 7.0.4)
+  rails-letsencrypt
   redis (~> 4.0)
+  rubyzip
   selenium-webdriver
   sidekiq (~> 7.0)
   sprockets-rails
