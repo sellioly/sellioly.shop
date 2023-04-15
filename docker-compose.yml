@@ -10,7 +10,6 @@ services:
       MYSQL_PASSWORD: sellioly
     volumes:
       - mysql_db_data_container:/var/lib/mysql
-      - mysqld_data_container:/var/run/mysqld
 
   redis:
     image: redis:alpine
