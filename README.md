@@ -1,24 +1,9 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+after install project should generate from this site
 
-Things you may want to cover:
+https://www.ssl.com/online-csr-and-key-generator/
 
-* Ruby version
+and image should build and for ngx_mruby from this repo
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+https://github.com/matsumotory/ngx_mruby

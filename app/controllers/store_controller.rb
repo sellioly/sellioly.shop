@@ -82,4 +82,28 @@ class StoreController < ApplicationController
     # result
     render json: { msg: 'template has been published', id: @store.id, template_path: @sub_path }
   end
+  public
+
+  def request_template_page
+    # code here
+    @shop_id = params[:shop_id].to_s
+    @template_id = params[:template_id].to_s
+    @request_page = params[:page].to_s
+    @sub_path = "/storage/" + @shop_id + "/" + @template_id
+    @path = Rails.root.to_s + @sub_path
+
+    file = File.read(@path + '/templates/' + @request_page + '.json')
+    data = JSON.load file
+    forms = []
+    data["order"].each { |section_id|
+      section_data = data["sections"][section_id]
+      if File.file? @path + '/schemas/' + section_data['type'] + '.json'
+        file = File.read( @path + '/schemas/' + section_data['type'] + '.json')
+        data = JSON.load file
+        forms.push(data)
+      end
+    }
+
+    render json: { sections: data, forms: forms }
+  end
 end

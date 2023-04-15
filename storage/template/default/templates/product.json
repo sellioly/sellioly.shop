@@ -1,0 +1,259 @@
+{
+  "sections": {
+    "information-product": {
+      "type": "information-product",
+      "blocks": {
+        "galleries-product": {
+          "type": "product-images",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-08.jpg",
+            "discount": 20,
+            "price": 29.00,
+            "price_before_discount": 39.00,
+            "title": "Facial cleanser",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-1": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-02.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Bio-shroom Rejuvenating Serum",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-2": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-03.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Coffee Bean Caffeine Eye Cream",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-3": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-04.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Facial mousse cleanser",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-4": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-05.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Glowing",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-5": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-06.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Cream Glowing",
+            "rating": 5,
+            "reviews": 2947
+          }
+        }
+      },
+      "block_order": [
+        "product-0",
+        "product-1",
+        "product-2",
+        "product-3",
+        "product-4",
+        "product-5"
+      ],
+      "settings": {
+        "direction": "ltr",
+        "title": "Shop our Feature products",
+        "sub_title": "Made using clean, non-toxic ingredients, our products are designed for everyone.",
+        "collection_image": "https://www.twelab.it/images/instagram-04.jpg",
+        "collection_top_heading": "Essenstial Items",
+        "collection_heading": "Empower Yourself",
+        "collection_link_text": "Explore More",
+        "collection_link": "#"
+      }
+    },
+    "similar-products": {
+      "type": "similar-products",
+      "blocks": {
+        "product-0": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-01.jpg",
+            "discount": 20,
+            "price": 29.00,
+            "price_before_discount": 39.00,
+            "title": "Facial cleanser",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-1": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-02.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Bio-shroom Rejuvenating Serum",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-2": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-03.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Coffee Bean Caffeine Eye Cream",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-3": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-04.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Facial mousse cleanser",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-4": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-05.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Glowing",
+            "rating": 5,
+            "reviews": 2947
+          }
+        },
+        "product-5": {
+          "type": "product",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/product-06.jpg",
+            "discount": 0,
+            "price": 39.00,
+            "price_before_discount": 39.00,
+            "title": "Cream Glowing",
+            "rating": 5,
+            "reviews": 2947
+          }
+        }
+      },
+      "block_order": [
+        "product-0",
+        "product-1",
+        "product-2",
+        "product-3",
+        "product-4",
+        "product-5"
+      ],
+      "settings": {
+        "direction": "rtl",
+        "title": "Customer Favorite Beauty Essentials",
+        "sub_title": "Made using clean, non-toxic ingredients, our products are designed for everyone.",
+        "collection_image": "https://templates.g5plus.net/glowing/images/bg-slider-09.jpg",
+        "collection_top_heading": "Essenstial Items",
+        "collection_heading": "Empower Yourself",
+        "collection_link_text": "Explore More",
+        "collection_link": "#"
+      }
+    },
+    "customer-reviews": {
+      "type": "customer-reviews",
+      "blocks": {
+        "banner-0": {
+          "type": "banner",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/client-logo-01.png",
+            "text": "Millions of combinations, meaning you get a totally unique piece of furniture exactly the way you want it."
+          }
+        },
+        "banner-1": {
+          "type": "banner",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/client-logo-02.png",
+            "text": "Great tags, Millie has got used to it, nothing like the old tin tags of years gone by. Light weight and great colours available."
+          }
+        },
+        "banner-2": {
+          "type": "banner",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/client-logo-03.png",
+            "text": "Amazing product. The results are so transformative in texture and my face feels plump and healthy. Highly recommend!"
+          }
+        },
+        "banner-3": {
+          "type": "banner",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/client-logo-04.png",
+            "text": "Millions of combinations, meaning you get a totally unique piece of furniture exactly the way you want it."
+          }
+        },
+        "banner-4": {
+          "type": "banner",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/client-logo-05.png",
+            "text": "Great tags, Millie has got used to it, nothing like the old tin tags of years gone by. Light weight and great colours available."
+          }
+        },
+        "banner-5": {
+          "type": "banner",
+          "settings": {
+            "image": "https://templates.g5plus.net/glowing/images/client-logo-06.png",
+            "text": "Amazing product. The results are so transformative in texture and my face feels plump and healthy. Highly recommend!"
+          }
+        }
+      },
+      "block_order": [
+        "banner-0",
+        "banner-1",
+        "banner-2",
+        "banner-3",
+        "banner-4",
+        "banner-5"
+      ],
+      "settings": {
+        "background_color": "#EDF1F0"
+      }
+    }
+  },
+  "order": [
+    "slideshow",
+    "featured-products-0",
+    "banner-brand",
+    "featured-products-1",
+    "product-benefits"
+  ]
+}
