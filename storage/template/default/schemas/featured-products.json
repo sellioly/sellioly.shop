@@ -1,0 +1,116 @@
+{
+  "name": "Amazing product featured",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "direction",
+      "label": "Direction",
+      "options": [
+        {
+          "value": "rtl",
+          "label": "Right to left"
+        },
+        {
+          "value": "ltr",
+          "label": "Left to right"
+        }
+      ],
+      "default": "ltr"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": ""
+    },
+    {
+      "type": "text",
+      "id": "sub_title",
+      "label": "Sub title",
+      "default": ""
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection",
+      "default": "uncategorized"
+    },
+    {
+      "type": "image-picker",
+      "id": "collection_image",
+      "label": "Collection image",
+      "default": "https://www.twelab.it/images/instagram-04.jpg"
+    },
+    {
+      "type": "text",
+      "id": "collection_top_heading",
+      "label": "Collection top heading",
+      "default": ""
+    },
+    {
+      "type": "text",
+      "id": "collection_heading",
+      "label": "Collection heading",
+      "default": ""
+    },
+    {
+      "type": "text",
+      "id": "collection_link_text",
+      "label": "Collection link text",
+      "default": ""
+    },
+    {
+      "type": "url",
+      "id": "collection_link",
+      "label": "Collection link",
+      "default": ""
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "t:sections.image-banner.blocks.heading.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Image banner",
+          "label": "t:sections.image-banner.blocks.heading.settings.heading.label"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "default": "Image banner",
+          "label": "t:sections.image-banner.blocks.heading.settings.heading.label"
+        },
+        {
+          "type": "richtext",
+          "id": "description",
+          "default": "h1",
+          "label": "t:sections.all.heading_size.label"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "default": "h1",
+          "label": "t:sections.all.heading_size.label"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "default": "h1",
+          "label": "t:sections.all.heading_size.label"
+        },
+        {
+          "type": "image-picker",
+          "id": "image",
+          "default": "h1",
+          "label": "t:sections.all.heading_size.label"
+        }
+      ]
+    }
+  ]
+}

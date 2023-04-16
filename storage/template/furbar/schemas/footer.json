@@ -1,0 +1,12 @@
+{
+  "name": "Footer",
+  "class": "section-footer",
+  "settings": [
+    {
+      "type": "rich-text",
+      "id": "copyright",
+      "default": "",
+      "label": "Copy right"
+    }
+  ]
+}

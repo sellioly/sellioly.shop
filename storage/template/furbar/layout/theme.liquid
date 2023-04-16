@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>{{ page_title | capitalize }}</title>
+    <meta name="robots" content="noindex, follow" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.png" />
+
+    <!-- CSS
+	============================================ -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css">
+    <!-- Icon Font CSS -->
+    {{ 'pe-icon-7-stroke.css' | asset_url | stylesheet_tag }}
+    {{ 'font-awesome.min.css' | asset_url | stylesheet_tag }}
+    {{ 'bootstrap.min.css' | asset_url | stylesheet_tag }}
+    {{ 'animate.min.css' | asset_url | stylesheet_tag }}
+    {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
+    {{ 'odometer.min.css' | asset_url | stylesheet_tag }}
+    {{ 'select2.min.css' | asset_url | stylesheet_tag }}
+    {{ 'ion.rangeSlider.min.css' | asset_url | stylesheet_tag }}
+    {{ 'style.min.css' | asset_url | stylesheet_tag }}
+
+    {{ content_for_header }}
+</head>
+
+
+<body>
+
+{% include 'sections/header' %}
+
+
+
+{{ content_for_layout }}
+
+
+
+{% include 'sections/footer' %}
+
+
+<!--Back To Start-->
+<button id="backBtn" class="back-to-top"><i class="pe-7s-angle-up"></i></button>
+<!--Back To End-->
+
+<!-- JS
+============================================ -->
+
+<script>
+    window.shopUrl = '{{ request.origin }}';
+</script>
+<script src="{{ 'modernizr-3.11.2.min.js' | asset_url }}"></script>
+<script src="{{ 'jquery-3.5.1.min.js' | asset_url }}"></script>
+<script src="{{ 'bootstrap.min.js' | asset_url }}"></script>
+<script src="{{ 'swiper-bundle.min.js' | asset_url }}"></script>
+<script src="{{ 'ajax-contact.js' | asset_url }}"></script>
+<script src="{{ 'odometer.min.js' | asset_url }}"></script>
+<script src="{{ 'select2.min.js' | asset_url }}"></script>
+<script src="{{ 'ion.rangeSlider.min.js' | asset_url }}"></script>
+<script src="{{ 'jquery.zoom.min.js' | asset_url }}"></script>
+<script src="{{ 'main.js' | asset_url }}"></script>
+
+{{ content_for_footer }}
+
+</body>
+
+</html>
