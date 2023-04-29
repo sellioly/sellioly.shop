@@ -107,7 +107,7 @@ class GetTemplateFromAwsJob < ApplicationJob
           FileUtils.mkdir_p(@path + '/config')
           zipfile.glob('config/*.json').each do
           |entry|
-            next unless %w[config/settings_templates.json config/settings_data.json config/settings_schema.json].include? entry.name
+            next unless %w[config/settings_templates.json config/settings_theme.json config/settings_data.json config/settings_schema.json].include? entry.name
             entry.extract(@path + '/' + entry.name)
           end
         end
