@@ -84,6 +84,18 @@ class GetTemplateFromAwsJob < ApplicationJob
           end
         end
 
+        unless File.directory?(@path + '/assets/fonts')
+          FileUtils.mkdir_p(@path + '/assets/fonts')
+          extentions = %w[eot ttf woff woff2]
+
+          extentions.each do |ext|
+            zipfile.glob('assets/*.' + ext).each do
+            |entry|
+              entry.extract(@path + '/' + entry.name)
+            end
+          end
+        end
+
         unless File.directory?(@path + '/config')
           FileUtils.mkdir_p(@path + '/config')
           zipfile.glob('config/*.json').each do

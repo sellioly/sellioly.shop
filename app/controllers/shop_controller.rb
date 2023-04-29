@@ -83,6 +83,24 @@ class ShopController < ApplicationController
     render file: @path + '/assets/' + params[:filename], status: 200
   end
 
+  def file_font_assets()
+    @path = Rails.root.to_s + '/storage/' + params[:shop_id] + '/' + params[:template_id]
+    unless File.directory?(@path)
+      content_not_found
+      return
+    end
+
+    $shop_id = params[:shop_id]
+    $template_id = params[:template_id]
+
+    unless File.exist?(@path + '/assets/fonts/' + params[:filename])
+      content_not_found
+      return
+    end
+    expires_in 24.hours, :public => true
+    render file: @path + '/assets/fonts/' + params[:filename], status: 200
+  end
+
   public def preview
 
     headers['Access-Control-Allow-Origin'] = '*'

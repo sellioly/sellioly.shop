@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     get '/collections/:collection', action: 'collection', controller: 'shop'
     get '/products/:product', action: 'product', controller: 'shop'
     get '/files/1/:shop_id/:template_id/assets/:filename', to: 'shop#file_assets', constraints: { filename: /[^\/]+/ }
+    get '/files/1/:shop_id/:template_id/assets/fonts/:filename', to: 'shop#file_font_assets', constraints: { filename: /[^\/]+/ }
     # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
     # Defines the root path route ("/")
