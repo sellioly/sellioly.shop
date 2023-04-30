@@ -347,4 +347,37 @@ class ShopController < ApplicationController
     render html: @test.html_safe
     return
   end
+
+
+
+
+
+  # def get_global_store_args
+  #   @response = HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'app_domain' => @domain })
+  #   unless (@response.status.success?)
+  #     internal_server_error
+  #     return
+  #   end
+  #
+  #   @data = @response.parse
+  #   @shop_name = @data['shop_name']
+  #   @currency = @data['currency']
+  #   @shop_description = @data['shop_description']
+  #   @logo = (@data['shop_logo_default'])
+  #
+  #   args = {}
+  #   args['logo'] = @logo
+  #   args['shop_name'] = @shop_name
+  #   args['currency'] = @currency
+  #   args['page_title'] = "HOME - #{@shop_name}"
+  #   args['shop_description'] = @shop_description
+  #
+  #   @response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => 'main-menu', 'user_id' => $shop_id })
+  #   args['menu'] = nil
+  #   if @response.status.success?
+  #     args['menu'] = @response.parse
+  #   end
+  #
+  #   return args
+  # end
 end
