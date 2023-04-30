@@ -33,7 +33,7 @@ class ShopController < ApplicationController
     args['logo'] = @logo
     args['shop_name'] = @shop_name
 
-    @response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => 'main-menu', 'user_id' => $shop_id  })
+    @response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => 'main-menu', 'user_id' => $shop_id, 'app_domain' => @domain })
     args['menu'] = nil
     if @response.status.success?
       args['menu'] = @response.parse
@@ -143,8 +143,7 @@ class ShopController < ApplicationController
     @logo = (@data['shop_logo_default'])
     args = {}
 
-
-    @response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => 'main-menu', 'user_id' => $shop_id  })
+    @response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => 'main-menu', 'user_id' => $shop_id })
     args['menu'] = nil
     if @response.status.success?
       args['menu'] = @response.parse
@@ -222,12 +221,12 @@ class ShopController < ApplicationController
     args['logo'] = @logo
     args['shop_name'] = @shop_name
 
-    @response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => 'main-menu', 'user_id' => $shop_id  })
+    @response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => 'main-menu', 'user_id' => $shop_id, 'app_domain' => @domain })
     args['menu'] = nil
     if @response.status.success?
       args['menu'] = @response.parse
     end
-    @response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => params[:product], 'user_id' => $shop_id  })
+    @response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => params[:product], 'user_id' => $shop_id, 'app_domain' => @domain })
     args['product'] = nil
     if @response.status.success?
       args['product'] = @response.parse
@@ -298,15 +297,22 @@ class ShopController < ApplicationController
     args['logo'] = @logo
     args['shop_name'] = @shop_name
 
-    @response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => 'main-menu', 'user_id' => $shop_id  })
+    @response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => 'main-menu', 'user_id' => $shop_id, 'app_domain' => @domain })
     args['menu'] = nil
     if @response.status.success?
       args['menu'] = @response.parse
     end
-    @response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => params[:collection], 'user_id' => $shop_id  })
+    @response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => params[:collection], 'user_id' => $shop_id, 'app_domain' => @domain })
     args['collection'] = nil
     if @response.status.success?
       args['collection'] = @response.parse
+    end
+
+
+    @response = HTTP.post("https://api.sellioly.com/server/product/get-by-collection", :form => { 'handle' => params[:collection], 'user_id' => $shop_id, 'app_domain' => @domain })
+    args['products'] = nil
+    if @response.status.success?
+      args['products'] = @response.parse
     end
     args['currency'] = @currency
     args['page_title'] = "HOME - #{@shop_name}"
