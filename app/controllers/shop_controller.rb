@@ -306,14 +306,14 @@ class ShopController < ApplicationController
     args['collection'] = nil
     if @response.status.success?
       args['collection'] = @response.parse
+      @response = HTTP.post("https://api.sellioly.com/server/product/get-by-collection", :form => { 'handle' => params[:collection], 'user_id' => $shop_id, 'app_domain' => @domain })
+      args['collection']['products'] = nil
+      if @response.status.success?
+        args['collection']['products'] = @response.parse
+      end
     end
 
 
-    @response = HTTP.post("https://api.sellioly.com/server/product/get-by-collection", :form => { 'handle' => params[:collection], 'user_id' => $shop_id, 'app_domain' => @domain })
-    args['products'] = nil
-    if @response.status.success?
-      args['products'] = @response.parse
-    end
     args['currency'] = @currency
     args['page_title'] = "HOME - #{@shop_name}"
     args['shop_description'] = @shop_description
