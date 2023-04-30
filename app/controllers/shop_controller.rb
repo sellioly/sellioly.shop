@@ -32,6 +32,12 @@ class ShopController < ApplicationController
     args = {}
     args['logo'] = @logo
     args['shop_name'] = @shop_name
+
+    @response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => 'main-menu', 'user_id' => $shop_id  })
+    args['menu'] = nil
+    if @response.status.success?
+      args['menu'] = @response.parse
+    end
     args['currency'] = @currency
     args['page_title'] = "HOME - #{@shop_name}"
     args['shop_description'] = @shop_description
@@ -136,6 +142,14 @@ class ShopController < ApplicationController
     @shop_description = @data['shop_description']
     @logo = (@data['shop_logo_default'])
     args = {}
+
+
+    @response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => 'main-menu', 'user_id' => $shop_id  })
+    args['menu'] = nil
+    if @response.status.success?
+      args['menu'] = @response.parse
+    end
+
     args['logo'] = @logo
     args['shop_name'] = @shop_name
     args['currency'] = @currency
