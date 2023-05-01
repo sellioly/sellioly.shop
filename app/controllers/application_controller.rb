@@ -65,8 +65,8 @@ class ApplicationController < ActionController::Base
       args['menu'] = @response.parse
     end
 
-    @template = Liquid::Template.parse(File.read(@path + '/sections/notfound.liquid'))
-    @content_for_layout += @template.render(args)
+    @not_found_page = Liquid::Template.parse(File.read(@path + '/sections/notfound.liquid'))
+    @content_for_layout = @not_found_page.render(args)
 
 
     @template = Liquid::Template.parse(File.read(@path + '/layout/theme.liquid')) # Parses and compiles the template
