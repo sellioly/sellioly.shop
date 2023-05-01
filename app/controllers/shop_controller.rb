@@ -297,16 +297,16 @@ class ShopController < ApplicationController
     args['logo'] = @logo
     args['shop_name'] = @shop_name
 
-    @response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => 'main-menu', 'user_id' => $shop_id, 'app_domain' => @domain })
+    @response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => 'main-menu',  'app_domain' => @domain })
     args['menu'] = nil
     if @response.status.success?
       args['menu'] = @response.parse
     end
-    @response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => params[:collection], 'user_id' => $shop_id, 'app_domain' => @domain })
+    @response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => params[:collection],  'app_domain' => @domain })
     args['collection'] = nil
     if @response.status.success?
       args['collection'] = @response.parse
-      @response = HTTP.post("https://api.sellioly.com/server/product/get-by-collection", :form => { 'handle' => params[:collection], 'user_id' => $shop_id, 'app_domain' => @domain })
+      @response = HTTP.post("https://api.sellioly.com/server/product/get-by-collection", :form => { 'handle' => params[:collection], 'app_domain' => @domain })
       args['collection']['products'] = nil
       if @response.status.success?
         args['collection']['products'] = @response.parse
