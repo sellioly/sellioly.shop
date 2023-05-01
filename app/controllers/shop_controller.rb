@@ -135,15 +135,15 @@ class ShopController < ApplicationController
     @content_for_layout = ''
     file = File.read(@path + '/templates/index.json')
     data = JSON.load file
-
     @data = @response.parse
+    @domain = @data['app_domain']
     @shop_name = @data['shop_name']
     @currency = @data['currency']
     @shop_description = @data['shop_description']
     @logo = (@data['shop_logo_default'])
     args = {}
 
-    @response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => 'main-menu', 'user_id' => $shop_id })
+    @response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => 'main-menu', 'app_domain' => @domain })
     args['menu'] = nil
     if @response.status.success?
       args['menu'] = @response.parse
@@ -186,7 +186,7 @@ class ShopController < ApplicationController
   end
 
   public def page
-    render :html => 'this part will be available so soon!', status: 404
+    page_not_found
   end
 
   public def product
