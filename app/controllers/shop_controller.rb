@@ -186,6 +186,16 @@ class ShopController < ApplicationController
   end
 
   public def page
+
+    unless check_store
+      return
+    end
+
+    unless @store
+      content_not_found
+      return
+    end
+
     page_not_found
   end
 
