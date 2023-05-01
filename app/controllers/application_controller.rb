@@ -36,4 +36,46 @@ class ApplicationController < ActionController::Base
 
     true
   end
+  
+  def page_not_found
+    @path = Rails.root.to_s + @store.template_path.to_s
+    Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
+
+    @response = HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'app_domain' => @domain })
+    unless (@response.status.success?)
+      internal_server_error
+      return
+    end
+
+    @data = @response.parse
+    @shop_name = @data['shop_name']
+    @currency = @data['currency']
+    @shop_description = @data['shop_description']
+    @logo = (@data['shop_logo_default'])
+    args = {}
+    args['logo'] = @logo
+    args['shop_name'] = @shop_name
+    args['currency'] = @currency
+    args['page_title'] = "HOME - #{@shop_name}"
+    args['shop_description'] = @shop_description
+
+    @response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => 'main-menu', 'user_id' => $shop_id, 'app_domain' => @domain })
+    args['menu'] = nil
+    if @response.status.success?
+      args['menu'] = @response.parse
+    end
+
+    @template = Liquid::Template.parse(File.read(@path + '/sections/notfound.liquid'))
+    @content_for_layout += @template.render(args)
+
+
+    @template = Liquid::Template.parse(File.read(@path + '/layout/theme.liquid')) # Parses and compiles the template
+    @origin = request.base_url
+    args['content_for_layout'] = @content_for_layout
+    args['request'] = { 'origin' => @origin }
+    @test = @template.render(args)
+    render html: @test.html_safe
+    return
+  end
+
 end

@@ -283,10 +283,6 @@ class ShopController < ApplicationController
       internal_server_error
       return
     end
-    @content_for_layout = ''
-
-    file = File.read(@path + '/templates/collection.json')
-    data = JSON.load file
 
     @data = @response.parse
     @shop_name = @data['shop_name']
@@ -296,27 +292,34 @@ class ShopController < ApplicationController
     args = {}
     args['logo'] = @logo
     args['shop_name'] = @shop_name
+    args['currency'] = @currency
+    args['page_title'] = "HOME - #{@shop_name}"
+    args['shop_description'] = @shop_description
 
-    @response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => 'main-menu',  'app_domain' => @domain })
+    @response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => 'main-menu', 'user_id' => $shop_id, 'app_domain' => @domain })
     args['menu'] = nil
     if @response.status.success?
       args['menu'] = @response.parse
     end
-    @response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => params[:collection],  'app_domain' => @domain })
+
+    @response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => params[:collection], 'user_id' => $shop_id, 'app_domain' => @domain })
     args['collection'] = nil
     if @response.status.success?
       args['collection'] = @response.parse
-      @response = HTTP.post("https://api.sellioly.com/server/product/get-by-collection", :form => { 'handle' => params[:collection], 'app_domain' => @domain })
+      @response = HTTP.post("https://api.sellioly.com/server/product/get-by-collection", :form => { 'handle' => params[:collection], 'user_id' => $shop_id, 'app_domain' => @domain })
       args['collection']['products'] = nil
       if @response.status.success?
         args['collection']['products'] = @response.parse
       end
+    else
+      page_not_found
+      return
     end
 
+    @content_for_layout = ''
 
-    args['currency'] = @currency
-    args['page_title'] = "HOME - #{@shop_name}"
-    args['shop_description'] = @shop_description
+    file = File.read(@path + '/templates/collection.json')
+    data = JSON.load file
     if data["order"].kind_of?(Array)
       data["order"].each { |section_id|
         section_data = data["sections"][section_id]
