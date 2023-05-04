@@ -29,8 +29,8 @@ module ShopFilter
     %(<a href="#{url}" title="#{title}">#{link}</a>)
   end
 
-  def img_tag(url, alt = "")
-    %(<img src="#{url}" alt="#{alt}" />)
+  def img_tag(url, alt = "", className = "")
+    %(<img src="#{url}" alt="#{alt}" class="#{className}" />)
   end
 
   def link_to_vendor(vendor)
@@ -78,12 +78,12 @@ module ShopFilter
 
     paginate['parts'].each do |part|
       html << if part['is_link']
-        %(<span class="page">#{link_to(part['title'], part['url'])}</span>)
-      elsif part['title'].to_i == paginate['current_page'].to_i
-        %(<span class="page current">#{part['title']}</span>)
-      else
-        %(<span class="deco">#{part['title']}</span>)
-      end
+                %(<span class="page">#{link_to(part['title'], part['url'])}</span>)
+              elsif part['title'].to_i == paginate['current_page'].to_i
+                %(<span class="page current">#{part['title']}</span>)
+              else
+                %(<span class="deco">#{part['title']}</span>)
+              end
     end
 
     html << %(<span class="next">#{link_to(paginate['next']['title'], paginate['next']['url'])}</span>) if paginate['next']
