@@ -21,6 +21,10 @@ module ShopFilter
     %(<link href="#{url}" rel="stylesheet" type="text/css"  media="#{media}"  />)
   end
 
+  def favicon_tag(url, media = "all", type = "image/png")
+    %(<link href="#{url}" rel="icon" type="#{type}"  media="#{media}"  />)
+  end
+
   def link_to(link, url, title = "")
     %(<a href="#{url}" title="#{title}">#{link}</a>)
   end
