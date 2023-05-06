@@ -17,6 +17,11 @@ module ShopFilter
     %(<script src="#{url}" type="text/javascript"></script>)
   end
 
+
+  def icon_tag(iconClass)
+    %(<i class="#{iconClass}" ></i>)
+  end
+
   def stylesheet_tag(url, media = "all")
     %(<link href="#{url}" rel="stylesheet" type="text/css"  media="#{media}"  />)
   end
