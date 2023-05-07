@@ -1,6 +1,6 @@
 class CartController < ApplicationController
   public def add
-    if !params[:cart_id].present? && !params[:quantity].present?
+    if !params[:cart_id].present? || !params[:quantity].present?
       render json: { error: 'Bad Request' }, status: :bad_request
     end
 
