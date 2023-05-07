@@ -1,6 +1,6 @@
 class Cart < ApplicationRecord
   self.table_name = 'cart'
 
-  serialize :preferences, JSON
+  serialize :items, JSON
 
 end
