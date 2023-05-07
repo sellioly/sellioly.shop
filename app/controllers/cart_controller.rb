@@ -5,11 +5,14 @@ class CartController < ApplicationController
 
     cart = Cart.find_by(cart_id: cart_id)
     if cart
-      cart.items.push({
+      updatedItems = cart.items
+
+      updatedItems.push({
         variant_id: params[:variant_id],
         title: params[:title],
       })
-
+      
+      cart.items = updatedItems
       cart.save
     else
       cart = Cart.new({})
@@ -20,7 +23,7 @@ class CartController < ApplicationController
           title: params[:title],
         }
       ]
-
+      
       cart.save
     end
 
