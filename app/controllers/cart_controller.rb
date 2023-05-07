@@ -25,8 +25,7 @@ class CartController < ApplicationController
           option2: {
             name: "size",
             value: "M"
-          },
-          option3: null
+          }
         }
       })
       
@@ -50,8 +49,7 @@ class CartController < ApplicationController
             option2: {
               name: "size",
               value: "M"
-            },
-            option3: null
+            }
           }
         }
       ]
