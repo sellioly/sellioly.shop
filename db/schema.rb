@@ -10,15 +10,39 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_08_141850) do
-  create_table "stores", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
-    t.string "app_domain"
-    t.string "template_path"
+ActiveRecord::Schema[7.0].define(version: 2023_05_07_092334) do
+  create_table "cart", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "cart_id"
+    t.text "items"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "template", charset: "utf8mb4", collation: "utf8mb4_general_ci", force: :cascade do |t|
+  create_table "letsencrypt_certificates", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "domain"
+    t.text "certificate"
+    t.text "intermediaries"
+    t.text "key"
+    t.datetime "expires_at"
+    t.datetime "renew_after"
+    t.string "verification_path"
+    t.string "verification_string"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["domain"], name: "index_letsencrypt_certificates_on_domain"
+    t.index ["renew_after"], name: "index_letsencrypt_certificates_on_renew_after"
+  end
+
+  create_table "stores", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "app_domain"
+    t.string "template_path"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "template_id"
+    t.bigint "shop_id"
+  end
+
+  create_table "template", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.string "path"
     t.datetime "created_at", null: false
