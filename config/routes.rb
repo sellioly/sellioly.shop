@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     post 'api/template/publish', action: 'publish_template', controller: 'store'
     post 'api/template/:page', action: 'request_template_page', controller: 'store'
     post 'api/cart/add', action: 'add', controller: 'cart'
-    post 'api/cart/list', action: 'list', controller: 'cart'
+    get 'api/cart/list', action: 'list', controller: 'cart'
     get '/', action: 'not_found', controller: 'shop'
     get '/*path', action: 'not_found', controller: 'shop'
   end
