@@ -11,7 +11,7 @@ class CartController < ApplicationController
         variant_id: params[:variant_id],
         title: params[:title],
       })
-      
+
       cart.items = updatedItems.to_json
       cart.save
     else
@@ -28,6 +28,6 @@ class CartController < ApplicationController
       cart.save
     end
 
-    render json: cart
+    render json: { cart_id: cart.cart_id, items: JSON.parse(cart.items)}
   end
 end
