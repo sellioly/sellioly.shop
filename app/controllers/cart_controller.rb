@@ -61,7 +61,18 @@ class CartController < ApplicationController
     render json: cart
   end
 
-  public def list
-    render json: Cart.all
+  public def get
+    if !params[:cart_id].present?
+      render json: { error: 'Bad Request' }, status: :bad_request
+      return 
+    end
+
+    cart = Cart.find_by(cart_id: params[:cart_id])
+    if cart.nil?
+      render json: { error: 'Bad Request' }, status: :bad_request
+      return  
+    end
+
+    render json: cart
   end
 end
