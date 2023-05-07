@@ -5,7 +5,7 @@ class CartController < ApplicationController
 
     cart = Cart.find_by(cart_id: cart_id)
     if cart
-      updatedItems = JSON.parse(cart.items)
+      updatedItems = cart.items
 
       updatedItems.push({
         variant_id: params[:variant_id],
