@@ -8,6 +8,7 @@ Rails.application.routes.draw do
     post 'api/template/import', action: 'import_template', controller: 'store'
     post 'api/template/publish', action: 'publish_template', controller: 'store'
     post 'api/template/:page', action: 'request_template_page', controller: 'store'
+    post 'api/cart/add', action: 'add', controller: 'cart'
     get '/', action: 'not_found', controller: 'shop'
     get '/*path', action: 'not_found', controller: 'shop'
   end
@@ -21,6 +22,7 @@ Rails.application.routes.draw do
   constraints lambda { |req| req.host != 'shop.sellioly.com' &&  req.host != 'preview.sellioly.com' } do
     get '/collections/:collection', action: 'collection', controller: 'shop'
     get '/products/:product', action: 'product', controller: 'shop'
+    # get '/products/:checkout', action: 'checkout', controller: 'shop'
     get '/files/1/:shop_id/:template_id/assets/:filename', to: 'shop#file_assets', constraints: { filename: /[^\/]+/ }
     get '/files/1/:shop_id/:template_id/assets/fonts/:filename', to: 'shop#file_font_assets', constraints: { filename: /[^\/]+/ }
     # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
