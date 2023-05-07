@@ -5,17 +5,26 @@ class CartController < ApplicationController
 
     cart = Cart.find_by(cart_id: cart_id)
     if cart
+      updatedItems = JSON.parse(cart.items)
+
+      updatedItems.push({
+        variant_id: params[:variant_id],
+        title: params[:title],
+      })
       
+      cart.items = updatedItems.to_json
+      cart.save
     else
       cart = Cart.new({})
       cart.cart_id = cart_id
-      cart.items = [
+      newItems = [
         {
-          variant_id: 12313,
-          title: 'new product'
+          variant_id: params[:variant_id],
+          title: params[:title],
         }
       ]
 
+      cart.items = newItems.to_json
       cart.save
     end
 
