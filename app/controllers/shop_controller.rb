@@ -236,6 +236,21 @@ class ShopController < ApplicationController
     if @response.status.success?
       args['menu'] = @response.parse
     end
+
+    # get cart -------------------------------------
+    if cookies[:cart_id].present?
+      cart = Cart.find_by(cart_id: cookies[:cart_id])
+      if cart 
+        args['cart'] = cart
+      else
+        new_cart = Cart.new({})
+        new_cart.cart_id = cookies[:cart_id]
+        new_cart.items = []
+        new_cart.save
+        args['cart'] = new_cart
+      end
+    end
+
     @response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => params[:product], 'user_id' => $shop_id, 'app_domain' => @domain })
     args['product'] = nil
     if @response.status.success?
@@ -360,7 +375,6 @@ class ShopController < ApplicationController
     render html: @test.html_safe
     return
   end
-
 
 
 
