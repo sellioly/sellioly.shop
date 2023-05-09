@@ -236,7 +236,7 @@ class ShopController < ApplicationController
     origin = request.base_url
     @args['content_for_layout'] = @content_for_layout
     @args['request'] = { 'origin' => origin }
-    temp = template.render(args)
+    temp = template.render(@args)
     render html: temp.html_safe
     return
   end
