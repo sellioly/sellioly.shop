@@ -401,7 +401,7 @@ class ShopController < ApplicationController
     if cookies[:cart_id].present?
       cart = Cart.find_by(cart_id: cookies[:cart_id])
       if cart 
-        args['cart'] = cart
+        @args['cart'] = cart
       else
         new_cart = Cart.new({})
         new_cart.cart_id = cookies[:cart_id]
