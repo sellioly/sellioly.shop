@@ -227,7 +227,7 @@ class ShopController < ApplicationController
           return
         end
         template = Liquid::Template.parse(File.read(@path + '/sections/' + section_data['type'] + '.liquid'))
-        @content_for_layout += template.render(args)
+        @content_for_layout += template.render(@args)
       }
     end
     @args.delete('section')
