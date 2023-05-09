@@ -202,42 +202,13 @@ class ShopController < ApplicationController
   end
 
   public def product
-    file = File.read(@path + '/templates/product.json')
-    data = JSON.load file
-
     response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => params[:product], 'user_id' => $shop_id, 'app_domain' => @domain })
     @args['product'] = nil
     if response.status.success?
       @args['product'] = response.parse
     end
 
-    if data["order"].kind_of?(Array)
-      data["order"].each { |section_id|
-        section_data = data["sections"][section_id]
-        section_settings = section_data['settings']
-        section_blocks = []
-        if section_data['block_order'].kind_of?(Array)
-          section_data['block_order'].each { |block_id|
-            section_blocks.push(section_data['blocks'][block_id])
-          }
-        end
-        @args['section'] = { 'settings' => section_settings, 'blocks' => section_blocks }
-        unless File.file? @path + '/sections/' + section_data['type'] + '.liquid'
-          render plain: 'could not found sections/' + section_data['type'] + '.liquid file missing!', status: 400
-          return
-        end
-        template = Liquid::Template.parse(File.read(@path + '/sections/' + section_data['type'] + '.liquid'))
-        @content_for_layout += template.render(@args)
-      }
-    end
-    @args.delete('section')
-
-    template = Liquid::Template.parse(File.read(@path + '/layout/theme.liquid')) # Parses and compiles the template
-    origin = request.base_url
-    @args['content_for_layout'] = @content_for_layout
-    @args['request'] = { 'origin' => origin }
-    temp = template.render(@args)
-    render html: temp.html_safe
+    render_page('product.json')
     return
   end
 
@@ -410,6 +381,40 @@ class ShopController < ApplicationController
         @args['cart'] = new_cart
       end
     end
+  end
+
+  def render_page(filename)
+    file = File.read(@path + '/templates/' + filename)
+    data = JSON.load file
+
+    if data["order"].kind_of?(Array)
+      data["order"].each { |section_id|
+        section_data = data["sections"][section_id]
+        section_settings = section_data['settings']
+        section_blocks = []
+        if section_data['block_order'].kind_of?(Array)
+          section_data['block_order'].each { |block_id|
+            section_blocks.push(section_data['blocks'][block_id])
+          }
+        end
+        @args['section'] = { 'settings' => section_settings, 'blocks' => section_blocks }
+        unless File.file? @path + '/sections/' + section_data['type'] + '.liquid'
+          render plain: 'could not found sections/' + section_data['type'] + '.liquid file missing!', status: 400
+          return
+        end
+        template = Liquid::Template.parse(File.read(@path + '/sections/' + section_data['type'] + '.liquid'))
+        @content_for_layout += template.render(@args)
+      }
+    end
+    @args.delete('section')
+
+    template = Liquid::Template.parse(File.read(@path + '/layout/theme.liquid')) # Parses and compiles the template
+    origin = request.base_url
+    @args['content_for_layout'] = @content_for_layout
+    @args['request'] = { 'origin' => origin }
+    temp = template.render(@args)
+    render html: temp.html_safe
+    return
   end
 
 end
