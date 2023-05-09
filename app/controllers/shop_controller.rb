@@ -203,9 +203,11 @@ class ShopController < ApplicationController
 
   public def product
     response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => params[:product], 'user_id' => $shop_id, 'app_domain' => @domain })
-    @args['product'] = nil
     if response.status.success?
       @args['product'] = response.parse
+    else
+      page_not_found
+      return
     end
 
     render_page('product.json')
