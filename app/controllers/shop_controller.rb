@@ -382,6 +382,8 @@ class ShopController < ApplicationController
         new_cart.save
         @args['cart'] = new_cart
       end
+
+      puts @args['cart']
     end
   end
 
