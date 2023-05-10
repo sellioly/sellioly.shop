@@ -12,31 +12,30 @@ class CartController < ApplicationController
     cart = Cart.find_by(cart_id: cart_id)
     if !cart
       render json: { error: 'Cart not found' }, status: :bad_request
+      return
     end
 
-    if cart
-      updatedItems = cart.items
-      updatedItems.push({
-        variant_id: variant_id,
-        quantity: quantity,
-        title: 'JACKET HOMME',
-        price: 300,
-        image_url: 'https://sellioly.s3.eu-west-3.amazonaws.com/100159510462595346/products/duPchDee4divN7OWaN34GIShN8Q9M3JO9pLJsFAM.jpg',
-        options: [
-          {
-            name: "color",
-            value: "black"
-          },
-          {
-            name: "size",
-            value: "M"
-          }
-        ]
-      })
-      
-      cart.items = updatedItems
-      cart.save
-    end
+    updatedItems = cart.items
+    updatedItems.push({
+      variant_id: variant_id,
+      quantity: quantity,
+      title: 'JACKET HOMME',
+      price: 300,
+      image_url: 'https://sellioly.s3.eu-west-3.amazonaws.com/100159510462595346/products/duPchDee4divN7OWaN34GIShN8Q9M3JO9pLJsFAM.jpg',
+      options: [
+        {
+          name: "color",
+          value: "black"
+        },
+        {
+          name: "size",
+          value: "M"
+        }
+      ]
+    })
+    
+    cart.items = updatedItems
+    cart.save
 
     render json: cart
   end
