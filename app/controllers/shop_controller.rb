@@ -74,7 +74,7 @@ class ShopController < ApplicationController
     return
   end
 
-  def file_assets()
+  def file_assets
     @path = Rails.root.to_s + '/storage/' + params[:shop_id] + '/' + params[:template_id]
     unless File.directory?(@path)
       content_not_found
@@ -92,7 +92,7 @@ class ShopController < ApplicationController
     render file: @path + '/assets/' + params[:filename], status: 200
   end
 
-  def file_font_assets()
+  def file_font_assets
     @path = Rails.root.to_s + '/storage/' + params[:shop_id] + '/' + params[:template_id]
     unless File.directory?(@path)
       content_not_found

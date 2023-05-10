@@ -1,5 +1,5 @@
 class StoreController < ApplicationController
-  public def generate_ssl()
+  public def generate_ssl
     cert = LetsEncrypt::Certificate.create(domain: params[:app_domain])
     # alias  `verify && issue`
     if cert.get
@@ -10,7 +10,7 @@ class StoreController < ApplicationController
     end
   end
 
-  public def renew_ssl()
+  public def renew_ssl
     cert = LetsEncrypt::Certificate.find_by(domain: params[:app_domain])
     # alias  `verify && issue`
     if cert.renew
@@ -22,7 +22,7 @@ class StoreController < ApplicationController
   end
 
 
-  public def verify_ssl()
+  public def verify_ssl
     cert = LetsEncrypt::Certificate.find_by(domain: params[:app_domain])
     # alias  `verify && issue`
     if cert.verify

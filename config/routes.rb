@@ -8,8 +8,6 @@ Rails.application.routes.draw do
     post 'api/template/import', action: 'import_template', controller: 'store'
     post 'api/template/publish', action: 'publish_template', controller: 'store'
     post 'api/template/:page', action: 'request_template_page', controller: 'store'
-    post 'api/cart/add', action: 'add', controller: 'cart'
-    post 'api/cart/get', action: 'get', controller: 'cart'
     get '/', action: 'not_found', controller: 'shop'
     get '/*path', action: 'not_found', controller: 'shop'
   end
@@ -21,6 +19,8 @@ Rails.application.routes.draw do
   end
 
   constraints lambda { |req| req.host != 'shop.sellioly.com' &&  req.host != 'preview.sellioly.com' } do
+    post 'api/cart/add', action: 'add', controller: 'cart'
+    post 'api/cart/get', action: 'get', controller: 'cart'
     get '/collections/:collection', action: 'collection', controller: 'shop'
     get '/products/:product', action: 'product', controller: 'shop'
     # get '/products/:checkout', action: 'checkout', controller: 'shop'

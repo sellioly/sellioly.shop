@@ -2,9 +2,9 @@ class CartController < ApplicationController
   protect_from_forgery
 
   public def add
-    if !cookies[:cart_id].present?
+    unless cookies[:cart_id].present?
       render json: { error: 'cart_id required!' }, status: :bad_request
-      return 
+      return
     end
     if !params[:variant_id].present? || !params[:quantity].present?
       render json: { error: 'variant_id and quantity required' }, status: :bad_request
@@ -16,7 +16,7 @@ class CartController < ApplicationController
     quantity = params[:quantity]
 
     cart = Cart.find_by(cart_id: cart_id)
-    if !cart
+    unless cart
       render json: { error: 'Cart not found' }, status: :bad_request
       return
     end
@@ -47,9 +47,9 @@ class CartController < ApplicationController
   end
 
   public def get
-    if !params[:cart_id].present?
+    unless params[:cart_id].present?
       render json: { error: 'Bad Request' }, status: :bad_request
-      return 
+      return
     end
 
     cart = Cart.find_by(cart_id: params[:cart_id])
