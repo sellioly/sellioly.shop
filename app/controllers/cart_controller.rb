@@ -1,7 +1,11 @@
 class CartController < ApplicationController
   public def add
-    if !params[:variant_id].present? || !params[:quantity].present? || !cookies[:cart_id].present?
-      render json: { error: 'Bad Request' }, status: :bad_request
+    if !cookies[:cart_id].present?
+      render json: { error: 'cart_id required!' }, status: :bad_request
+      return 
+    end
+    if !params[:variant_id].present? || !params[:quantity].present?
+      render json: { error: 'variant_id and quantity required' }, status: :bad_request
       return 
     end
 
