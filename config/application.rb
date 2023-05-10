@@ -14,13 +14,6 @@ Bundler.require(*Rails.groups)
 
 module Sellioly
   class Application < Rails::Application
-    use Rack::Cors do
-      allow do
-        origins '*'
-        resource '*', headers: :any, methods: :any
-      end  
-    end
-
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
     config.active_job.queue_adapter = :sidekiq
