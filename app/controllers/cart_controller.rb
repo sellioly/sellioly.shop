@@ -2,7 +2,7 @@ class CartController < ApplicationController
   protect_from_forgery
 
   public def add
-    puts cookies[:cart_id].present?
+    puts cookies[:cart_id]
 
     if !cookies[:cart_id].present?
       render json: { error: 'cart_id required!' }, status: :bad_request
