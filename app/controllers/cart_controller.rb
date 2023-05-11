@@ -1,7 +1,8 @@
 class CartController < ApplicationController
-  
+
   public def add
-    unless cookies[:cart_id].present?
+    # unless cookies[:cart_id].present?
+    unless params[:cart_id].present?
       render json: { error: 'cart_id required!' }, status: :bad_request
       return
     end
@@ -10,7 +11,7 @@ class CartController < ApplicationController
       return 
     end
 
-    cart_id = cookies[:cart_id]
+    cart_id = params[:cart_id]
     variant_id = params[:variant_id]
     quantity = params[:quantity]
 
