@@ -21,24 +21,16 @@ class CartController < ApplicationController
       return
     end
 
-    updatedItems = cart.items
-    updatedItems.push({
-      variant_id: variant_id,
-      quantity: quantity,
-      title: 'JACKET HOMME',
-      price: 300,
-      image_url: 'https://sellioly.s3.eu-west-3.amazonaws.com/100159510462595346/products/duPchDee4divN7OWaN34GIShN8Q9M3JO9pLJsFAM.jpg',
-      options: [
-        {
-          name: "color",
-          value: "black"
-        },
-        {
-          name: "size",
-          value: "M"
-        }
-      ]
-    })
+    response = HTTP.post("https://api.sellioly.com/server/product/variant/get-by-id", :form => { 'variant_id' => variant_id })
+    unless response.status.success?
+      render json: { error: 'error on getting the variant!' }, status: :bad_request
+      return
+    end
+
+    variant = response.parse
+    variant.quantity = quantity
+
+    updatedItems.push(variant)
     
     cart.items = updatedItems
     cart.save
