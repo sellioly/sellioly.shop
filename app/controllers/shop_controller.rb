@@ -332,6 +332,8 @@ class ShopController < ApplicationController
   private
 
   def initialize_shop
+    puts '--------------------- initialize_shop --------------------'
+
     unless check_store
       return
     end
