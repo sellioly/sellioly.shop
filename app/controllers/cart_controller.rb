@@ -1,6 +1,11 @@
 class CartController < ApplicationController
 
   public def add
+    unless check_store
+      return
+    end
+    @path = Rails.root.to_s + @store.template_path.to_s
+
     # unless cookies[:cart_id].present?
     unless params[:cart_id].present?
       render json: { error: 'cart_id required!' }, status: :bad_request
@@ -41,7 +46,17 @@ class CartController < ApplicationController
     cart.items = updatedItems
     cart.save
 
-    render json: cart
+    sections = {}
+
+    # render sections
+    if params[:section].kind_of?(Array)
+      params[:section].each { |section_id|
+        section = Liquid::Template.parse(File.read(@path + '/sections/' + section_id + '.liquid'))
+        sections[section_id] = section
+      }
+    end
+
+    render json: sections
   end
 
   public def get
