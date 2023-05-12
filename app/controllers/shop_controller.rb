@@ -419,4 +419,14 @@ class ShopController < ApplicationController
     return
   end
 
+  
+  def render_section(section_id)
+    unless File.file? @path + '/sections/' + section_id + '.liquid'
+      return ''
+    end
+    
+    template = Liquid::Template.parse(File.read(@path + '/sections/' + section_data['type'] + '.liquid'))
+    return template.render(@args)
+  end
+
 end

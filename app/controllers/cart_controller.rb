@@ -1,4 +1,4 @@
-class CartController < ApplicationController
+class CartController < ShopController
 
   public def add
     unless check_store
@@ -52,8 +52,7 @@ class CartController < ApplicationController
     if params[:sections].present?
       section_ids = params[:sections].split(',')
       section_ids.each { |section_id|
-        section = Liquid::Template.parse(File.read(@path + '/sections/' + section_id + '.liquid'))
-        sections[section_id] = section.render({})
+        sections[section_id] = render_section(section_id)
       }
     end
 
