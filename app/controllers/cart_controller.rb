@@ -26,9 +26,9 @@ class CartController < ApplicationController
       render json: { error: 'error on getting the variant!' }, status: :bad_request
       return
     end
-
     variant = response.parse
 
+    updatedItems = cart.items
     updatedItems.push({
       variant_id: variant_id,
       quantity: quantity,
