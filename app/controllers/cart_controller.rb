@@ -49,8 +49,8 @@ class CartController < ApplicationController
     sections = {}
 
     # render sections
-    if params[:section].kind_of?(Array)
-      params[:section].each { |section_id|
+    if params[:sections].kind_of?(Array)
+      params[:sections].each { |section_id|
         section = Liquid::Template.parse(File.read(@path + '/sections/' + section_id + '.liquid'))
         sections[section_id] = section
       }
