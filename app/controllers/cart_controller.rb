@@ -28,9 +28,15 @@ class CartController < ApplicationController
     end
 
     variant = response.parse
-    variant['quantity'] = quantity
 
-    updatedItems.push(variant)
+    updatedItems.push({
+      variant_id: variant_id,
+      quantity: quantity,
+      title: variant.title,
+      price: variant.price,
+      image: variant.image,
+      options: variant.options
+    })
     
     cart.items = updatedItems
     cart.save
