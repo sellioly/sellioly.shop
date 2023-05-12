@@ -46,9 +46,11 @@ class CartController < ShopController
     cart.items = updatedItems
     cart.save
 
+    # because we inherit from shop_controller
+    @args['cart'] = cart
+
     # render sections
     sections = {}
-
     if params[:sections].present?
       section_ids = params[:sections].split(',')
       section_ids.each { |section_id|
