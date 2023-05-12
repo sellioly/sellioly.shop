@@ -53,7 +53,7 @@ class CartController < ApplicationController
       section_ids = params[:sections].split(',')
       section_ids.each { |section_id|
         section = Liquid::Template.parse(File.read(@path + '/sections/' + section_id + '.liquid'))
-        sections[section_id] = section
+        sections[section_id] = section.render({})
       }
     end
 
