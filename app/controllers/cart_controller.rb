@@ -47,7 +47,7 @@ class CartController < ShopController
     cart.save
 
     # because we inherit from shop_controller
-    @args['cart'] = cart
+    @args['cart'] = cart.as_json
 
     # render sections
     sections = {}
