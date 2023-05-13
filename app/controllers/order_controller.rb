@@ -47,10 +47,10 @@ class OrderController < ApplicationController
       return ''
     end
     
-    args = {}
-    args['order_id'] = result.id
     template = Liquid::Template.parse(File.read(@path + '/sections/' + section_id + '.liquid'))
-    return template.render(args)
+    section = template.render({ 'order_id' => result.id})
+
+    return json:  section
   end
 
 end
