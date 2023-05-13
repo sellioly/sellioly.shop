@@ -43,13 +43,13 @@ class OrderController < ApplicationController
     result = response.parse
 
     @path = Rails.root.to_s + @store.template_path.to_s
-    unless File.file? @path + '/sections/order-completed.liquid'
+    unless File.file? @path + '/sections/orderCompleted.liquid'
       return ''
     end
     
     sections = {}
-    template = Liquid::Template.parse(File.read(@path + '/sections/' + section_id + '.liquid'))
-    sections['order-completed'] = template.render({ 'order_id' => result.id})
+    template = Liquid::Template.parse(File.read(@path + '/sections/orderCompleted.liquid'))
+    sections['orderCompleted'] = template.render({ 'order_id' => result.id})
 
     return json: sections
   end
