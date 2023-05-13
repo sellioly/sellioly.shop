@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   constraints lambda { |req| req.host != 'shop.sellioly.com' &&  req.host != 'preview.sellioly.com' } do
     post 'api/cart/add', action: 'add', controller: 'cart'
     post 'api/cart/remove', action: 'remove', controller: 'cart'
+    post 'api/order/add', action: 'add', controller: 'order'
     get '/collections/:collection', action: 'collection', controller: 'shop'
     get '/products/:product', action: 'product', controller: 'shop'
     get '/checkout', action: 'checkout', controller: 'shop'

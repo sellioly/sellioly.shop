@@ -1,4 +1,4 @@
-class CartController < ApplicationController
+class OrderController < ApplicationController
 
   public def add
     unless check_store
