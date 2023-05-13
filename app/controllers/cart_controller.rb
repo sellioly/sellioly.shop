@@ -88,7 +88,7 @@ class CartController < ShopController
 
     newItems = []
     cart.items.each { |item|
-      if item.variant_id != variant_id
+      if item['variant_id'] != variant_id
         newItems.push(item)
       end
     }
