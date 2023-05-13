@@ -44,7 +44,7 @@ class OrderController < ApplicationController
 
     @path = Rails.root.to_s + @store.template_path.to_s
     unless File.file? @path + '/sections/orderCompleted.liquid'
-      return ''
+      render json: {}
     end
     
     sections = {}
