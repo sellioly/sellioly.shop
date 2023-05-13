@@ -1,5 +1,6 @@
 class PreviewController < ApplicationController
-
+  protect_from_forgery
+  
   public def index
     headers['Access-Control-Allow-Origin'] = '*'
     headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
