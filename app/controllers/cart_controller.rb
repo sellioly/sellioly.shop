@@ -36,8 +36,8 @@ class CartController < ShopController
     exist = false
     updatedItems = cart.items
     updatedItems.each { |item|
-      if item['variant_id'] != variant_id
-        item['quantity'] = item['quantity'] + quantity 
+      if item['variant_id'] == variant_id
+        item['quantity'] = item['quantity'].to_i + quantity.to_i 
         exist = true
       end
     }
