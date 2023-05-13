@@ -26,15 +26,6 @@ class OrderController < ApplicationController
       return
     end
 
-    order_items = []
-    cart.items.each { |item|
-      order_items.push({
-        variant_id: item['variant_id'],
-        quantity: item['quantity'],
-        price: item['price'],
-      })
-    }
-
     response = HTTP.post("https://api.sellioly.com/server/order/create", :form => { 
       'app_domain' => @domain,
       'variant_id' => params[:variant_id],
@@ -43,7 +34,7 @@ class OrderController < ApplicationController
       'city' => params[:city],
       'address' => params[:address],
       'phone' => params[:phone],
-      'order_items' => order_items
+      'order_items' => cart.items.to_json
     })
     unless response.status.success?
       render json: { error: 'error on create the order!' }, status: :bad_request
