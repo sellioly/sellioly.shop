@@ -42,7 +42,14 @@ class OrderController < ApplicationController
     end
     result = response.parse
 
-    render json: result
+    unless File.file? @path + '/sections/order-completed.liquid'
+      return ''
+    end
+    
+    args = {}
+    args['order_id'] = result.id
+    template = Liquid::Template.parse(File.read(@path + '/sections/' + section_id + '.liquid'))
+    return template.render(args)
   end
 
 end
