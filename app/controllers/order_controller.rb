@@ -33,8 +33,7 @@ class OrderController < ApplicationController
         'quantity' => item['quantity'],
         'price' => item['price'],
       })
-    end
-  }
+    }
 
     response = HTTP.post("https://api.sellioly.com/server/order/create", :form => { 
       'app_domain' => @domain,
