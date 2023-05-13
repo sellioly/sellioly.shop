@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   end
 
   constraints host: 'preview.sellioly.com' do
-    get '/preview/:shop_id/:template_id', action: 'index', controller: 'preview'
+    get '/preview/:shop_id/:template_id', action: 'preview', controller: 'shop'
     get '/files/1/:shop_id/:template_id/assets/:filename', to: 'shop#file_assets', constraints: { filename: /[^\/]+/ }
     get '/files/1/:shop_id/:template_id/assets/fonts/:filename', to: 'shop#file_font_assets', constraints: { filename: /[^\/]+/ }
   end
