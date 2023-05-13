@@ -29,9 +29,9 @@ class OrderController < ApplicationController
     order_items = []
     cart.items.each { |item|
       order_items.push({
-        'variant_id' => item['variant_id'],
-        'quantity' => item['quantity'],
-        'price' => item['price'],
+        variant_id: item['variant_id'],
+        quantity: item['quantity'],
+        price: item['price'],
       })
     }
 
