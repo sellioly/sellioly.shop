@@ -15,14 +15,14 @@ class OrderController < ApplicationController
       render json: { error: 'cart_id required!' }, status: :bad_request
       return
     end
-    if !params[:variant_id].present? || !params[:full_name].present? || !params[:phone].present?
+    if !params[:full_name].present? || !params[:phone].present?
       render json: { error: 'fields required' }, status: :bad_request
       return 
     end
     
     cart = Cart.find_by(cart_id: params[:cart_id])
-    unless cart
-      render json: { error: 'Cart not found' }, status: :bad_request
+    if !cart || cart.items.size == 0
+      render json: { error: 'Cart not found or empty!' }, status: :bad_request
       return
     end
 
