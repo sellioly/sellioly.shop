@@ -381,6 +381,7 @@ class ShopController < ApplicationController
         new_cart = Cart.new({})
         new_cart.cart_id = cookies[:cart_id]
         new_cart.items = []
+        new_cart.subtotal = 0
         new_cart.save
         @args['cart'] = new_cart.as_json
       end

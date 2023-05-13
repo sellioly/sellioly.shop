@@ -53,6 +53,7 @@ class CartController < ShopController
       })
     end
     
+    cart.subtotal += variant['price'].to_f * quantity.to_i
     cart.items = updatedItems
     cart.save
 
@@ -98,7 +99,9 @@ class CartController < ShopController
 
     newItems = []
     cart.items.each { |item|
-      if item['variant_id'] != variant_id
+      if item['variant_id'] == variant_id
+        cart.subtotal -= item['price'].to_f * item['quantity'].to_i
+      else
         newItems.push(item)
       end
     }
