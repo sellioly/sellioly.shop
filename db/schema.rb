@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_05_07_092334) do
+ActiveRecord::Schema[7.0].define(version: 2023_05_13_211423) do
+  create_table "cart", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "cart_id"
+    t.json "items"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.float "subtotal"
+  end
+
   create_table "letsencrypt_certificates", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "domain"
     t.text "certificate"
