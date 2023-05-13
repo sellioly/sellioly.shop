@@ -349,6 +349,9 @@ class ShopController < ApplicationController
 
     # get cart -------------------------------------
     if cookies[:cart_id].present?
+      puts '------------------------------------------------'
+      puts '---------------- cart_id cookie ----------------'
+      puts '------------------------------------------------'
       cart = Cart.find_by(cart_id: cookies[:cart_id])
       if cart 
         @args['cart'] = cart.as_json
