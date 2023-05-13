@@ -33,15 +33,25 @@ class CartController < ShopController
     end
     variant = response.parse
 
+    exist = false
     updatedItems = cart.items
-    updatedItems.push({
-      variant_id: variant_id,
-      quantity: quantity,
-      title: variant['title'],
-      price: variant['price'],
-      image: variant['image'],
-      options: variant['options']
-    })
+    updatedItems.each { |item|
+      if item['variant_id'] != variant_id
+        item['quantity'] = item['quantity'] + quantity 
+        exist = true
+      end
+    }
+
+    unless exist
+      updatedItems.push({
+        variant_id: variant_id,
+        quantity: quantity,
+        title: variant['title'],
+        price: variant['price'],
+        image: variant['image'],
+        options: variant['options']
+      })
+    end
     
     cart.items = updatedItems
     cart.save
@@ -88,8 +98,6 @@ class CartController < ShopController
 
     newItems = []
     cart.items.each { |item|
-      puts item
-      puts item.class
       if item['variant_id'] != variant_id
         newItems.push(item)
       end
