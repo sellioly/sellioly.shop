@@ -133,10 +133,29 @@ class StoreController < ApplicationController
                      key: file_name,
                      created_at: created_at,
                      updated_at: updated_at,
+                     extension: ext_type,
                      content_type: content_type
                    })
     end
 
     render json: entries
+  end
+
+  def request_asset_content
+    # code here
+    @shop_id = params[:shop_id].to_s
+    @template_id = params[:template_id].to_s
+    @key = params[:key].to_s
+    @sub_path = "/storage/" + @shop_id + "/" + @template_id
+    @path = Rails.root.to_s + @sub_path + "/" + @key
+
+    ext_type = File.extname(@path)
+    if ext_type == '.liquid'
+      mime_type = 'application/x-liquid'
+    else
+      mime_type = Rack::Mime.mime_type(ext_type)
+    end
+    content = File.read(@path)
+    render body: content, mime_type: mime_type
   end
 end
