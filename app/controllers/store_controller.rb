@@ -120,7 +120,7 @@ class StoreController < ApplicationController
       next if File.directory?(file_path)
 
       file_name = file_path.sub(@path, "")
-      created_at = File.birthtime(file_path).strftime("%Y-%m-%d %H:%M:%S")
+      created_at = File.ctime(file_path).strftime("%Y-%m-%d %H:%M:%S")
       updated_at = File.mtime(file_path).strftime("%Y-%m-%d %H:%M:%S")
       content_type = File.extname(file_path)
 
