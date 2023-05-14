@@ -158,4 +158,28 @@ class StoreController < ApplicationController
     content = File.read(@path)
     render body: content, mime_type: mime_type
   end
+
+
+  def update_asset_content
+    # code here
+    @shop_id = params[:shop_id].to_s
+    @template_id = params[:template_id].to_s
+    @key = params[:key].to_s
+    @content = params[:content].to_s
+    @sub_path = "/storage/" + @shop_id + "/" + @template_id
+    @path = Rails.root.to_s + @sub_path + "/" + @key
+
+    File.open(@path, "w") do |file|
+      file.write(@content)
+    end
+
+    ext_type = File.extname(@path)
+    if ext_type == '.liquid'
+      mime_type = 'application/x-liquid'
+    else
+      mime_type = Rack::Mime.mime_type(ext_type)
+    end
+    content = File.read(@path)
+    render body: content, mime_type: mime_type
+  end
 end
