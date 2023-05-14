@@ -234,7 +234,7 @@ class ShopController < ApplicationController
 
   public def checkout
     render_page('checkout.json')
-    return
+    nil
   end
 
   private
@@ -255,7 +255,7 @@ class ShopController < ApplicationController
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
 
     response = HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'app_domain' => @domain })
-    unless (response.status.success?)
+    unless response.status.success?
       internal_server_error
       return
     end
@@ -330,7 +330,7 @@ class ShopController < ApplicationController
     @args['request'] = { 'origin' => origin }
     temp = template.render(@args)
     render html: temp.html_safe
-    return
+    nil
   end
 
   def render_section(section_id)
@@ -339,7 +339,7 @@ class ShopController < ApplicationController
     end
     
     template = Liquid::Template.parse(File.read(@path + '/sections/' + section_id + '.liquid'))
-    return template.render(@args)
+    template.render(@args)
   end
 
 end

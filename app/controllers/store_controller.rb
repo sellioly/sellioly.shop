@@ -106,4 +106,32 @@ class StoreController < ApplicationController
 
     render json: { sections: data, forms: forms }
   end
+
+  def request_assets_template
+    # code here
+    @shop_id = params[:shop_id].to_s
+    @template_id = params[:template_id].to_s
+    @sub_path = "/storage/" + @shop_id + "/" + @template_id
+    @path = Rails.root.to_s + @sub_path
+
+    entries = []
+
+    Dir.glob("#{@path}/**/*") do |file_path|
+      next if File.directory?(file_path)
+
+      file_name = file_path.sub(@path, "")
+      created_at = File.birthtime(file_path).strftime("%Y-%m-%d %H:%M:%S")
+      updated_at = File.mtime(file_path).strftime("%Y-%m-%d %H:%M:%S")
+      content_type = File.extname(file_path)
+
+      entries.push({
+                     key: file_name,
+                     created_at: created_at,
+                     updated_at: updated_at,
+                     content_type: content_type
+                   })
+    end
+
+    render json:  entries
+  end
 end
