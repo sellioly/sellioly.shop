@@ -21,7 +21,6 @@ class StoreController < ApplicationController
     end
   end
 
-
   public def verify_ssl
     cert = LetsEncrypt::Certificate.find_by(domain: params[:app_domain])
     # alias  `verify && issue`
@@ -82,6 +81,7 @@ class StoreController < ApplicationController
     # result
     render json: { msg: 'template has been published', id: @store.id, template_path: @sub_path }
   end
+
   public
 
   def request_template_page
@@ -98,7 +98,7 @@ class StoreController < ApplicationController
     data["order"].each { |section_id|
       section_data = data["sections"][section_id]
       if File.file? @path + '/schemas/' + section_data['type'] + '.json'
-        file = File.read( @path + '/schemas/' + section_data['type'] + '.json')
+        file = File.read(@path + '/schemas/' + section_data['type'] + '.json')
         data = JSON.load file
         forms.push(data)
       end
@@ -123,8 +123,11 @@ class StoreController < ApplicationController
       created_at = File.ctime(file_path).strftime("%Y-%m-%d %H:%M:%S")
       updated_at = File.mtime(file_path).strftime("%Y-%m-%d %H:%M:%S")
       ext_type = File.extname(file_path)
-      content_type = Rack::Mime.mime_type(ext_type)
-
+      if ext_type == '.liquid'
+        content_type = 'application/x-liquid'
+      else
+        content_type = Rack::Mime.mime_type(ext_type)
+      end
 
       entries.push({
                      key: file_name,
@@ -134,6 +137,6 @@ class StoreController < ApplicationController
                    })
     end
 
-    render json:  entries
+    render json: entries
   end
 end
