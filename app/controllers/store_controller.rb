@@ -119,10 +119,10 @@ class StoreController < ApplicationController
     Dir.glob("#{@path}/**/*") do |file_path|
       next if File.directory?(file_path)
 
-      file_name = file_path.sub(@path, "")
+      file_name = file_path.sub("#{@path}/", "")
       created_at = File.ctime(file_path).strftime("%Y-%m-%d %H:%M:%S")
       updated_at = File.mtime(file_path).strftime("%Y-%m-%d %H:%M:%S")
-      content_type = File.extname(file_path)
+      content_type = Mime::Types.type_for(file_name).first.content_type
 
       entries.push({
                      key: file_name,
