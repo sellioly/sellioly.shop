@@ -122,7 +122,8 @@ class StoreController < ApplicationController
       file_name = file_path.sub("#{@path}/", "")
       created_at = File.ctime(file_path).strftime("%Y-%m-%d %H:%M:%S")
       updated_at = File.mtime(file_path).strftime("%Y-%m-%d %H:%M:%S")
-      content_type = Mime::Types.type_for(file_name).first.content_type
+      ext_type = File.extname(file_path)
+      content_type = Mime::Type.lookup_by_extension(ext_type).to_s
 
       entries.push({
                      key: file_name,
