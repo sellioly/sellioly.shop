@@ -123,7 +123,8 @@ class StoreController < ApplicationController
       created_at = File.ctime(file_path).strftime("%Y-%m-%d %H:%M:%S")
       updated_at = File.mtime(file_path).strftime("%Y-%m-%d %H:%M:%S")
       ext_type = File.extname(file_path)
-      content_type = Mime::Type.lookup_by_extension(ext_type).to_s
+      content_type = Rack::Mime.mime_type(ext_type)
+
 
       entries.push({
                      key: file_name,
