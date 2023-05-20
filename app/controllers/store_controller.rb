@@ -124,10 +124,11 @@ class StoreController < ApplicationController
     forms = {}
     data["order"].each { |section_id|
       section_data = data["sections"][section_id]
+      forms[section_id] = { schema: null, data: section_data }
       if File.file? @path + '/schemas/' + section_data['type'] + '.json'
         file = File.read(@path + '/schemas/' + section_data['type'] + '.json')
         schema_data = JSON.load file
-        forms[section_id] = { schema: schema_data, data: section_data }
+        forms[section_id]['schema'] = schema_data
       end
     }
     data["sections"] = forms
