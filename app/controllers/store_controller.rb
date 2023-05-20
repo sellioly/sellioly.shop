@@ -112,12 +112,12 @@ class StoreController < ApplicationController
     #
     layout_forms = {}
     after_content_for_layout = false
-    layout_data['sections'].each do |section_id|
-      section_data = layout_data['sections'][section_id[0]]
+    layout_data['sections'].each do |section|
+      section_data = section[1]
       if File.file? @path + '/schemas/' + section_data['type'] + '.json'
         file = File.read(@path + '/schemas/' + section_data['type'] + '.json')
         schema_data = JSON.load file
-        layout_forms[section_id] = {schema: schema_data, data: section_data}
+        layout_forms[section[0]] = {schema: schema_data, data: section_data}
       end
     end
 
