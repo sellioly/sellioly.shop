@@ -107,18 +107,19 @@ class StoreController < ApplicationController
 
     layout_forms = []
     after_content_for_layout = false
-    # items.each do |name|
-    #   if name.is_a?(Liquid::VariableLookup)
-    #     after_content_for_layout = true
-    #     next
-    #   end
-    #
-    #   if File.file? @path + '/schemas/' + name + '.json'
-    #     file = File.read(@path + '/schemas/' + name + '.json')
-    #     form = JSON.load file
-    #     layout_forms.push({form: form, after: after_content_for_layout})
-    #   end
-    # end
+    items.each do |name|
+      name = name['name']
+      if name == "content_for_layout"
+        after_content_for_layout = true
+        next
+      end
+
+      if File.file? @path + '/schemas/' + name + '.json'
+        file = File.read(@path + '/schemas/' + name + '.json')
+        form = JSON.load file
+        layout_forms.push({form: form, after: after_content_for_layout})
+      end
+    end
 
     forms = []
     data["order"].each { |section_id|
