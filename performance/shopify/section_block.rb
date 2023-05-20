@@ -24,7 +24,7 @@ class SectionBlock < Liquid::Tag
 
   def render(context)
     new_context = context.environments.first
-
+    return Liquid::Template.file_system.root
     # Remember here we are not passing extension
     content = File.read(full_path('sections/' + @name + ".liquid"))
 
