@@ -131,7 +131,7 @@ class StoreController < ApplicationController
       end
     }
 
-    render json: {page_sections: forms, layout_sections: layout_forms }
+    render json: {page_sections: forms, layout_sections: layout_data }
   end
 
   def request_assets_template
