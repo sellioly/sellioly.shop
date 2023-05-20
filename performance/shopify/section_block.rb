@@ -11,15 +11,11 @@ class SectionBlock < Liquid::Tag
   def full_path(template_path)
     raise FileSystemError, "Illegal template name '#{template_path}'" unless %r{\A[^./][a-zA-Z0-9-_/]+\z}.match?(template_path)
 
-    full_path = if template_path.include?('/')
+    if template_path.include?('/')
                   File.join(Liquid::Template.file_system.root, File.dirname(template_path), Liquid::Template.file_system.pattern % File.basename(template_path))
                 else
                   File.join(Liquid::Template.file_system.root, Liquid::Template.file_system.pattern % template_path)
                 end
-
-    raise FileSystemError, "Illegal template path '#{File.expand_path(full_path)}'" unless File.expand_path(full_path).start_with?(File.expand_path(root))
-
-    full_path
   end
 
   def render(context)
