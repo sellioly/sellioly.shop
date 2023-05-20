@@ -10,11 +10,10 @@ class SectionBlock < Liquid::Tag
   def render(context)
     new_context = context.environments.first
 
-    return "hello world"
     # Remember here we are not passing extension
-    asset = Template.partial.find_by(filename: 'sections/' + @name + ".liquid")
+    content = Liquid::Template.file_system.read_template_file('sections/' + @name + ".liquid")
 
-    Liquid::Template.parse(asset.content).render(new_context).html_safe
+    Liquid::Template.parse(content).render(new_context).html_safe
   end
 
 end
