@@ -26,7 +26,6 @@ class SectionTag < Liquid::Tag
     content = File.read(full_path)
 
     Liquid::Template.parse(content).render(new_context).html_safe
-    new_context['section'] = nil
   end
 
 end
