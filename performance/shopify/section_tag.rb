@@ -14,7 +14,7 @@ class SectionTag < Liquid::Tag
   def render(context)
     new_context = context.environments.first
 
-    if new_context['section']
+    if new_context.key?('section') and new_context['section']
       return "cannot render section inside other section "
     end
     new_context['section'] = context['layout_data'][@name]
