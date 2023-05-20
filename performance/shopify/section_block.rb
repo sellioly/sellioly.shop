@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+require 'liquid'
 class SectionBlock < Liquid::Block
   def initialize(tag_name, markup, options)
     super
