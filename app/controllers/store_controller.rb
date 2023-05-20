@@ -102,7 +102,7 @@ class StoreController < ApplicationController
 
     template = Liquid::Template.parse(File.read(@path + "/layout/#{layout}.liquid"))
     items = template.root.nodelist
-    items = items.select{ |node| (node.is_a?(Liquid::Variable) && node.name.name == "content_for_layout") || node.is_a?(SectionTag)}
+    items = items.select{ |node| (node.is_a?(Liquid::Variable) && node.name.is_a?(Liquid::VariableLookup) && node.name.name == "content_for_layout") || node.is_a?(SectionTag)}
             .map{ |var| var.as_json }
 
     layout_forms = []
