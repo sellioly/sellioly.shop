@@ -16,7 +16,7 @@ class ShopController < ApplicationController
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
 
     @response = HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'app_domain' => @domain })
-    unless (@response.status.success?)
+    unless @response.status.success?
       internal_server_error
       return
     end
@@ -323,8 +323,11 @@ class ShopController < ApplicationController
       }
     end
     @args.delete('section')
-
-    template = Liquid::Template.parse(File.read(@path + '/layout/theme.liquid')) # Parses and compiles the template
+    layout = 'theme'
+    if data['layout']
+      layout = data['layout']
+    end
+    template = Liquid::Template.parse(File.read(@path + "/layout/#{layout}.liquid")) # Parses and compiles the template
     origin = request.base_url
     @args['content_for_layout'] = @content_for_layout
     @args['request'] = { 'origin' => origin }

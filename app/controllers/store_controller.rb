@@ -94,6 +94,14 @@ class StoreController < ApplicationController
 
     file = File.read(@path + '/templates/' + @request_page + '.json')
     data = JSON.load file
+
+    layout = 'theme'
+    if data['layout']
+      layout = data['layout']
+    end
+    template = Liquid::Template.parse(File.read(@path + "/layout/#{layout}.liquid"))
+    items = template.root.nodelist
+
     forms = []
     data["order"].each { |section_id|
       section_data = data["sections"][section_id]
