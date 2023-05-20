@@ -25,7 +25,9 @@ class SectionTag < Liquid::Tag
     # Remember here we are not passing extension
     content = File.read(full_path)
 
-    Liquid::Template.parse(content).render(new_context).html_safe
+    content = Liquid::Template.parse(content).render(new_context).html_safe
+    new_context.delete('section')
+    content
   end
 
 end
