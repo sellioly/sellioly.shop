@@ -13,7 +13,7 @@ class SectionTag < Liquid::Tag
 
   def render(context)
     new_context = context.environments.first
-    return self.inspect
+    return new_context.inspect
     full_path = Liquid::Template.file_system.root + "/sections/" + @name + ".liquid"
     unless File.exist?(full_path)
       return "No such '#{@name}' in section folder!"
