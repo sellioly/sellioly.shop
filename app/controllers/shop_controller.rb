@@ -236,7 +236,7 @@ class ShopController < ApplicationController
 
     layout_json = File.read(@path + "/layout/#{layout}.json")
     layout_data = JSON.load layout_json
-
+    @args['layout_data'] = layout_data['sections']
     response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => 'main-menu', 'user_id' => $shop_id, 'app_domain' => @domain })
     @args['menu'] = nil
     if response.status.success?
@@ -272,7 +272,7 @@ class ShopController < ApplicationController
       }
     end
 
-    @args['section'] = {}
+    @args.delete('section')
 
     # layout_data['sections'].each do |section|
     #   variable = section[0].gsub(/^[0-9]+/, "").gsub(/[^A-Za-z0-9]+/, "")
