@@ -114,7 +114,6 @@ class StoreController < ApplicationController
         next
       end
 
-      layout_forms.push({name: name})
       if File.file? @path + '/schemas/' + name + '.json'
         file = File.read(@path + '/schemas/' + name + '.json')
         form = JSON.load file
@@ -132,7 +131,7 @@ class StoreController < ApplicationController
       end
     }
 
-    render json: { sections: data, forms: forms, layout_form: items }
+    render json: { sections: data, forms: forms, layout_form: layout_forms }
   end
 
   def request_assets_template
