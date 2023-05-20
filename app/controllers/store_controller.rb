@@ -108,7 +108,7 @@ class StoreController < ApplicationController
     layout_forms = []
     after_content_for_layout = false
     items.each do |name|
-      if name.is_a?(Liquid::VariableLookup) && name.name === 'content_for_layout'
+      if name.is_a?(Liquid::VariableLookup)
         after_content_for_layout = true
         next
       end
