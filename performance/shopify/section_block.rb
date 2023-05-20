@@ -9,7 +9,6 @@ class SectionBlock < Liquid::Tag
   end
 
   def full_path(template_path)
-    raise FileSystemError, "Illegal template name '#{template_path}'" unless %r{\A[^./][a-zA-Z0-9-_/]+\z}.match?(template_path)
 
     if template_path.include?('/')
                   File.join(Liquid::Template.file_system.root, File.dirname(template_path), Liquid::Template.file_system.pattern % File.basename(template_path))
