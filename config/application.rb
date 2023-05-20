@@ -7,7 +7,7 @@ require_relative "../performance/shopify/json_filter"
 require_relative "../performance/shopify/money_filter"
 require_relative "../performance/shopify/weight_filter"
 require_relative "../performance/shopify/tag_filter"
-require_relative "../performance/shopify/section_tag"
+require_relative "../performance/shopify/section_block"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -24,7 +24,7 @@ module Sellioly
     Liquid::Template.register_filter(WeightFilter)
     Liquid::Template.register_filter(ShopFilter)
     Liquid::Template.register_filter(TagFilter)
-    Liquid::Template.register_tag('section', SectionTag)
+    Liquid::Template.register_tag('section', SectionBlock)
 
     # Configuration for the application, engines, and railties goes here.
     #
