@@ -93,7 +93,7 @@ class StoreController < ApplicationController
     @path = Rails.root.to_s + @sub_path
 
     file = File.read(@path + '/templates/' + @request_page + '.json')
-    settings_file = File.read(@path + '/templates/settings_data.json')
+    settings_file = File.read(@path + '/configs/settings_data.json')
     settings_data = JSON.load settings_file
     settings_data = settings_data['presets'][settings_data['current']]
     data = JSON.load file
