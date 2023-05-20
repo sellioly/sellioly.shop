@@ -111,15 +111,17 @@ class StoreController < ApplicationController
     #              .map { |var| var.as_json }
     #
     layout_forms = {}
-    # after_content_for_layout = false
-    # layout_data['sections'].each do |section_id|
-    #   section_data = layout_data['sections'][section_id]
-    #   if File.file? @path + '/schemas/' + section_data['type'] + '.json'
-    #     file = File.read(@path + '/schemas/' + section_data['type'] + '.json')
-    #     schema_data = JSON.load file
-    #     layout_forms[section_id] = {schema: schema_data, data: section_data}
-    #   end
-    # end
+    after_content_for_layout = false
+    layout_data['sections'].each do |section_id|
+      layout_forms[section_id] = true
+      next
+      section_data = layout_data['sections'][section_id]
+      if File.file? @path + '/schemas/' + section_data['type'] + '.json'
+        file = File.read(@path + '/schemas/' + section_data['type'] + '.json')
+        schema_data = JSON.load file
+        layout_forms[section_id] = {schema: schema_data, data: section_data}
+      end
+    end
 
     forms = {}
     data["order"].each { |section_id|
@@ -131,7 +133,7 @@ class StoreController < ApplicationController
       end
     }
 
-    render json: {page_sections: forms, layout_sections: layout_data }
+    render json: {page_sections: forms, layout_sections: layout_forms }
   end
 
   def request_assets_template
