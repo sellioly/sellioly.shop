@@ -17,7 +17,7 @@ class SectionTag < Liquid::Tag
     if new_context.key?('section') and new_context['section']
       return "cannot render section inside other section "
     end
-    new_context['section'] = context['layout_data'][@name]
+    new_context['section'] = new_context['layout_data'][@name]
     full_path = Liquid::Template.file_system.root + "/sections/" + @name + ".liquid"
     unless File.exist?(full_path)
       return "No such '#{@name}' in section folder!"
