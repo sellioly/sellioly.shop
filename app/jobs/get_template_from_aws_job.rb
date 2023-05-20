@@ -39,6 +39,12 @@ class GetTemplateFromAwsJob < ApplicationJob
         @error.push('layout/theme.liquid is missing!')
       end
 
+
+      json_theme = zipfile.find_entry("layout/theme.json")
+      unless json_theme
+        @error.push('layout/theme.json is missing!')
+      end
+
       assets_folder = zipfile.find_entry("assets")
       unless assets_folder
         @error.push('assets folder is missing!')
@@ -115,6 +121,14 @@ class GetTemplateFromAwsJob < ApplicationJob
         unless File.directory?(@path + '/layout')
           FileUtils.mkdir_p(@path + '/layout')
           zipfile.glob('layout/*.liquid').each do
+          |entry|
+            entry.extract(@path + '/' + entry.name)
+          end
+        end
+
+        unless File.directory?(@path + '/layout')
+          FileUtils.mkdir_p(@path + '/layout')
+          zipfile.glob('layout/*.json').each do
           |entry|
             entry.extract(@path + '/' + entry.name)
           end
