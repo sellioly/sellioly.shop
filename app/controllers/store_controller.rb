@@ -108,8 +108,8 @@ class StoreController < ApplicationController
     layout_forms = []
     after_content_for_layout = false
     items.each do |name|
-      name = name['name'].to_s
-      if name == "content_for_layout"
+      name = name['name']
+      if !name.is_a?(String) && name['name'] == "content_for_layout"
         after_content_for_layout = true
         next
       end
