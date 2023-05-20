@@ -6,11 +6,17 @@ class SectionTag < Liquid::Tag
     super
 
     @name = markup.strip.remove("'")
+    unless @name =~ /(.+?)(\.[^.]*$|$)/
+      raise "Illegal template name '#{@name}'"
+    end
   end
 
   def render(context)
     new_context = context.environments.first
     full_path = Liquid::Template.file_system.root + "/sections/" + @name + ".liquid"
+    unless File.exist?(full_path)
+      raise "No such '#{@name}' in section folder!"
+    end
     # Remember here we are not passing extension
     content = File.read(full_path)
 
