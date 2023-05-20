@@ -130,6 +130,7 @@ class StoreController < ApplicationController
         forms[section_id] = {schema: schema_data, data: section_data }
       end
     }
+    forms['order'] = data["order"]
 
     render json: {page_sections: forms, layout_sections: layout_forms }
   end
