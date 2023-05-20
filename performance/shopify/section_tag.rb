@@ -14,7 +14,7 @@ class SectionTag < Liquid::Tag
   def render(context)
     new_context = context.environments.first
     if new_context['section']
-      return "cannot render section inside other section " + new_context.inspect
+      return "cannot render section inside other section "
     end
     new_context['section'] = new_context['layout_data'][@name]
     full_path = Liquid::Template.file_system.root + "/sections/" + @name + ".liquid"
