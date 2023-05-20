@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require 'liquid'
-class SectionBlock < Liquid::Block
+class SectionBlock < Liquid::Tag
   def initialize(tag_name, markup, options)
     super
 
