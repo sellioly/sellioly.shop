@@ -127,7 +127,7 @@ class StoreController < ApplicationController
       if File.file? @path + '/schemas/' + section_data['type'] + '.json'
         file = File.read(@path + '/schemas/' + section_data['type'] + '.json')
         schema_data = JSON.load file
-        forms[section_id] = {schema: schema_data, data: layout_data }
+        forms[section_id] = {schema: schema_data, data: section_data }
       end
     }
 
