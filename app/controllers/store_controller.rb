@@ -99,8 +99,25 @@ class StoreController < ApplicationController
     if data['layout']
       layout = data['layout']
     end
+
     template = Liquid::Template.parse(File.read(@path + "/layout/#{layout}.liquid"))
     items = template.root.nodelist
+    items = items.select{ |node| (node.is_a?(Liquid::Variable) and node.name.name == "content_for_layout") || node.is_a?(Liquid::SectionTag)}
+            .map{ |var| var.name.name }
+    layout_forms = []
+    after_content_for_layout = false
+    items.each do |name|
+      if name === 'content_for_layout'
+        after_content_for_layout = true
+        next
+      end
+
+      if File.file? @path + '/schemas/' + name + '.json'
+        file = File.read(@path + '/schemas/' + name + '.json')
+        form = JSON.load file
+        layout_forms.push({form: form, after: after_content_for_layout})
+      end
+    end
 
     forms = []
     data["order"].each { |section_id|
@@ -112,7 +129,7 @@ class StoreController < ApplicationController
       end
     }
 
-    render json: { sections: data, forms: forms }
+    render json: { sections: data, forms: forms, layout_form: layout_forms }
   end
 
   def request_assets_template
