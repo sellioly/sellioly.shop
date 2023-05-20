@@ -124,9 +124,7 @@ class GetTemplateFromAwsJob < ApplicationJob
           |entry|
             entry.extract(@path + '/' + entry.name)
           end
-        end
 
-        unless File.directory?(@path + '/layout')
           zipfile.glob('layout/*.json').each do
           |entry|
             entry.extract(@path + '/' + entry.name)
