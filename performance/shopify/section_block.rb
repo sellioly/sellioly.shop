@@ -14,6 +14,7 @@ class SectionBlock < Liquid::Tag
     asset = Template.partial.find_by(filename: 'sections/' + @name + ".liquid")
 
     Liquid::Template.parse(asset.content).render(new_context).html_safe
+    @name
   end
 
 end
