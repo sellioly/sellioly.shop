@@ -108,7 +108,7 @@ class StoreController < ApplicationController
     layout_forms = []
     after_content_for_layout = false
     items.each do |name|
-      name = name.name
+      name = name['name'].to_s
       if name == "content_for_layout"
         after_content_for_layout = true
         next
@@ -117,7 +117,7 @@ class StoreController < ApplicationController
       if File.file? @path + '/schemas/' + name + '.json'
         file = File.read(@path + '/schemas/' + name + '.json')
         form = JSON.load file
-        layout_forms.push({form: form, after: after_content_for_layout})
+        layout_forms.push({form: form, after: after_content_for_layout, name: name})
       end
     end
 
