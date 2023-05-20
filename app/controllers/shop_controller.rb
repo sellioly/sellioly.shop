@@ -274,15 +274,15 @@ class ShopController < ApplicationController
 
     @args['section'] = {}
 
-    layout_data['sections'].each do |section|
-      variable = section[0].gsub(/^[0-9]+/, "").gsub(/[^A-Za-z0-9]+/, "")
-      section_data = section[1]
-      @args['section'][variable] = { settings: section_data['settings'] }
-      if File.file? @path + '/schemas/' + section_data['type'] + '.json'
-        file = File.read(@path + '/schemas/' + section_data['type'] + '.json')
-        schema_data = JSON.load file
-      end
-    end
+    # layout_data['sections'].each do |section|
+    #   variable = section[0].gsub(/^[0-9]+/, "").gsub(/[^A-Za-z0-9]+/, "")
+    #   section_data = section[1]
+    #   @args['section'][variable] = { settings: section_data['settings'] }
+    #   if File.file? @path + '/schemas/' + section_data['type'] + '.json'
+    #     file = File.read(@path + '/schemas/' + section_data['type'] + '.json')
+    #     schema_data = JSON.load file
+    #   end
+    # end
 
     template = Liquid::Template.parse(File.read(@path + "/layout/#{layout}.liquid")) # Parses and compiles the template
     origin = request.base_url
