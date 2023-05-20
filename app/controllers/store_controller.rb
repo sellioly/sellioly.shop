@@ -93,6 +93,9 @@ class StoreController < ApplicationController
     @path = Rails.root.to_s + @sub_path
 
     file = File.read(@path + '/templates/' + @request_page + '.json')
+    settings_file = File.read(@path + '/templates/settings_data.json')
+    settings_data = JSON.load settings_file
+    settings_data = settings_data['presets'][settings_data['current']]
     data = JSON.load file
 
     layout = 'theme'
@@ -102,8 +105,8 @@ class StoreController < ApplicationController
 
     template = Liquid::Template.parse(File.read(@path + "/layout/#{layout}.liquid"))
     items = template.root.nodelist
-    items = items.select{ |node| (node.is_a?(Liquid::Variable) && node.name.is_a?(Liquid::VariableLookup) && node.name.name == "content_for_layout") || node.is_a?(SectionTag)}
-            .map{ |var| var.as_json }
+    items = items.select { |node| (node.is_a?(Liquid::Variable) && node.name.is_a?(Liquid::VariableLookup) && node.name.name == "content_for_layout") || node.is_a?(SectionTag) }
+                 .map { |var| var.as_json }
 
     layout_forms = []
     after_content_for_layout = false
@@ -117,7 +120,7 @@ class StoreController < ApplicationController
       if File.file? @path + '/schemas/' + name + '.json'
         file = File.read(@path + '/schemas/' + name + '.json')
         form = JSON.load file
-        layout_forms.push({schema: form, after: after_content_for_layout, name: name})
+        layout_forms.push({ schema: form, data: settings_data['sections'][name], after: after_content_for_layout, name: name })
       end
     end
 
@@ -185,7 +188,6 @@ class StoreController < ApplicationController
     content = File.read(@path)
     render body: content, mime_type: mime_type
   end
-
 
   def update_asset_content
     # code here
