@@ -248,7 +248,7 @@ class ShopController < ApplicationController
         @args['section'] = {}
         section_data = data["sections"][section_id]
         section_schema = nil
-        unless File.file? @path + '/schema/' + section_data['type'] + '.json'
+        if File.file? @path + '/schema/' + section_data['type'] + '.json'
           file = File.read @path + '/schema/' + section_data['type'] + '.json'
           section_schema = JSON.load file
         end
