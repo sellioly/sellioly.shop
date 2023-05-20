@@ -93,48 +93,45 @@ class StoreController < ApplicationController
     @path = Rails.root.to_s + @sub_path
 
     file = File.read(@path + '/templates/' + @request_page + '.json')
+    data = JSON.load file
+
     settings_file = File.read(@path + '/config/settings_data.json')
     settings_data = JSON.load settings_file
     settings_data = settings_data['presets'][settings_data['current']]
-    data = JSON.load file
 
     layout = 'theme'
     if data['layout']
       layout = data['layout']
     end
 
-    template = Liquid::Template.parse(File.read(@path + "/layout/#{layout}.liquid"))
-    items = template.root.nodelist
-    items = items.select { |node| (node.is_a?(Liquid::Variable) && node.name.is_a?(Liquid::VariableLookup) && node.name.name == "content_for_layout") || node.is_a?(SectionTag) }
-                 .map { |var| var.as_json }
-
-    layout_forms = []
-    after_content_for_layout = false
-    items.each do |name|
-      name = name['name']
-      if !name.is_a?(String) && name['name'] == "content_for_layout"
-        after_content_for_layout = true
-        next
-      end
-
-      if File.file? @path + '/schemas/' + name + '.json'
-        file = File.read(@path + '/schemas/' + name + '.json')
-        form = JSON.load file
-        layout_forms.push({ schema: form, data: settings_data['sections'][name], after: after_content_for_layout, name: name })
+    layout_json = File.read(@path + "/layout/#{layout}.json")
+    layout_data = JSON.load layout_json
+    # items = template.root.nodelist
+    # items = items.select { |node| (node.is_a?(Liquid::Variable) && node.name.is_a?(Liquid::VariableLookup) && node.name.name == "content_for_layout") || node.is_a?(SectionTag) }
+    #              .map { |var| var.as_json }
+    #
+    layout_forms = {}
+    # after_content_for_layout = false
+    layout_data['sections'].each do |section_id|
+      section_data = data["sections"][section_id]
+      if File.file? @path + '/schemas/' + section_data['type'] + '.json'
+        file = File.read(@path + '/schemas/' + section_data['type'] + '.json')
+        schema_data = JSON.load file
+        layout_forms[section_id] = {schema: schema_data, data: section_data}
       end
     end
 
-    forms = []
+    forms = {}
     data["order"].each { |section_id|
       section_data = data["sections"][section_id]
       if File.file? @path + '/schemas/' + section_data['type'] + '.json'
         file = File.read(@path + '/schemas/' + section_data['type'] + '.json')
-        data = JSON.load file
-        forms.push(data)
+        schema_data = JSON.load file
+        forms[section_id] = {schema: schema_data, data: section_data }
       end
     }
 
-    render json: { sections: data, schemas: forms, layout_schemas: layout_forms }
+    render json: {page_sections: forms, layout_sections: layout_forms }
   end
 
   def request_assets_template
