@@ -284,9 +284,10 @@ class ShopController < ApplicationController
         if section_data['block_order'].kind_of?(Array)
           section_data['block_order'].each { |block_id|
             block_data = section_data['blocks'][block_id]
-            puts block_data
             if section_schema and block_data
+              puts "1 " + block_data
               if section_schema['blocks'] && section_schema['blocks'][block_data['type']]
+                puts "2 " + block_data
                 block_schema = section_schema['blocks'][block_data['type']]
                 block_data['settings'].each do |_data|
                   puts _data
