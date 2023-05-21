@@ -60,10 +60,41 @@ class ShopController < ApplicationController
 
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
 
-    @response = HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'user_id' => params[:shop_id] })
-    unless @response.status.success?
+    response = HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'user_id' => params[:shop_id] })
+    unless response.status.success?
       internal_server_error
       return
+    end
+
+    data = response.parse
+    shop_name = data['shop_name']
+    shop_description = data['shop_description']
+    currency = data['currency']
+    logo = (data['shop_logo_default'])
+
+    @args = {}
+    @args['page_title'] = "HOME - #{shop_name}"
+    @args['shop_name'] = shop_name
+    @args['shop_description'] = shop_description
+    @args['currency'] = currency
+    @args['logo'] = logo
+
+    # get cart -------------------------------------
+    if cookies[:cart_id].present?
+      puts '------------------------------------------------'
+      puts '---------------- cart_id cookie ----------------'
+      puts '------------------------------------------------'
+      cart = Cart.find_by(cart_id: cookies[:cart_id])
+      if cart
+        @args['cart'] = cart.as_json
+      else
+        new_cart = Cart.new({})
+        new_cart.cart_id = cookies[:cart_id]
+        new_cart.items = []
+        new_cart.subtotal = 0
+        new_cart.save
+        @args['cart'] = new_cart.as_json
+      end
     end
 
     render_page('index.json')
