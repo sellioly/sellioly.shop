@@ -288,6 +288,7 @@ class ShopController < ApplicationController
               if section_schema['blocks'] && section_schema['blocks'][block_data['type']]
                 block_schema = section_schema['blocks'][block_data['type']]
                 block_data['settings'].each do |_data|
+                  puts _data
                   key = _data[0]
                   value = _data[1]
                   if block_schema['settings'][key]
