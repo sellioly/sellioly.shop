@@ -334,9 +334,8 @@ class ShopController < ApplicationController
 
     @args.delete('section')
 
-    layout_data['sections'].each do |section|
-      section_id = section[0]
-      section_data = section[1]
+    layout_data['sections'].keys.each do |section_key|
+      section_data = layout_data['sections'][section_key]
       schema_data = nil
       if File.file? @path + '/schemas/' + section_data['type'] + '.json'
         file = File.read(@path + '/schemas/' + section_data['type'] + '.json')
