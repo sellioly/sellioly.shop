@@ -291,7 +291,7 @@ class ShopController < ApplicationController
                   key = _data[0]
                   value = _data[1]
                   if block_schema['settings'][key]
-                    case block_schema['settings'][key]['type']
+                    case block_schema['settings'][key]['element']
                     when 'menu'
                       response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
                       if response.status.success?
