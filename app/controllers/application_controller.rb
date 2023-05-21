@@ -59,12 +59,6 @@ class ApplicationController < ActionController::Base
     args['page_title'] = "HOME - #{@shop_name}"
     args['shop_description'] = @shop_description
 
-    @response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => 'main-menu', 'user_id' => $shop_id, 'app_domain' => @domain })
-    args['menu'] = nil
-    if @response.status.success?
-      args['menu'] = @response.parse
-    end
-
 
     render_page('404.json')
   end

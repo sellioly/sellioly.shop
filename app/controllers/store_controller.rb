@@ -95,10 +95,6 @@ class StoreController < ApplicationController
     file = File.read(@path + '/templates/' + @request_page + '.json')
     data = JSON.load file
 
-    settings_file = File.read(@path + '/config/settings_data.json')
-    settings_data = JSON.load settings_file
-    settings_data = settings_data['presets'][settings_data['current']]
-
     layout = 'theme'
     if data['layout']
       layout = data['layout']
@@ -131,9 +127,10 @@ class StoreController < ApplicationController
         forms[section_id]['schema'] = schema_data
       end
     }
-    data["sections"] = forms
+    page_data = data
+    page_data["sections"] = forms
 
-    render json: { page: data, layout: { sections: layout_forms } }
+    render json: { page: page_data, layout: { sections: layout_forms }, original: { page: data, layout: layout_data } }
   end
 
   def request_assets_template
