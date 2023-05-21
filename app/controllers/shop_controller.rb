@@ -247,7 +247,7 @@ class ShopController < ApplicationController
           section_schema = JSON.load file
         end
 
-        unless section_schema
+        if section_schema
           section_data['settings'].each do |_data|
             key = _data[0]
             value = _data[1]
@@ -284,7 +284,7 @@ class ShopController < ApplicationController
         if section_data['block_order'].kind_of?(Array)
           section_data['block_order'].each { |block_id|
             block_data = section_data['blocks'][block_id]
-            unless section_schema
+            if section_schema
               if block_data && section_schema['blocks'] && section_schema['blocks'][block_data['type']]
                 block_schema = section_schema['blocks'][block_data['type']]
                 block_data['settings'].each do |_data|
