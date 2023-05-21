@@ -285,11 +285,11 @@ class ShopController < ApplicationController
           section_data['block_order'].each { |block_id|
             block_data = section_data['blocks'][block_id]
             puts section_schema
-            puts "0 " + block_data
+            puts block_data
             if section_schema and block_data
-              puts "1 " + block_data
+              puts "1 " + block_data.inspect
               if section_schema['blocks'] && section_schema['blocks'][block_data['type']]
-                puts "2 " + block_data
+                puts "2 " +  block_data.inspect
                 block_schema = section_schema['blocks'][block_data['type']]
                 block_data['settings'].each do |_data|
                   puts _data
