@@ -344,7 +344,7 @@ class ShopController < ApplicationController
       end
       if schema_data
         puts section_data['settings']
-        puts section_data['settings'].keys
+        puts section_data['settings'].keys.inspect
         section_data['settings'].keys.each do |key|
           value = section_data['settings'][key]
           if schema_data['settings'][key]
