@@ -345,10 +345,10 @@ class ShopController < ApplicationController
         schema_data = JSON.load file
       end
       if schema_data
+        puts section_data['settings']
         section_data['settings'].each do |_data|
           key = _data[0].to_s
           value = _data[1]
-          puts _data
           if schema_data['settings'][key]
             case schema_data['settings'][key]['type']
             when 'menu'
