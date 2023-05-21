@@ -127,8 +127,9 @@ class StoreController < ApplicationController
         forms[section_id]['schema'] = schema_data
       end
     }
-    page_data = data
-    page_data["sections"] = forms
+    page_data = {}
+    page_data['order'] = data['order']
+    page_data['sections'] = forms
 
     render json: { page: page_data, layout: { sections: layout_forms }, original: { page: data, layout: layout_data } }
   end
