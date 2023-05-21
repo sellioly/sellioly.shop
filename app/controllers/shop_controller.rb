@@ -323,8 +323,6 @@ class ShopController < ApplicationController
         @args['section']['settings'] = section_settings
         @args['section']['blocks'] = section_blocks
 
-        puts section_blocks
-        puts section_settings
         unless File.file? @path + '/sections/' + section_data['type'] + '.liquid'
           render plain: 'could not found sections/' + section_data['type'] + '.liquid file missing!', status: 400
           return
@@ -347,6 +345,7 @@ class ShopController < ApplicationController
       if schema_data
         puts section_data['settings']
         section_data['settings'].each do |_data|
+          puts _data
           key = _data[0].to_s
           value = _data[1]
           if schema_data['settings'][key]
