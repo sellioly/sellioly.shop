@@ -124,7 +124,7 @@ class ApplicationController < ActionController::Base
     end
 
     @content_for_layout = ''
-    layout_data = { sections: {} }
+    layout_data = {}
     if File.exist? @path + "/layout/#{layout}.json"
       layout_json = File.read(@path + "/layout/#{layout}.json")
       layout_data = JSON.load layout_json
@@ -227,45 +227,47 @@ class ApplicationController < ActionController::Base
 
     @args.delete('section')
 
-    layout_data['sections'].keys.each do |section_id|
-      section_data = layout_data['sections'][section_id]
-      schema_data = nil
-      if File.file? @path + '/schemas/' + section_data['type'] + '.json'
-        file = File.read(@path + '/schemas/' + section_data['type'] + '.json')
-        schema_data = JSON.load file
-      end
-      if schema_data
-        section_data['settings'].keys.each do |key|
-          value = section_data['settings'][key]
-          if schema_data['settings'][key]
-            case schema_data['settings'][key]['type']
-            when 'menu'
-              response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
-              if response.status.success?
-                layout_data['sections'][section_id]['settings'][key] = response.parse
-              end
-            when 'product-picker'
-              response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
-              if response.status.success?
-                layout_data['sections'][section_id]['settings'][key] = response.parse
-              end
-            when 'collection-picker'
-              response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
-              if response.status.success?
-                layout_data['sections'][section_id]['settings'][key] = response.parse
+    if layout_data['sections']
+      layout_data['sections'].keys.each do |section_id|
+        section_data = layout_data['sections'][section_id]
+        schema_data = nil
+        if File.file? @path + '/schemas/' + section_data['type'] + '.json'
+          file = File.read(@path + '/schemas/' + section_data['type'] + '.json')
+          schema_data = JSON.load file
+        end
+        if schema_data
+          section_data['settings'].keys.each do |key|
+            value = section_data['settings'][key]
+            if schema_data['settings'][key]
+              case schema_data['settings'][key]['type']
+              when 'menu'
+                response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
+                if response.status.success?
+                  layout_data['sections'][section_id]['settings'][key] = response.parse
+                end
+              when 'product-picker'
+                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
+                if response.status.success?
+                  layout_data['sections'][section_id]['settings'][key] = response.parse
+                end
+              when 'collection-picker'
+                response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
+                if response.status.success?
+                  layout_data['sections'][section_id]['settings'][key] = response.parse
+                end
+              else
+                next
               end
             else
-              next
+
             end
-          else
-
           end
+
         end
-
       end
-    end
 
-    @args['layout_data'] = layout_data['sections']
+      @args['layout_data'] = layout_data['sections']
+    end
 
     template = Liquid::Template.parse(File.read(@path + "/layout/#{layout}.liquid")) # Parses and compiles the template
     origin = request.base_url
