@@ -344,7 +344,7 @@ class ShopController < ApplicationController
         file = File.read(@path + '/schemas/' + section_data['type'] + '.json')
         schema_data = JSON.load file
       end
-      unless schema_data
+      if schema_data
         section_data['settings'].each do |_data|
           key = _data[0]
           value = _data[1]
