@@ -173,7 +173,6 @@ class ShopController < ApplicationController
       internal_server_error
       return
     end
-    @content_for_layout = ''
 
     data = response.parse
     shop_name = data['shop_name']
@@ -215,6 +214,7 @@ class ShopController < ApplicationController
       layout = data['layout']
     end
 
+    @content_for_layout = ''
     layout_json = File.read(@path + "/layout/#{layout}.json")
     layout_data = JSON.load layout_json
 
