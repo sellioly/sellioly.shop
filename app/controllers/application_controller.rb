@@ -36,7 +36,7 @@ class ApplicationController < ActionController::Base
 
     true
   end
-  
+
   def page_not_found
     @path = Rails.root.to_s + @store.template_path.to_s
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
@@ -59,10 +59,8 @@ class ApplicationController < ActionController::Base
     args['page_title'] = "HOME - #{@shop_name}"
     args['shop_description'] = @shop_description
 
-
     render_page('404.json')
   end
-
 
   def initialize_shop
     puts '--------------------- initialize_shop --------------------'
@@ -117,7 +115,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-
   def render_page(filename)
     file = File.read(@path + '/templates/' + filename)
     data = JSON.load file
@@ -127,8 +124,11 @@ class ApplicationController < ActionController::Base
     end
 
     @content_for_layout = ''
-    layout_json = File.read(@path + "/layout/#{layout}.json")
-    layout_data = JSON.load layout_json
+    layout_data = { sections: {} }
+    if File.exist? @path + "/layout/#{layout}.json"
+      layout_json = File.read(@path + "/layout/#{layout}.json")
+      layout_data = JSON.load layout_json
+    end
 
     if data["order"].kind_of?(Array)
       data["order"].each { |section_id|
