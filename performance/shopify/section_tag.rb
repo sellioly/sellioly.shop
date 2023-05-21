@@ -18,9 +18,6 @@ class SectionTag < Liquid::Tag
       return "cannot render section inside other section "
     end
     new_context['section'] = new_context['layout_data'][@name]
-    if @name == "header"
-      return new_context['section'].inspect
-    end
     full_path = Liquid::Template.file_system.root + "/sections/" + @name + ".liquid"
     unless File.exist?(full_path)
       return "No such '#{@name}' in section folder!"
