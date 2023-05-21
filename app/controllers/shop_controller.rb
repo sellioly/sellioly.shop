@@ -284,19 +284,13 @@ class ShopController < ApplicationController
         if section_data['block_order'].kind_of?(Array)
           section_data['block_order'].each { |block_id|
             block_data = section_data['blocks'][block_id]
-            puts section_schema
-            puts block_data
             if section_schema and block_data
-              puts "1 " + block_data.inspect
               if section_schema['blocks'] && section_schema['blocks'][block_data['type']]
-                puts "2 " +  block_data.inspect
                 block_schema = section_schema['blocks'][block_data['type']]
                 block_data['settings'].each do |_data|
-                  puts _data
                   key = _data[0]
                   value = _data[1]
                   if block_schema['settings'][key]
-                    puts "ELEMENT: " +  block_schema['settings'][key]['element']
                     case block_schema['settings'][key]['element']
                     when 'menu'
                       response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
@@ -328,6 +322,9 @@ class ShopController < ApplicationController
         end
         @args['section']['settings'] = section_settings
         @args['section']['blocks'] = section_blocks
+
+        puts section_blocks
+        puts section_settings
         unless File.file? @path + '/sections/' + section_data['type'] + '.liquid'
           render plain: 'could not found sections/' + section_data['type'] + '.liquid file missing!', status: 400
           return
