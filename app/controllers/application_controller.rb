@@ -145,7 +145,7 @@ class ApplicationController < ActionController::Base
             key = _data[0]
             value = _data[1]
             if section_schema['settings'][key]
-              case section_schema['settings'][key]['type']
+              case section_schema['settings'][key]['element']
               when 'menu'
                 response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
                 if response.status.success?
@@ -239,7 +239,7 @@ class ApplicationController < ActionController::Base
           section_data['settings'].keys.each do |key|
             value = section_data['settings'][key]
             if schema_data['settings'][key]
-              case schema_data['settings'][key]['type']
+              case schema_data['settings'][key]['element']
               when 'menu'
                 response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
                 if response.status.success?
