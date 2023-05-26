@@ -224,6 +224,7 @@ class StoreController < ApplicationController
     end
 
     bundle_filename = Rails.root.to_s + "/storage/" + @shop_id + "/" + @template_id + ".zip"
+    FileUtils.rm bundle_filename,:force => true
     Zip::File.open(bundle_filename, Zip::File::CREATE) do |zipfile|
       Dir.chdir @path
       Dir.glob("**/*").reject {|fn| File.directory?(fn) }.each do |file|
