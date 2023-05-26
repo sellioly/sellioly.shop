@@ -1,3 +1,4 @@
+require "zip"
 class StoreController < ApplicationController
   public def generate_ssl
     cert = LetsEncrypt::Certificate.create(domain: params[:app_domain])
@@ -207,5 +208,28 @@ class StoreController < ApplicationController
     end
     content = File.read(@path)
     render body: content, mime_type: mime_type
+  end
+
+
+
+  def request_template
+    # code here
+    @shop_id = params[:shop_id].to_s
+    @template_id = params[:template_id].to_s
+    @sub_path = "/storage/" + @shop_id + "/" + @template_id
+    @path = Rails.root.to_s + @sub_path
+
+    unless Dir.exist? @path
+      return json: {msg: "template not found"}, status=400
+    end
+
+    bundle_filename = Rails.root.to_s + "/storage/" + @shop_id + "/" + @template_id + ".zip"
+    Zip::File.open(bundle_filename, Zip::File::CREATE) do |zipfile|
+      Dir.chdir @path
+      Dir.glob("**/*").reject {|fn| File.directory?(fn) }.each do |file|
+        zipfile.add(file.sub(@path + '/', ''), file)
+      end
+    end
+    send_file @path, :type=>"application/zip", :x_sendfile=>true
   end
 end
