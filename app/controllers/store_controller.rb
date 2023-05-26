@@ -230,6 +230,6 @@ class StoreController < ApplicationController
         zipfile.add(file.sub(@path + '/', ''), file)
       end
     end
-    send_file @path, :type=>"application/zip", :x_sendfile=>true
+    send_file bundle_filename, :type=>"application/zip", :x_sendfile=>true
   end
 end
