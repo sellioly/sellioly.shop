@@ -220,7 +220,7 @@ class StoreController < ApplicationController
     @path = Rails.root.to_s + @sub_path
 
     unless Dir.exist? @path
-      return json: {msg: "template not found"}, status=400
+      return :json => {msg: "template not found"}, status: 400
     end
 
     bundle_filename = Rails.root.to_s + "/storage/" + @shop_id + "/" + @template_id + ".zip"
