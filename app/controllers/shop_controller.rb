@@ -1,6 +1,6 @@
 class ShopController < ApplicationController
   protect_from_forgery except: :file_assets
-  before_action :initialize_shop, except: [:preview, :file_assets, :file_font_assets]
+  before_action :initialize_shop, except: [:preview, :file_assets, :file_font_assets, :page]
 
   def index
     render_page('index.json')
