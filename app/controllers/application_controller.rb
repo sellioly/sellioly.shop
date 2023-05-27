@@ -66,10 +66,12 @@ class ApplicationController < ActionController::Base
     puts '--------------------- initialize_shop --------------------'
     puts "initialize_shop Format: " + request.format.to_s + "/" + (request.format.html?).to_s
 
-    unless request.format.html?
-      content_not_found
-      return
-    end
+    # remove html format check because we need initialize_shop for cart_controller
+
+    # unless request.format.html?
+    #   content_not_found
+    #   return
+    # end
 
     unless check_store
       return
