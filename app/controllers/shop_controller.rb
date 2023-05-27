@@ -4,11 +4,6 @@ class ShopController < ApplicationController
 
   def index
 
-    unless request.format.html?
-      content_not_found
-      return
-    end
-
     render_page('index.json')
   end
 
@@ -107,6 +102,9 @@ class ShopController < ApplicationController
   end
 
   public def page
+
+    puts "page Format: " + request.format.html
+
     unless request.format.html?
       content_not_found
       return

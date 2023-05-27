@@ -64,8 +64,9 @@ class ApplicationController < ActionController::Base
 
   def initialize_shop
     puts '--------------------- initialize_shop --------------------'
+    puts "initialize_shop Format: " + request.format.html
 
-    unless request.format.html?
+    unless
       content_not_found
       return
     end
@@ -118,6 +119,7 @@ class ApplicationController < ActionController::Base
         @args['cart'] = new_cart.as_json
       end
     end
+
   end
 
   def render_page(filename)
