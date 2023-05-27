@@ -157,7 +157,7 @@ class ApplicationController < ActionController::Base
                   section_data['settings'][key] = response.parse
                 end
               when 'products-picker'
-                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
+                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles[]' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
                 if response.status.success?
                   section_data['settings'][key] = response.parse
                 end
@@ -201,7 +201,7 @@ class ApplicationController < ActionController::Base
                         block_data['settings'][key] = response.parse
                       end
                     when 'products-picker'
-                      response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
+                      response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles[]' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
                       if response.status.success?
                         section_data['settings'][key] = response.parse
                       end
@@ -261,7 +261,7 @@ class ApplicationController < ActionController::Base
                   layout_data['sections'][section_id]['settings'][key] = response.parse
                 end
               when 'products-picker'
-                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
+                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles[]' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
                 if response.status.success?
                   section_data['settings'][key] = response.parse
                 end
