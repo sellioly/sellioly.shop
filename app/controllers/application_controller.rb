@@ -152,6 +152,7 @@ class ApplicationController < ActionController::Base
                   section_data['settings'][key] = response.parse
                 end
               when 'product-picker'
+                puts value
                 response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
                 if response.status.success?
                   section_data['settings'][key] = response.parse
