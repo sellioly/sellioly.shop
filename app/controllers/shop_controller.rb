@@ -103,7 +103,7 @@ class ShopController < ApplicationController
 
   public def page
 
-    puts "page Format: " + request.format.html
+    puts "page Format: " + request.format.to_s + "/" + (request.format.html?).to_s
 
     unless request.format.html?
       content_not_found

@@ -64,9 +64,9 @@ class ApplicationController < ActionController::Base
 
   def initialize_shop
     puts '--------------------- initialize_shop --------------------'
-    puts "initialize_shop Format: " + request.format.html
+    puts "initialize_shop Format: " + request.format.to_s + "/" + (request.format.html?).to_s
 
-    unless
+    unless request.format.html?
       content_not_found
       return
     end
