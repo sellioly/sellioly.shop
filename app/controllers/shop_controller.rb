@@ -3,6 +3,12 @@ class ShopController < ApplicationController
   before_action :initialize_shop, except: [:preview, :file_assets, :file_font_assets, :page]
 
   def index
+
+    unless request.format.html?
+      content_not_found
+      return
+    end
+
     render_page('index.json')
   end
 
