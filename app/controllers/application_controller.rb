@@ -156,6 +156,11 @@ class ApplicationController < ActionController::Base
                 if response.status.success?
                   section_data['settings'][key] = response.parse
                 end
+              when 'products-picker'
+                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
+                if response.status.success?
+                  section_data['settings'][key] = response.parse
+                end
               when 'collection-picker'
                 response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
                 if response.status.success?
@@ -194,6 +199,11 @@ class ApplicationController < ActionController::Base
                       response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
                       if response.status.success?
                         block_data['settings'][key] = response.parse
+                      end
+                    when 'products-picker'
+                      response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
+                      if response.status.success?
+                        section_data['settings'][key] = response.parse
                       end
                     when 'collection-picker'
                       response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
@@ -249,6 +259,11 @@ class ApplicationController < ActionController::Base
                 response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
                 if response.status.success?
                   layout_data['sections'][section_id]['settings'][key] = response.parse
+                end
+              when 'products-picker'
+                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
+                if response.status.success?
+                  section_data['settings'][key] = response.parse
                 end
               when 'collection-picker'
                 response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
