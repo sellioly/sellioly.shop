@@ -124,4 +124,26 @@ class CartController < ShopController
     render json: sections
   end
 
+  public def selectOption 
+    unless check_store
+      return
+    end
+
+    unless params[:product_handle].present? || params[:options].present?
+      render json: { error: 'params required!' }, status: :bad_request
+      return
+    end
+
+    response = HTTP.post("https://api.sellioly.com/server/product/variant/get-by-options", 
+      :form => { 'app_domain' => @domain, 'product_handle' => params[:product_handle], 'options' => params[:options] }
+    )
+
+    unless response.status.success?
+      render json: { error: 'error on getting the variant!' }, status: :bad_request
+      return
+    end
+
+    render json: response.parse
+  end
+
 end
