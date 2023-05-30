@@ -135,7 +135,7 @@ class CartController < ShopController
     end
 
     response = HTTP.post("https://api.sellioly.com/server/product/variant/get-by-options", 
-      :form => { 'app_domain' => @domain, 'product_handle' => params[:product_handle], 'options' => JSON.parse(params[:options]) }
+      :form => { 'app_domain' => @domain, 'product_handle' => params[:product_handle], 'options' => params[:options] }
     )
 
     unless response.status.success?
