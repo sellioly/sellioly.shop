@@ -4,6 +4,8 @@ class ShopController < ApplicationController
 
   def index
 
+    puts "page Format: " + request.format.to_s + "/" + (request.format.html?).to_s
+
     render_page('index.json')
   end
 
@@ -110,7 +112,6 @@ class ShopController < ApplicationController
       return
     end
 
-
     unless check_store
       return
     end
@@ -162,13 +163,86 @@ class ShopController < ApplicationController
 
   private
 
+  def render_snippet(section_id, current_url)
+    # data = current_url.match(/^\/(product|collection|)?\/?(.*)$/)
+    # layout = "theme"
+    # template = "index"
+    # if data
+    #   if data[0] != ""
+    #     template = data[0]
+    #   end
+    # end
+    #
+    #
+    # file = File.read(@path + '/templates/' + template + ".json")
+    # template_data = JSON.load file
+    # if template_data['layout']
+    #   layout = template_data['layout']
+    # end
+    #
+    # layout_data = {}
+    # if File.exist? @path + "/layout/#{layout}.json"
+    #   layout_json = File.read(@path + "/layout/#{layout}.json")
+    #   layout_data = JSON.load layout_json
+    # end
 
-  def render_section(section_id)
-    unless File.file? @path + '/sections/' + section_id + '.liquid'
+    unless File.file? @path + '/snippets/' + section_id + '.liquid'
       return ''
     end
 
-    template = Liquid::Template.parse(File.read(@path + '/sections/' + section_id + '.liquid'))
+    file = File.read(@path + '/config/settings_data.json')
+    settings_data = JSON.load file
+
+    file = File.read(@path + '/config/settings_schema.json')
+    settings_schema = JSON.load file
+
+    presets = {
+    }
+    if settings_data['presets'][settings_data['current']]
+      settings_data['presets'][settings_data['current']].keys.each do |section_id|
+        section_data = settings_data['presets'][settings_data['current']][section_id]
+        schema_data = settings_schema[section_id]
+        if schema_data
+          section_data['settings'].keys.each do |key|
+            value = section_data['settings'][key]
+            if schema_data['settings'][key]
+              presets[section_id] = { settings: {} }
+              case schema_data['settings'][key]['element']
+              when 'menu'
+                response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
+                if response.status.success?
+                  presets[section_id]['settings'][key] = response.parse
+                end
+              when 'product-picker'
+                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
+                if response.status.success?
+                  presets[section_id]['settings'][key] = response.parse
+                end
+              when 'products-picker'
+                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles[]' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
+                if response.status.success?
+                  presets[section_id]['settings'][key] = response.parse
+                end
+              when 'collection-picker'
+                response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
+                if response.status.success?
+                  presets[section_id]['settings'][key] = response.parse
+                end
+              else
+                next
+              end
+            else
+
+            end
+          end
+
+        end
+      end
+
+      @args['presets'] = presets
+    end
+
+    template = Liquid::Template.parse(File.read(@path + '/snippets/' + section_id + '.liquid'))
     template.render(@args)
   end
 

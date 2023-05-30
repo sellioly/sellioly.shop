@@ -19,7 +19,6 @@ class CartController < ShopController
     cart_id = params[:cart_id]
     variant_id = params[:variant_id]
     quantity = params[:quantity]
-
     cart = Cart.find_by(cart_id: cart_id)
     unless cart
       render json: { error: 'Cart not found' }, status: :bad_request
@@ -60,12 +59,13 @@ class CartController < ShopController
     # because we inherit from shop_controller
     @args['cart'] = cart.as_json
 
+    current_url = params[:current_url]
     # render sections
     sections = {}
     if params[:sections].present?
       section_ids = params[:sections].split(',')
       section_ids.each { |section_id|
-        sections[section_id] = render_section(section_id)
+        sections[section_id] = render_snippet(section_id, current_url)
       }
     end
 
@@ -117,7 +117,7 @@ class CartController < ShopController
     if params[:sections].present?
       section_ids = params[:sections].split(',')
       section_ids.each { |section_id|
-        sections[section_id] = render_section(section_id)
+        sections[section_id] = render_snippet(section_id, nil)
       }
     end
 
