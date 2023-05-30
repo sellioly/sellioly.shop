@@ -134,7 +134,7 @@ class CartController < ShopController
       return
     end
 
-    response = HTTP.post("https://api.sellioly.com/server/product/variant/get-by-id", 
+    response = HTTP.post("https://api.sellioly.com/server/product/variant/get-by-options", 
       :form => { 'app_domain' => @domain, 'product_handle' => params[:product_handle], 'options' => params[:options] }
     )
 
