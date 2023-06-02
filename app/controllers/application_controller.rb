@@ -134,11 +134,12 @@ class ApplicationController < ActionController::Base
       settings_data['presets'][settings_data['current']].keys.each do |section_id|
         section_data = settings_data['presets'][settings_data['current']][section_id]
         schema_data = settings_schema[section_id]
+        presets[section_id] = section_data # to verify !
+        
         if schema_data
           section_data['settings'].keys.each do |key|
             value = section_data['settings'][key]
             if schema_data['settings'][key]
-              presets[section_id] = { settings: {} }
               case schema_data['settings'][key]['element']
               when 'menu'
                 response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
