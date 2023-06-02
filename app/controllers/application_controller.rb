@@ -129,8 +129,7 @@ class ApplicationController < ActionController::Base
     file = File.read(@path + '/config/settings_schema.json')
     settings_schema = JSON.load file
 
-    presets = {
-    }
+    presets = {}
     if settings_data['presets'][settings_data['current']]
       settings_data['presets'][settings_data['current']].keys.each do |section_id|
         section_data = settings_data['presets'][settings_data['current']][section_id]
@@ -172,7 +171,7 @@ class ApplicationController < ActionController::Base
         end
       end
 
-      @args['presets'] = presets
+      @args['presets'] = presets.as_json
     end
 
   end
