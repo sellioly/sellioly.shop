@@ -171,7 +171,7 @@ class ApplicationController < ActionController::Base
         end
       end
 
-      @args['presets'] = presets.as_json
+      @args['presets'] = presets
     end
 
   end
