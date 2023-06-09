@@ -227,7 +227,7 @@ class StoreController < ApplicationController
     FileUtils.rm bundle_filename,:force => true
     Zip::File.open(bundle_filename, Zip::File::CREATE) do |zipfile|
       Dir.chdir @path
-      Dir.glob("**/*").reject {|fn| File.directory?(fn) }.each do |file|
+      Dir.glob("**/*").each do |file|
         zipfile.add(file.sub(@path + '/', ''), file)
       end
     end
