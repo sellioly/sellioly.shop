@@ -9,7 +9,7 @@ class UploadLocalTemplateJob < ApplicationJob
       FileUtils.mkdir_p(shop_path)
     end
 
-    @path = Rails.root.to_s + ("/storage/template/default")
+    @path = Rails.root.to_s + ("/storage/template/astral")
     FileUtils.copy_entry @path, shop_path
 
     file = File.read(shop_path + '/config/settings_schema.json')
