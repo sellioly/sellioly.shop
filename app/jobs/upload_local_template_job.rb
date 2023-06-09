@@ -12,7 +12,7 @@ class UploadLocalTemplateJob < ApplicationJob
     @path = Rails.root.to_s + ("/storage/templates/astral")
     FileUtils.copy_entry @path, shop_path
 
-    file = File.read(@path + '/config/settings_schema.json')
+    file = File.read(shop_path + '/config/settings_schema.json')
     @data = JSON.load file
     @theme_name = @data[0]['theme_name']
     @theme_version = @data[0]['theme_version']
