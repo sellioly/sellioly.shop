@@ -1,0 +1,35 @@
+<!-- ============================ Hero Banner  Start================================== -->
+<div class="home-slider margin-bottom-0">
+
+  {% for block in section.blocks %}
+
+    <!-- Slide -->
+    <div data-background-image="{{ block.settings.image }}" class="item">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="home-slider-container">
+
+              <!-- Slide Title -->
+              <div class="home-slider-desc">
+                <div class="home-slider-title mb-4">
+                  <h5 class="theme-cl fs-sm ft-ragular mb-0">{{ block.settings.subheading }}</h5>
+                  <h1 class="mb-1 ft-bold lg-heading">{{ block.settings.heading }}</h1>
+                  <span class="trending">{{ block.settings.description }}</span>
+                </div>
+
+                <a href="{{ block.settings.link }}" class="btn stretched-link borders">{{ block.settings.button_label }}<i class="lni lni-arrow-right ml-2"></i>
+                </a>
+              </div>
+              <!-- Slide Title / End -->
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  {% endfor %}
+
+</div>
+<!-- ============================ Hero Banner End ================================== -->

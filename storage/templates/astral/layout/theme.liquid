@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="author" content="Themezhub" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{ page_title | upcase }}</title>
+
+    <!-- Custom CSS -->
+
+    {{ 'styles.css' | asset_url | stylesheet_tag }}
+
+    {{ content_for_header }}
+
+  </head>
+
+  <body>
+
+    <!-- ============================================================== -->
+    <!-- Preloader - style you can find in spinners.css -->
+    <!-- ============================================================== --><div class="preloader"> </div>
+
+    <!-- ============================================================== -->
+    <!-- Main wrapper - style you can find in pages.scss -->
+    <!-- ============================================================== -->
+      <div id="main-wrapper"> <!-- ============================================================== -->
+
+      {% section 'header' %}
+
+      {{ content_for_layout }}
+
+      {% section 'footer' %}
+
+      <!--------------- Cart ---------------->
+      {% snippet 'cart-notification' %}
+      <!--------------- Cart | end ---------------->
+
+      <!--
+      <div
+      class="w3-ch-sideBar w3-bar-block w3-card-2 w3-animate-right"
+      style="display:none;right:0;"
+      id="Search">
+      <div class="rightMenu-scroll">
+      <div class="d-flex align-items-center justify-content-between slide-head py-3 px-3">
+      <h4 class="cart_heading fs-md ft-medium mb-0">Search Products</h4>
+      <button onclick="closeSearch()" class="close_slide">
+      <i class="ti-close"></i>
+      </button>
+      </div>
+
+      <div class="cart_action px-3 py-4">
+      <form class="form m-0 p-0">
+      <div class="form-group">
+      <input
+      type="text"
+      class="form-control"
+      placeholder="Product Keyword.." />
+      </div>
+
+      <div class="form-group">
+      <select class="custom-select">
+      <option value="1" selected="">Choose Category</option>
+      <option value="2">Men's Store</option>
+      <option value="3">Women's Store</option>
+      <option value="4">Kid's Fashion</option>
+      <option value="5">Inner Wear</option>
+      </select>
+      </div>
+
+      <div class="form-group mb-0">
+      <button type="button" class="btn d-block full-width btn-dark">Search Product</button>
+      </div>
+      </form>
+      </div>
+
+      <div class="d-flex align-items-center justify-content-center br-top br-bottom py-2 px-3">
+      <h4 class="cart_heading fs-md mb-0">Hot Categories</h4>
+      </div>
+
+      <div class="cart_action px-3 py-3">
+      <div class="row">
+      <div class="col-xl-4 col-lg-4 col-md-4 col-4 mb-3">
+      <div class="cats_side_wrap text-center">
+      <div class="sl_cat_01">
+      <div class="d-inline-flex align-items-center justify-content-center p-3 circle mb-2 gray">
+      <a href="javascript:void(0);" class="d-block"><img
+      src="assets/img/tshirt.png"
+      class="img-fluid"
+      width="40"
+      alt="" /></a>
+      </div>
+      </div>
+      <div class="sl_cat_02">
+      <h6 class="m-0 ft-medium fs-sm">
+      <a href="javascript:void(0);">T-Shirts</a>
+      </h6>
+      </div>
+      </div>
+      </div>
+      <div class="col-xl-4 col-lg-4 col-md-4 col-4 mb-3">
+      <div class="cats_side_wrap text-center">
+      <div class="sl_cat_01">
+      <div class="d-inline-flex align-items-center justify-content-center p-3 circle mb-2 gray">
+      <a href="javascript:void(0);" class="d-block"><img
+      src="assets/img/pant.png"
+      class="img-fluid"
+      width="40"
+      alt="" /></a>
+      </div>
+      </div>
+      <div class="sl_cat_02">
+      <h6 class="m-0 ft-medium fs-sm">
+      <a href="javascript:void(0);">Pants</a>
+      </h6>
+      </div>
+      </div>
+      </div>
+      <div class="col-xl-4 col-lg-4 col-md-4 col-4 mb-3">
+      <div class="cats_side_wrap text-center">
+      <div class="sl_cat_01">
+      <div class="d-inline-flex align-items-center justify-content-center p-3 circle mb-2 gray">
+      <a href="javascript:void(0);" class="d-block"><img
+      src="assets/img/fashion.png"
+      class="img-fluid"
+      width="40"
+      alt="" /></a>
+      </div>
+      </div>
+      <div class="sl_cat_02">
+      <h6 class="m-0 ft-medium fs-sm">
+      <a href="javascript:void(0);">Women's</a>
+      </h6>
+      </div>
+      </div>
+      </div>
+      <div class="col-xl-4 col-lg-4 col-md-4 col-4 mb-3">
+      <div class="cats_side_wrap text-center">
+      <div class="sl_cat_01">
+      <div class="d-inline-flex align-items-center justify-content-center p-3 circle mb-2 gray">
+      <a href="javascript:void(0);" class="d-block"><img
+      src="assets/img/sneakers.png"
+      class="img-fluid"
+      width="40"
+      alt="" /></a>
+      </div>
+      </div>
+      <div class="sl_cat_02">
+      <h6 class="m-0 ft-medium fs-sm">
+      <a href="javascript:void(0);">Shoes</a>
+      </h6>
+      </div>
+      </div>
+      </div>
+      <div class="col-xl-4 col-lg-4 col-md-4 col-4 mb-3">
+      <div class="cats_side_wrap text-center">
+      <div class="sl_cat_01">
+      <div class="d-inline-flex align-items-center justify-content-center p-3 circle mb-2 gray">
+      <a href="javascript:void(0);" class="d-block"><img
+      src="assets/img/television.png"
+      class="img-fluid"
+      width="40"
+      alt="" /></a>
+      </div>
+      </div>
+      <div class="sl_cat_02">
+      <h6 class="m-0 ft-medium fs-sm">
+      <a href="javascript:void(0);">Television</a>
+      </h6>
+      </div>
+      </div>
+      </div>
+      <div class="col-xl-4 col-lg-4 col-md-4 col-4 mb-3">
+      <div class="cats_side_wrap text-center">
+      <div class="sl_cat_01">
+      <div class="d-inline-flex align-items-center justify-content-center p-3 circle mb-2 gray">
+      <a href="javascript:void(0);" class="d-block"><img
+      src="assets/img/accessories.png"
+      class="img-fluid"
+      width="40"
+      alt="" /></a>
+      </div>
+      </div>
+      <div class="sl_cat_02">
+      <h6 class="m-0 ft-medium fs-sm">
+      <a href="javascript:void(0);">Accessories</a>
+      </h6>
+      </div>
+      </div>
+      </div>
+      </div>
+      </div>
+
+      </div>
+      </div>
+      -->
+        <a
+        id="back2Top"
+        class="top-scroll"
+        title="Back to top"
+        href="#"> <i class="ti-arrow-up"></i>
+      </a>
+
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Wrapper -->
+    <!-- ============================================================== -->
+
+    <!-- ============================================================== -->
+    <!-- All Jquery -->
+    <!-- ============================================================== --><script src="{{ 'jquery.min.js' | asset_url }}"> </script>
+    <script src="{{ 'popper.min.js' | asset_url }}"></script>
+    <script src="{{ 'bootstrap.min.js' | asset_url }}"></script>
+    <script src="{{ 'ion.rangeSlider.min.js' | asset_url }}"></script>
+    <script src="{{ 'slick.js' | asset_url }}"></script>
+    <script src="{{ 'slider-bg.js' | asset_url }}"></script>
+    <script src="{{ 'lightbox.js' | asset_url }}"></script>
+    <script src="{{ 'smoothproducts.js' | asset_url }}"></script>
+    <script src="{{ 'snackbar.min.js' | asset_url }}"></script>
+    <script src="{{ 'jQuery.style.switcher.js' | asset_url }}"></script>
+    <script src="{{ 'custom.js' | asset_url }}"></script>
+    <script src="{{ 'global.js' | asset_url }}"></script>
+
+    <script src="{{ 'cart.js' | asset_url }}"></script>
+    <script src="{{ 'checkout.js' | asset_url }}"></script>
+
+
+    <!-- ============================================================== -->
+    <!-- This page plugins -->
+    <!-- ============================================================== -->
+
+      <script>
+function openWishlist() {
+  document.getElementById("Wishlist").style.display = "block";
+}
+function closeWishlist() {
+  document.getElementById("Wishlist").style.display = "none";
+}
+</script>
+
+      <script>
+function openCart() {
+  document.getElementById("cart-notification").style.display = "block";
+}
+function closeCart() {
+  document.getElementById("cart-notification").style.display = "none";
+}
+</script>
+
+      <script>
+function openSearch() {
+  document.getElementById("Search").style.display = "block";
+}
+function closeSearch() {
+  document.getElementById("Search").style.display = "none";
+}
+</script>
+
+
+      <script>
+/*
+  window.routes = {
+    add_to_cart_url: '{{ routes.add_to_cart_url }}'
+    };
+    */
+window.routes = {
+  add_to_cart_url: '/api/cart/add',
+  remove_from_cart_url: '/api/cart/remove',
+  select_option_url: '/api/product/select-option',
+  add_order_url: '/api/order/add'
+};
+</script>
+
+      <script>
+
+window.config = {
+  cart_id: '{{ cart.cart_id }}'
+};
+</script>
+
+  {{ content_for_footer }}
+
+</body></html>

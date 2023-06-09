@@ -1,0 +1,30 @@
+{
+	"current": "Default",
+	"presets": {
+		"Default": {
+			"colors": {
+				"settings": {
+					"colors_solid_button_labels": "#9a2222",
+					"color_accent_1": "#547eed",
+					"gradient_accent_1": "#ef9f9f",
+					"colors_accent_2": "#0e1b4d",
+					"gradient_accent_2": "",
+					"colors_text": "#0e1b4d",
+					"colors_outline_button_labels": "#0e1b4d",
+					"colors_background_1": "#eff0f5",
+					"gradient_background_1": "#ffe8e8",
+					"colors_background_2": "#ffd9d9",
+					"gradient_background_2": ""
+				}
+			},
+			"cart-notification": {
+				"settings": {
+					"title": "Cart"
+				}
+			},
+			"cart-notification-icon": {
+				"settings": {}
+			}
+		}
+	}
+}

@@ -1,0 +1,26 @@
+{
+  "name": "Footer",
+  "class": "section-footer",
+  "settings": {
+    "copyright": {
+      "element": "rich-text",
+      "default": "",
+      "label": "Copy right"
+    },
+    "supportmenu": {
+      "element": "menu",
+      "default": "menu-footer",
+      "label": "Support menu"
+    },
+    "shopmenu": {
+      "element": "menu",
+      "default": "menu-footer",
+      "label": "Shop menu"
+    },
+    "companymenu": {
+      "element": "menu",
+      "default": "menu-footer",
+      "label": "Company menu"
+    }
+  }
+}

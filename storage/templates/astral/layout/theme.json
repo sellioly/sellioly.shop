@@ -1,0 +1,22 @@
+{
+	"sections": {
+		"header": {
+			"type": "header",
+			"settings": {
+				"logo_width": "96",
+				"menu": "main-menu"
+			},
+			"display_position": "top"
+		},
+		"footer": {
+			"type": "footer",
+			"settings": {
+				"copyright": "© 2023 Furbar Made with by sellioly",
+				"supportmenu": "menu-footer",
+				"shopmenu": "menu-shop",
+				"companymenu": "menu-company"
+			},
+			"display_position": "bottom"
+		}
+	}
+}

@@ -1,0 +1,160 @@
+<!-- ======================= Top Breadcrubms ======================== -->
+<div class="gray py-3" style="margin-top: 70px;">
+  <div class="container">
+    <div class="row">
+      <div class="colxl-12 col-lg-12 col-md-12">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+              <a href="/">Home</a>
+            </li>
+            <li class="breadcrumb-item">
+              <a href="/collections/all">Products</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">{{ product.title }}</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ======================= Top Breadcrubms ======================== -->
+
+<!-- ======================= Product Detail ======================== -->
+<section class="middle">
+  <div class="container">
+    <add-to-cart-form>
+      <form>
+        <!-------------- selected variant ------------>
+        <input hidden id="variant-id" type="text" name="variant_id" value="{{ product.variants[0].id }}">
+
+        <div class="product-infos" style="display: none;"></div>
+        <div class="row justify-content-between">
+          <div class="col-xl-5 col-lg-6 col-md-12 col-sm-12">
+            <div class="quick_view_slide">
+              {% for image in product.images %}
+                <div class="single_view_slide">
+                  <a
+                    href="{{ image.src }}"
+                    data-lightbox="roadtrip"
+                    class="d-block mb-4">
+                    <img
+                      src="{{ image.src }}"
+                      class="img-fluid rounded "
+                      alt="" />
+                  </a>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="col-xl-7 col-lg-6 col-md-12 col-sm-12">
+            <div class="prd_details pl-3 pt-3">
+              {% if product.tags.size > 0 %}
+                <div class="prt_01 mb-3">
+                  <span class="text-light bg-info rounded px-2 py-1">{{ product.tags[0] }}</span>
+                </div>
+              {% endif %}
+              <div class="prt_02 mb-4">
+                <h2 class="ft-bold mb-1">
+                  <span>{{ product.title }}</span>
+                </h2>
+                <div class="text-left">
+                  <div class="elis_rty">
+                    {% if product.variants[0].price %}
+                      <div class="elis_rty">
+                        <span class="ft-bold theme-cl fs-lg mr-2">
+                          <span id="product-price">{{ product.variants[0].price }}</span>
+                          <span>{{ currency }}</span>
+                        </span>
+                      </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+              {% for option in product.options %}
+
+                <div class="prt_04 mb-4">
+                  <p class="d-flex align-items-center mb-0 text-dark ft-medium">{{ option.name }}:</p>
+                  <div class="text-left pb-0 pt-2">
+                    <variant-options>
+                      {% for value in option.values %}
+                        <div class="form-check size-option form-option form-check-inline mb-2">
+                          <input
+                            class="form-check-input"
+                            type="radio"
+                            name="{{ option.name }}"
+                            value="{{ value }}"
+                            id="{{ option.name }}-{{ value }}"
+                            {% if forloop.first %}
+                              checked
+                            {% endif %}
+                          />  
+                          <label class="form-option-label" for="{{ option.name }}-{{ value }}">{{ value }}</label>
+                        </div>
+                      {% endfor %}
+                    </variant-options>
+                  </div>
+                </div>
+             
+              {% endfor %}
+
+              <div class="prt_05 mb-4">
+                <div class="form-row mb-7">
+                  <div class="col-12 col-lg-auto">
+                    <!-- Quantity -->
+                    <select id="product-quantity" name="quantity" class="mb-2 custom-select">
+                      <option value="1" selected="">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                    </select>
+                  </div>
+                  <div class="col-12 col-lg">
+                    <!-- Submit -->
+                    <button
+                      type="submit"
+                      class="btn btn-block custom-height bg-dark mb-2">
+                      <i class="lni lni-shopping-basket mr-2"></i>Add to Cart
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </form>
+    </add-to-cart-form>
+  </div>
+</section>
+<!-- ======================= Product Detail End ======================== -->
+
+<!-- ======================= Product Description ======================= -->
+
+{% if product.body_html != blank %}
+
+<section class="middle">
+  <div class="container">
+    <div class="row align-items-center justify-content-center">
+      <div class="col-xl-11 col-lg-12 col-md-12 col-sm-12">
+        <h3 class="text-center mb-3">Description</h3>
+        <div class="description_info">
+          {{ product.body_html }}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endif %}
+
+
+<!-- ======================= Product Description End ==================== -->
+
+
+<script>
+  var product =  {{ product | json }}
+</script>

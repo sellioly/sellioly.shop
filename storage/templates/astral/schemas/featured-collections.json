@@ -1,0 +1,22 @@
+{
+  "name": "Featured collections",
+  "settings": {
+    "show": {
+      "element": "checkbox",
+      "label": "Show section",
+      "default": true
+    }
+  },
+  "blocks": {
+    "featured-collection": {
+      "name": "Featured collection",
+      "settings": {
+        "collection": {
+          "element": "collection-picker",
+          "label": "Collection",
+          "default": "all"
+        }
+      }
+    }
+  }
+}

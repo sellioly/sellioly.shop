@@ -1,0 +1,44 @@
+{
+  "name": "Trending products",
+  "settings": {
+    "show": {
+      "element": "checkbox",
+      "label": "Show section",
+      "default": true
+    },
+    "divider_1": {
+      "element": "divider"
+    },
+    "heading": {
+      "element": "text",
+      "label": "Heading",
+      "default": ""
+    },
+    "subheading": {
+      "element": "text",
+      "label": "Sub heading",
+      "default": ""
+    },
+    "divider_2": {
+      "element": "divider"
+    },
+    "products": {
+      "element": "products-picker",
+      "label": "Products",
+      "default": []
+    },
+    "divider_3": {
+      "element": "divider"
+    },
+    "button_label": {
+      "element": "text",
+      "label": "Button label",
+      "default": ""
+    },
+    "button_link": {
+      "element": "url",
+      "label": "Button link",
+      "default": ""
+    }
+  }
+}

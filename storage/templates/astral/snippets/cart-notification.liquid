@@ -1,0 +1,79 @@
+<div
+  class="w3-ch-sideBar w3-bar-block w3-card-2 w3-animate-right"
+  style="display:none;right:0;"
+  id="cart-notification">
+  <div class="rightMenu-scroll">
+    <div class="d-flex align-items-center justify-content-between slide-head py-3 px-3">
+      <h4 class="cart_heading fs-md ft-medium mb-0">{{ presets.cart-notification.settings.title }}</h4>
+      <button onclick="closeCart()" class="close_slide">
+        <i class="ti-close"></i>
+      </button>
+    </div>
+    <div class="right-ch-sideBar">
+      {% if cart and cart.items.size > 0 %}
+        <div class="cart_select_items py-2">
+          <!-- Single Item -->
+          {% for item in cart.items %}
+            <remove-from-cart-form>
+              <form>
+                <!-------------- variant id ------------>
+                <input
+                  hidden
+                  type="text"
+                  name="variant_id"
+                  value="{{ item.variant_id }}">
+
+                <div class="d-flex align-items-center justify-content-between br-bottom px-3 py-3">
+                  <div class="cart_single d-flex align-items-center">
+                    <div class="cart_selected_single_thumb">
+                      <a href="#"><img
+                          src="{{ item.image }}"
+                          width="60"
+                          class="img-fluid"
+                          alt="" /></a>
+                    </div>
+                    <div class="cart_single_caption pl-2">
+                      <h4 class="product_title fs-sm ft-medium mb-0 lh-1">{{ item.title }}</h4>
+                      {% if item.options.size > 0 %}
+                        {% for option in item.options %}
+                          <span class="text-dark ft-medium small">{{ option.name }}</span>:
+                          <span class="text-dark small">{{ option.value }}</span>
+                          {% unless forloop.last %}
+                            <span class="text-dark small">,
+                            </span>
+                          {% endunless %}
+                        {% endfor %}
+                      {% endif %}
+                      <p class="mb-2"></p>
+                      <h4 class="fs-md ft-medium mb-0 lh-1">{{ item.price }} {{ currency }} x{{ item.quantity }}</h4>
+                    </div>
+                  </div>
+                  <div class="fls_last">
+                    <button type="submit" class="close_slide gray">
+                      <i class="ti-close"></i>
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </remove-from-cart-form>
+          {% endfor %}
+        </div>
+
+        <div class="d-flex align-items-center justify-content-between br-top br-bottom px-3 py-3">
+          <h6 class="mb-0">Subtotal</h6>
+          <h3 class="mb-0 ft-medium">{{ cart.subtotal }} {{ currency }}</h3>
+        </div>
+
+        <div class="cart_action px-3 py-3">
+          <div class="form-group">
+            <a href="/checkout" class="btn d-block full-width btn-dark">Checkout Now</a>
+          </div>
+        </div>
+      {% else %}
+        <div>
+          <h3 class="text-center mt-4">Empty cart!</h3>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,88 @@
+{
+  "colors": {
+    "name": "Template colors",
+    "settings": {
+      "header": {
+        "element": "header",
+        "content": "header__1.content"
+      },
+      "colors_solid_button_labels": {
+        "element": "color",
+        "default": "#FFFFFF",
+        "label": "colors solid button labels",
+        "info": "colors_solid_button_labels.info"
+      },
+      "color_accent_1": {
+        "element": "color",
+        "default": "#121212",
+        "label": "colors_accent_1.label",
+        "info": "colors_accent_1.info"
+      },
+      "gradient_accent_1": {
+        "element": "color",
+        "label": "gradient_accent_1.label"
+      },
+      "colors_accent_2": {
+        "element": "color",
+        "default": "#334FB4",
+        "label": "colors_accent_2.label"
+      },
+      "gradient_accent_2": {
+        "element": "color",
+        "label": "gradient_accent_2.label"
+      },
+      "header-2": {
+        "element": "header",
+        "content": "header__2.content"
+      },
+      "colors_text": {
+        "element": "color",
+        "default": "#121212",
+        "label": "colors_text.label",
+        "info": "colors_text.info"
+      },
+      "colors_outline_button_labels": {
+        "element": "color",
+        "default": "#121212",
+        "label": "colors_outline_button_labels.label",
+        "info": "colors_outline_button_labels.info"
+      },
+      "colors_background_1": {
+        "element": "color",
+        "default": "#FFFFFF",
+        "label": "colors_background_1.label"
+      },
+      "gradient_background_1": {
+        "element": "color",
+        "label": "gradient_background_1.label"
+      },
+      "colors_background_2": {
+        "element": "color",
+        "default": "#F3F3F3",
+        "label": "colors_background_2.label"
+      },
+      "gradient_background_2": {
+        "element": "color",
+        "label": "gradient_background_2.label"
+      }
+    }
+  },
+  "cart-notification": {
+    "name": "Cart notification",
+    "settings": {
+      "title": {
+        "element": "text",
+        "label": "Title",
+        "default": ""
+      }
+    }
+  },
+  "cart-notification-icon": {
+    "name": "Cart notification icon"
+  },
+  "settings_order": [
+    "colors",
+    "cart-notification",
+    "cart-notification-icon"
+  ]
+}

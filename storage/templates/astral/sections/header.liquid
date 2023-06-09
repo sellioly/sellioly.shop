@@ -1,0 +1,69 @@
+<!-- Top header  -->
+<!-- ============================================================== -->
+<!-- Start Navigation -->
+  <div id="header" class="header header-transparent dark-text"> <div class="container">
+    <nav id="navigation" class="navigation navigation-landscape">
+      <div class="nav-header">
+        <a class="nav-brand" href="/">
+          <div style="width: {{ section.settings.logo_width }}px">
+            {% if logo %}
+              {{ logo | img_tag: page_title }}
+            {% else %}
+              {{ page_title | capitalize }}
+            {% endif %}
+          </div>
+        </a>
+        <div class="nav-toggle"></div>
+        <div class="mobile_nav">
+          <ul>
+            <li><a href="#" onclick="openSearch()"><i class="lni lni-search-alt"></i></a></li>
+            <li><a href="#" onclick="openCart()"><i class="lni lni-shopping-basket"></i><span class="dn-counter">{{ cart.items.size }}</span></a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="nav-menus-wrapper" style="transition-property: none;">
+        <ul class="nav-menu">
+          {% for item in section.settings.menu.items %}
+            {% if item.children.size == 0 %}
+              <li>
+                <a href="{{ item.link }}">{{ item.name }}</a>
+              </li>
+            {% else %}
+              <li>
+                <a href="#">{{ item.name }}</a>
+                <ul class="nav-dropdown nav-submenu">
+                  {% for item2 in item.children %}
+                    <li>
+                      <a href="{{ item2.link }}">{{ item2.name }}</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+
+        <ul class="nav-menu nav-menu-social align-to-right">
+          <li>
+            <a href="#" onclick="openSearch()">
+              <i class="lni lni-search-alt"></i>
+            </a>
+          </li>
+          <li>
+            <a href="#" onclick="openCart()">
+              <i class="lni lni-shopping-basket"></i>
+              {% if cart and cart.items.size > 0 %}
+                {% snippet 'cart-notification-icon-desk' %}
+              {% endif %}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+</div>
+<!-- End Navigation -->
+<div class="clearfix"></div>
+<!-- ============================================================== -->
+<!-- Top header  -->
+<!-- ============================================================== -->

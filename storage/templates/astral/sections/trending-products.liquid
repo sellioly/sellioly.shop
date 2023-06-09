@@ -1,0 +1,86 @@
+<!-- ======================= Product List ======================== -->
+<section class="middle">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="sec_title position-relative text-center">
+          <h2 class="off_title">{{ section.settings.heading }}</h2>
+          <h3 class="ft-bold pt-3">{{ section.settings.subheading }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- row -->
+    <div class="row align-items-center rows-products">
+
+      {% for product in section.settings.products %}
+
+        {% assign product_link = '/products/' | append: product.handle %}
+
+        <!-- Single -->
+        <div class="col-xl-3 col-lg-4 col-md-6 col-6">
+          <div class="product_grid card b-0">
+            {% if product.tags.size > 0 %}
+              {% if product.tags[0] == 'new' %}
+                <div class="badge bg-success text-white position-absolute ft-regular ab-left text-upper">{{ product.tags[0] }}</div>
+              {% elsif product.tags[0] == 'hot' %}
+                <div class="badge bg-danger text-white position-absolute ft-regular ab-left text-upper">{{ product.tags[0] }}</div>
+              {% else %}
+                <div class="badge bg-warning text-white position-absolute ft-regular ab-left text-upper">{{ product.tags[0] }}</div>
+              {% endif %}
+            {% endif %}
+            <div class="card-body p-0">
+              <div class="shop_thumb position-relative">
+                <a class="card-img-top d-block overflow-hidden" href="{{ product_link }}"><img
+                    class="card-img-top"
+                    src="{{ product.default_image.src }}"
+                    alt="..."></a>
+                <div class="product-hover-overlay bg-dark d-flex align-items-center justify-content-center">
+                  <div class="edlio">
+                    <add-to-cart-form>
+                      <form id="add-to-cart-form">
+                        <input hidden id="variant-id" type="text" name="variant_id" value="{{ product.variants[0].id }}">
+                        <input hidden type="number" name="quantity" value="1">
+                        <button type="submit" style="border: none; background: none; color: white; cursor: pointer">
+                          <i class="lni lni-shopping-basket mr-2"></i>Add to Cart
+                        </button>
+                      </form>
+                    </add-to-cart-form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-footers b-0 pt-3 px-2 bg-white d-flex align-items-start justify-content-center">
+              <div class="text-left">
+                <div class="text-center">
+                  <h5 class="fw-bolder fs-md mb-0 lh-1 mb-1">
+                    <a href="{{ product_link }}">{{ product.title }}</a>
+                  </h5>
+                  {% if product.variants[0].price %}
+                    <div class="elis_rty">
+                      <span class="ft-bold fs-md text-dark">{{ product.variants[0].price }} {{ currency }}</span>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      {% endfor %}
+
+    </div>
+    <!-- row -->
+
+    <div class="row justify-content-center">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="position-relative text-center">
+          <a href="{{ section.settings.button_link }}" class="btn stretched-link borders">{{ section.settings.button_label }}<i class="lni lni-arrow-right ml-2"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<!-- ======================= Product List ======================== -->

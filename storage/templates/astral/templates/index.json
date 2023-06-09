@@ -1,0 +1,117 @@
+{
+	"sections": {
+		"slideshow": {
+			"type": "slideshow",
+			"settings": {
+				"show": true
+			},
+			"block_order": [
+				"slide-0",
+				"slide-1",
+				"slide-2"
+			],
+			"blocks": {
+				"slide-0": {
+					"type": "slide",
+					"settings": {
+						"heading": "New Winter<br>Collections 2023",
+						"subheading": "Winter Collection",
+						"description": "There's nothing like trend test",
+						"button_label": "Shop now",
+						"link": "/products/sky-blue-t-shirt",
+						"image": "https://sellioly.s3.eu-west-3.amazonaws.com/100174026596417908/images/qRYw0KkAWMMu3HRP86Yqd6JpF6nOCg4ceiuSBZBr.png"
+					}
+				},
+				"slide-1": {
+					"type": "slide",
+					"settings": {
+						"heading": "New Winter<br>Collections 2022",
+						"subheading": "Winter Collection",
+						"description": "To keep GitLab spam and abuse free",
+						"button_label": "Shop now",
+						"link": "/collections/women",
+						"image": "https://sellioly.s3.eu-west-3.amazonaws.com/100174026596417908/images/lrfqkFWMYSPdJJtMsmhvjsLKmENxSuZhJ5BH2tr5.jpg"
+					}
+				},
+				"slide-2": {
+					"type": "slide",
+					"settings": {
+						"heading": "New Winter<br>Collections 2023",
+						"subheading": "Winter Collection",
+						"description": "There's nothing like trend",
+						"button_label": "Shop now",
+						"link": "/products/stylish-hoddie",
+						"image": "https://sellioly.s3.eu-west-3.amazonaws.com/100174026596417908/images/55Tr7YCnpZhP4kZD6AeOlAYZFe8APv4Gn6C7gJFj.jpg"
+					}
+				}
+			}
+		},
+		"featured-collections": {
+			"type": "featured-collections",
+			"settings": {
+				"show": true
+			},
+			"block_order": [
+				"collection-0",
+				"collection-1",
+				"collection-2",
+				"collection-3"
+			],
+			"blocks": {
+				"collection-0": {
+					"type": "featured-collection",
+					"settings": {
+						"collection": "jackets"
+					}
+				},
+				"collection-1": {
+					"type": "featured-collection",
+					"settings": {
+						"collection": "men"
+					}
+				},
+				"collection-2": {
+					"type": "featured-collection",
+					"settings": {
+						"collection": "shoes"
+					}
+				},
+				"collection-3": {
+					"type": "featured-collection",
+					"settings": {
+						"collection": "t-shirt"
+					}
+				}
+			}
+		},
+		"trending-products": {
+			"type": "trending-products",
+			"settings": {
+				"show": true,
+				"heading": "Trending Products",
+				"subheading": "Our trending products",
+				"button_label": "Explore more",
+				"button_link": "/collections/jackets",
+				"products": [
+					"full-sleev-tshirt",
+					"sky-blue-t-shirt",
+					"comfort-unisex-hoddie",
+					"stylish-hoddie"
+				],
+				"special-products": "sky-blue-t-shirt"
+			}
+		},
+		"customer-features": {
+			"type": "customer-features",
+			"settings": {
+				"show": true
+			}
+		}
+	},
+	"order": [
+		"slideshow",
+		"featured-collections",
+		"trending-products",
+		"customer-features"
+	]
+}

@@ -1,0 +1,47 @@
+{
+  "name": "Slidshow",
+  "settings": {
+    "show": {
+      "element": "checkbox",
+      "label": "Show section",
+      "default": true
+    }
+  },
+  "blocks": {
+    "slide": {
+      "name": "Slide item",
+      "settings": {
+        "heading": {
+          "element": "text",
+          "label": "Heading",
+          "default": ""
+        },
+        "subheading": {
+          "element": "text",
+          "label": "Heading",
+          "default": ""
+        },
+        "description": {
+          "element": "textarea",
+          "label": "Description",
+          "default": ""
+        },
+        "button_label": {
+          "element": "text",
+          "label": "Text",
+          "default": ""
+        },
+        "link": {
+          "element": "url",
+          "label": "Link",
+          "default": ""
+        },
+        "image": {
+          "element": "image-picker",
+          "label": "Image",
+          "default": ""
+        }
+      }
+    }
+  }
+}
