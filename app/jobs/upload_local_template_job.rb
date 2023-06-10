@@ -12,12 +12,12 @@ class UploadLocalTemplateJob < ApplicationJob
     @path = Rails.root.to_s + ("/storage/templates/astral")
     FileUtils.copy_entry @path, shop_path
 
-    file = File.read(@path + '/config/settings_schema.json')
+    file = File.read(@path + '/config/settings_theme.json')
     @data = JSON.load file
-    @theme_name = @data[0]['theme_name']
-    @theme_version = @data[0]['theme_version']
-    @theme_author = @data[0]['theme_author']
-    @theme_support_url = @data[0]['theme_support_url']
+    @theme_name = @data['theme_name']
+    @theme_version = @data['theme_version']
+    @theme_author = @data['theme_author']
+    @theme_support_url = @data['theme_support_url']
 
 
     @response = HTTP.post("https://api.sellioly.com/server/template-created", :form => { 'app_domain' => app_domain, 'template_path' => sub_path, 'theme_name' => @theme_name, 'theme_version' => @theme_version, 'theme_author' => @theme_author, 'theme_support_url' => @theme_support_url })
