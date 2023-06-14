@@ -43,7 +43,7 @@ class OrderController < ApplicationController
     result = response.parse
 
     @path = Rails.root.to_s + @store.template_path.to_s
-    unless File.file? @path + '/sections/orderCompleted.liquid'
+    unless File.file? @path + '/sections/order-completed.liquid'
       render json: {}
       return
     end
