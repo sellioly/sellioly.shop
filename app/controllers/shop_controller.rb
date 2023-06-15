@@ -161,6 +161,11 @@ class ShopController < ApplicationController
     nil
   end
 
+  public def cart
+    render_page('cart.json')
+    nil
+  end
+
   private
 
   def render_snippet(section_id, current_url)
