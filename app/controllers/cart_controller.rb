@@ -69,7 +69,7 @@ class CartController < ShopController
       }
     end
 
-    render json: sections
+    render json: { "cart" => cart, "sections" => sections }
   end
 
   public def remove
@@ -159,7 +159,7 @@ class CartController < ShopController
       if item['variant_id'] == variant_id
         cart.subtotal -= item['price'].to_f * item['quantity'].to_i
         cart.subtotal += item['price'].to_f * quantity.to_i
-        
+
         item['quantity'] = quantity.to_i 
       else
         newItems.push(item)
