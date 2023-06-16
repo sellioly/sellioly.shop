@@ -161,9 +161,9 @@ class CartController < ShopController
         cart.subtotal += item['price'].to_f * quantity.to_i
 
         item['quantity'] = quantity.to_i 
-      else
-        newItems.push(item)
       end
+      
+      newItems.push(item)
     }
     
     cart.items = newItems
