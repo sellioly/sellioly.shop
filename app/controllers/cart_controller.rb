@@ -146,7 +146,7 @@ class CartController < ShopController
 
     cart_id = params[:cart_id]
     variant_id = params[:variant_id]
-    quantity = params[:variant_id]
+    quantity = params[:quantity]
 
     cart = Cart.find_by(cart_id: cart_id)
     unless cart
@@ -162,7 +162,7 @@ class CartController < ShopController
 
         item['quantity'] = quantity.to_i 
       end
-      
+
       newItems.push(item)
     }
     
