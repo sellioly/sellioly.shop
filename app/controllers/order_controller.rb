@@ -55,4 +55,43 @@ class OrderController < ApplicationController
     render json: sections
   end
 
+
+  
+  public def orderNow
+    unless check_store
+      return
+    end
+
+    unless @store
+      content_not_found
+      return
+    end
+
+    if !params[:variant_id].present? ||
+       !params[:quantity].present? || 
+       !params[:full_name].present? || 
+       !params[:phone].present? || 
+       !params[:city].present?
+      render json: { error: 'fields required' }, status: :bad_request
+      return 
+    end
+
+    response = HTTP.post("https://api.sellioly.com/server/order/create", :form => { 
+      'app_domain' => @domain,
+      'full_name' => params[:full_name],
+      'email' => params[:email],
+      'city' => params[:city],
+      'address' => params[:address],
+      'phone' => params[:phone],
+      'order_items' => [{ "variant_id" => params[:variant_id], "quantity" => params[:quantity]}]
+    })
+    unless response.status.success?
+      render json: { error: 'error on create the order!' }, status: :bad_request
+      return
+    end
+    result = response.parse
+
+    render json: { 'order_id' => result['id']}
+  end
+
 end

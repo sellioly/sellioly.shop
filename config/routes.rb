@@ -29,6 +29,7 @@ Rails.application.routes.draw do
     post 'api/cart/buynow', action: 'buynow', controller: 'cart'
     # post 'api/product/select-option', action: 'selectOption', controller: 'cart'
     post 'api/order/add', action: 'add', controller: 'order'
+    post 'api/order/order-now', action: 'orderNow', controller: 'order'
     get '/collections/:collection', action: 'collection', controller: 'shop'
     get '/products/:product', action: 'product', controller: 'shop'
     get '/checkout', action: 'checkout', controller: 'shop'
