@@ -83,7 +83,7 @@ class OrderController < ApplicationController
       'city' => params[:city],
       'address' => params[:address],
       'phone' => params[:phone],
-      'order_items' => [{ "variant_id" => params[:variant_id], "quantity" => params[:quantity]}]
+      'order_items' => [{ "variant_id" => params[:variant_id], "quantity" => params[:quantity]}].to_json
     })
     unless response.status.success?
       render json: { error: 'error on create the order!' }, status: :bad_request
