@@ -1,0 +1,18 @@
+{
+	"sections": {
+		"banner": {
+			"type": "collection-banner",
+			"settings": {
+				"banner_image": "https://sellioly.s3.eu-west-3.amazonaws.com/100174026596417908/images/Y4JywchN4tDX0ftpCGxqeKHuqPRGgNzQTetdK9aD.jpg"
+			}
+		},
+		"product-grid": {
+			"type": "collection-product-grid",
+			"settings": {}
+		}
+	},
+	"order": [
+		"banner",
+		"product-grid"
+	]
+}

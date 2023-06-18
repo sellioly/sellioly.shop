@@ -1,0 +1,18 @@
+{
+	"current": "Default",
+	"presets": {
+		"Default": {
+			"cart": {
+				"settings": {
+					"product_form_type": "order-now"
+				}
+			},
+			"colors": {
+				"settings": {
+					"primary": "#21c45d",
+					"secondary": "#dbdbdb"
+				}
+			}
+		}
+	}
+}

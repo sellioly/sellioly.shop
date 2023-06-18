@@ -1,0 +1,30 @@
+{
+  "name": "Trending products",
+  "settings": {
+    "show": {
+      "element": "checkbox",
+      "label": "Show section",
+      "default": true
+    },
+    "divider_1": {
+      "element": "divider"
+    },
+    "button_label": {
+      "element": "text",
+      "label": "Button label",
+      "default": ""
+    }
+  },
+  "blocks": {
+    "single-product": {
+      "name": "Single product",
+      "settings": {
+        "product": {
+          "element": "product-picker",
+          "label": "Product",
+          "default": ""
+        }
+      }
+    }
+  }
+}

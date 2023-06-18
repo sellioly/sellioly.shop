@@ -9,7 +9,7 @@ class UploadLocalTemplateJob < ApplicationJob
       FileUtils.mkdir_p(shop_path)
     end
 
-    @path = Rails.root.to_s + ("/storage/templates/astral")
+    @path = Rails.root.to_s + ("/storage/templates/katri")
     FileUtils.copy_entry @path, shop_path
 
     file = File.read(@path + '/config/settings_theme.json')

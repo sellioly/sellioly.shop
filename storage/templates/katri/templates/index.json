@@ -1,0 +1,120 @@
+{
+	"sections": {
+		"slideshow": {
+			"type": "slideshow",
+			"settings": {
+				"show": true
+			},
+			"block_order": [
+				"slide"
+			],
+			"blocks": {
+				"slide": {
+					"type": "slide",
+					"settings": {
+						"subheading": "Winter Collection",
+						"heading": "New Winter Collections",
+						"button_label": "Shop now",
+						"button_link": "#",
+						"image": "https://sellioly.s3.eu-west-3.amazonaws.com/100174026596417908/images/9amTt9AvekuREuTjXrjkkZ8lfPptn31xR0D9Wxh2.jpg"
+					}
+				}
+			}
+		},
+		"trending-products": {
+			"type": "trending-products",
+			"settings": {
+				"show": true,
+				"button_label": "Shop now"
+			},
+			"block_order": [
+				"product-0",
+				"product-1",
+				"product-2"
+			],
+			"blocks": {
+				"product-0": {
+					"type": "single-product",
+					"settings": {
+						"product": ""
+					}
+				},
+				"product-1": {
+					"type": "single-product",
+					"settings": {
+						"product": ""
+					}
+				},
+				"product-2": {
+					"type": "single-product",
+					"settings": {
+						"product": ""
+					}
+				}
+			}
+		},
+		"new-arrivals": {
+			"type": "new-arrivals",
+			"settings": {
+				"show": true,
+				"heading": "New Arrivals",
+				"subheading": "Vestibulum auctor dapibus neque",
+				"products": []
+			}
+		},
+		"popular-collections": {
+			"type": "popular-collections",
+			"settings": {
+				"show": true,
+				"heading": "Popular Collections",
+				"subheading": "Vestibulum auctor dapibus neque",
+				"button_label": "Discover now"
+			},
+			"block_order": [
+				"collection-0",
+				"collection-1",
+				"collection-2",
+				"collection-3"
+			],
+			"blocks": {
+				"collection-0": {
+					"type": "single-collection",
+					"settings": {
+						"collection": ""
+					}
+				},
+				"collection-1": {
+					"type": "single-collection",
+					"settings": {
+						"collection": ""
+					}
+				},
+				"collection-2": {
+					"type": "single-collection",
+					"settings": {
+						"collection": ""
+					}
+				},
+				"collection-3": {
+					"type": "single-collection",
+					"settings": {
+						"collection": ""
+					}
+				}
+			}
+		},
+		"customer-features": {
+			"type": "customer-features",
+			"settings": {
+				"show": true
+			}
+		}
+	},
+	"order": [
+		"slideshow",
+		"trending-products",
+		"new-arrivals",
+		"popular-collections",
+		"customer-features"
+	]
+}

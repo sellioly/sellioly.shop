@@ -1,0 +1,19 @@
+{
+	"sections": {
+		"header": {
+			"type": "header",
+			"settings": {
+				"logo_width": "120",
+				"menu": "main-menu"
+			},
+			"display_position": "top"
+		},
+		"footer": {
+			"type": "footer",
+			"settings": {
+				"menu": ""
+			},
+			"display_position": "bottom"
+		}
+	}
+}

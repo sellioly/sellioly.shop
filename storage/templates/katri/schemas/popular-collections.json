@@ -1,0 +1,43 @@
+{
+  "name": "Popular collections",
+  "settings": {
+    "show": {
+      "element": "checkbox",
+      "label": "Show section",
+      "default": true
+    },
+    "divider_1": {
+      "element": "divider"
+    },
+    "heading": {
+      "element": "text",
+      "label": "Heading",
+      "default": true
+    },
+    "subheading": {
+      "element": "text",
+      "label": "Sub Heading",
+      "default": true
+    },
+    "divider_2": {
+      "element": "divider"
+    },
+    "button_label": {
+      "element": "text",
+      "label": "Button label",
+      "default": true
+    }
+  },
+  "blocks": {
+    "single-collection": {
+      "name": "Single collection",
+      "settings": {
+        "collection": {
+          "element": "collection-picker",
+          "label": "Collection",
+          "default": "all"
+        }
+      }
+    }
+  }
+}

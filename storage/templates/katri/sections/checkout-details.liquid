@@ -1,0 +1,116 @@
+<div class="page-header text-center" style="background-color: #eeeeee8a;">
+    <div class="container">
+        <h1 class="page-title">Checkout<span>Shop</span></h1>
+    </div><!-- End .container -->
+</div><!-- End .page-header -->
+<nav aria-label="breadcrumb" class="breadcrumb-nav">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+        </ol>
+    </div><!-- End .container -->
+</nav><!-- End .breadcrumb-nav -->
+
+<div id="checkout" class="page-content">
+    <div class="checkout">
+        <div class="container">
+            {% if cart.items.size > 0 %}
+            <add-order-form>
+                <div class="row">
+                    <div class="col-lg-7">
+                        <h2 class="checkout-title">Billing Details</h2><!-- End .checkout-title -->
+  
+                        <label>Full Name *</label>
+                        <input type="text" class="form-control" name="full_name" required="" data-dashlane-rid="968583940b94b3db" data-kwimpalastatus="alive" data-kwimpalaid="1686753473364-2" data-form-type="full_name">
+
+                        <label>Phone *</label>
+                        <input type="tel" class="form-control" name="phone" required="" data-dashlane-rid="c98ccd76f018de44" data-kwimpalastatus="alive" data-kwimpalaid="1686753473364-8" data-form-type="phone">
+
+                        <label>City *</label>
+                        <input type="text" class="form-control" name="city" required="" data-dashlane-rid="16c9c7a7bfedd91a" data-kwimpalastatus="alive" data-kwimpalaid="1686753473364-3" data-form-type="city">
+
+                        <label>Adresse (optional)</label>
+                        <textarea class="form-control" name="address" cols="30" rows="4" placeholder="Notes about your order, e.g. special notes for delivery" data-dashlane-rid="d496fe0218b4c7c4" data-form-type="address"></textarea>
+                    </div>  
+                    <aside class="col-lg-5">
+                        <div class="summary">
+                            <h3 class="summary-title">Your Order</h3><!-- End .summary-title -->
+
+                            <table class="table table-summary">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>            
+                                    {% for item in cart.items %}
+                                        <tr>
+                                            <td>
+                                                <p style="margin-bottom: 2px"><a href="#">{{ item.title }}</a></p>
+                                                {% if item.options.size > 0 %}
+                                                    {% for option in item.options %}
+                                                        <span class="">{{ option.name }}</span>:
+                                                        <span class="">{{ option.value }}</span>
+                                                        {% unless forloop.last %}
+                                                        <span class="">,
+                                                        </span>
+                                                        {% endunless %}
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <span>{{ item.quantity }} x {{ item.price }} {{ currency }}</span>
+                                                <br />
+                                                <span style="font-weight: 600">{{ item.price | times: item.quantity }} {{ currency }}</span>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+
+                                    <tr class="summary-total">
+                                        <td>Total:</td>
+                                        <td>{{ cart.subtotal }} {{ currency }}</td>
+                                    </tr><!-- End .summary-total -->
+                                </tbody>
+                            </table><!-- End .table table-summary -->
+
+
+                            <div class="accordion-summary" id="accordion-payment">
+                                <div class="card">
+                                    <div class="card-header" id="heading-3">
+                                        <h2 class="card-title">
+                                            <a class="" role="button" disabled data-toggle="collapse" href="#collapse-3" aria-expanded="true" aria-controls="collapse-3" data-dashlane-rid="0dec9ad1be237007" data-dashlane-label="true" data-form-type="other">
+                                                Cash on delivery
+                                            </a>
+                                        </h2>
+                                    </div><!-- End .card-header -->
+                                    <div id="collapse-3" class="collapse show" aria-labelledby="heading-3" data-parent="#accordion-payment" style="">
+                                        <div class="card-body">Quisque volutpat mattis eros. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. 
+                                        </div><!-- End .card-body -->
+                                    </div><!-- End .collapse -->
+                                </div><!-- End .card -->
+                            </div>
+
+
+                            <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block" data-dashlane-rid="c58bb6439f13b31e" data-dashlane-label="true" data-form-type="action">
+                                <span class="btn-text">Place Order</span>
+                                <span class="btn-hover-text">Proceed to Checkout</span>
+                            </button>
+                        </div><!-- End .summary -->
+                    </aside><!-- End .col-lg-3 -->
+                </div><!-- End .row -->
+            </add-order-form>
+            {% else %}
+                <div class="text-center my-5">
+                    <p class="mb-1" style="font-size: 18px">No Items in the cart</p>
+                    <a href="/collections/all" class="btn btn-outline-primary-2 btn-minwidth-lg">
+                        <span>GO TO SHIPPING</span>
+                        <i class="icon-long-arrow-right"></i>
+                    </a>
+                </div>
+            {% endif %}
+        </div><!-- End .container -->
+    </div><!-- End .checkout -->
+</div><!-- End .page-content -->

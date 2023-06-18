@@ -1,0 +1,149 @@
+<header class="header header-9">
+  <div class="header-middle sticky-header">
+    <div class="container">
+      <div class="header-left">
+        <button class="mobile-menu-toggler">
+          <span class="sr-only">Toggle mobile menu</span>
+          <i class="icon-bars"></i>
+        </button>
+
+        <a href="/" class="logo">
+          {% if logo %}
+          <div style="width: {{ section.settings.logo_width }}px">
+            {{ logo | img_tag: page_title }}
+          </div>
+          {% else %}
+          <span style="font-size: 16px; font-weight: 600;">
+            {{ shop_name | capitalize }}
+          </span>
+          {% endif %}
+        </a>
+      </div>
+      <!-- End .header-left -->
+
+      <div class="header-right">
+        <nav class="main-nav">
+          <ul class="menu sf-arrows">
+
+            {% for item in section.settings.menu.items %}
+            {% if item.children.size == 0 %}
+            <li>
+              <a href="{{ item.link }}">{{ item.name }}</a>
+            </li>
+            {% else %}
+            <li>
+              <a href="#" class="sf-with-ul">{{ item.name }}</a>
+              <ul>
+                {% for item2 in item.children %}
+                <li>
+                  <a href="{{ item2.link }}">{{ item2.name }}</a>
+                </li>
+                {% endfor %}
+              </ul>
+            </li>
+            {% endif %}
+            {% endfor %}
+
+          </ul>
+          <!-- End .menu -->
+        </nav>
+        <!-- End .main-nav -->
+
+        {% snippet 'cart-notification' %}
+
+        <!-- End .cart-dropdown -->
+      </div>
+      <!-- End .header-right -->
+    </div>
+    <!-- End .container -->
+  </div>
+  <!-- End .header-middle -->
+</header>
+<!-- End .header -->
+
+<!-- Mobile Menu -->
+<div class="mobile-menu-container mobile-menu-light">
+  <div class="mobile-menu-wrapper">
+    <span class="mobile-menu-close">
+      <i class="icon-close"></i>
+    </span>
+
+    <form
+      action="#"
+      method="get"
+      class="mobile-search">
+      <label for="mobile-search" class="sr-only">Search</label>
+      <input
+        type="search"
+        class="form-control"
+        name="mobile-search"
+        id="mobile-search"
+        placeholder="Search in..."
+        required />
+      <button class="btn btn-primary" type="submit">
+        <i class="icon-search"></i>
+      </button>
+    </form>
+
+    <nav class="mobile-nav">
+      <ul class="mobile-menu">
+        {% for item in section.settings.menu.items %}
+          {% if item.children.size == 0 %}
+            <li>
+              <a href="{{ item.link }}">{{ item.name }}</a>
+            </li>
+          {% else %}
+            <li>
+              <a href="#" class="sf-with-ul">{{ item.name }}</a>
+              <ul>
+                {% for item2 in item.children %}
+                <li>
+                  <a href="{{ item2.link }}">{{ item2.name }}</a>
+                </li>
+                {% endfor %}
+              </ul>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </nav>
+    <!-- End .mobile-nav -->
+
+    <div class="social-icons">
+      <a
+        href="#"
+        class="social-icon"
+        target="_blank"
+        title="Facebook">
+        <i class="icon-facebook-f"></i>
+      </a>
+      <a
+        href="#"
+        class="social-icon"
+        target="_blank"
+        title="Twitter">
+        <i class="icon-twitter"></i>
+      </a>
+      <a
+        href="#"
+        class="social-icon"
+        target="_blank"
+        title="Instagram">
+        <i class="icon-instagram"></i>
+      </a>
+      <a
+        href="#"
+        class="social-icon"
+        target="_blank"
+        title="Youtube">
+        <i class="icon-youtube"></i>
+      </a>
+    </div>
+    <!-- End .social-icons -->
+  </div>
+  <!-- End .mobile-menu-wrapper -->
+</div>
+<!-- End .mobile-menu-container -->
+
+<div class="mobile-menu-overlay"></div>
+<!-- End .mobil-menu-overlay -->

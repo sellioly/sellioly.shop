@@ -1,0 +1,10 @@
+{
+  "name": "Customer features",
+  "settings": {
+    "show": {
+      "element": "checkbox",
+      "label": "Show section",
+      "default": true
+    }
+  }
+}

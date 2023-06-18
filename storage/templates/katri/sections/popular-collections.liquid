@@ -1,0 +1,113 @@
+<div class="container">
+  <div class="heading text-center mb-4">
+    <h2 class="title">Popular Categories</h2>
+    <!-- End .title -->
+    <p class="title-desc">Vestibulum auctor dapibus neque</p>
+    <!-- End .title-desc -->
+  </div>
+  <!-- End .heading -->
+
+  <div class="row">
+    <div class="col-sm-6 col-lg-4">
+      <div class="banner banner-display banner-link-anim">
+        <a href="/collections/{{ section.blocks[0].settings.collection.handle }}">
+          <img src="{{ section.blocks[0].settings.collection.image.src }}" alt="Banner" style="height: 500px; object-fit: cover;" />
+        </a>
+
+        <div class="banner-content banner-content-center">
+          <h3 class="banner-title text-white">
+            {{ section.blocks[0].settings.collection.title }}
+          </h3>
+          <!-- End .banner-title -->
+          <h4 class="banner-subtitle text-white">
+            {{ section.blocks[0].settings.collection.nbProducts }} Items
+          </h4>
+          <!-- End .banner-subtitle -->
+          <a href="/collections/{{ section.blocks[0].settings.collection.handle }}" class="btn btn-outline-white banner-link">{{ section.settings.button_label }}</a>
+        </div>
+        <!-- End .banner-content -->
+      </div>
+      <!-- End .banner -->
+    </div>
+    <!-- End .col-sm-6 -->
+
+    <div class="col-sm-6 col-lg-4 order-lg-last">
+      <div class="banner banner-display banner-link-anim">
+        <a href="/collections/{{ section.blocks[1].settings.collection.handle }}">
+          <img src="{{ section.blocks[1].settings.collection.image.src }}" alt="Banner" style="height: 500px; object-fit: cover;" />
+        </a>
+
+        <div class="banner-content banner-content-center">
+          <h3 class="banner-title text-white">
+            {{ section.blocks[1].settings.collection.title }}
+          </h3>
+          <!-- End .banner-title -->
+          <h4 class="banner-subtitle text-white">
+            {{ section.blocks[1].settings.collection.nbProducts }} Items
+          </h4>
+          <!-- End .banner-subtitle -->
+          <a href="/collections/{{ section.blocks[1].settings.collection.handle }}" class="btn btn-outline-white banner-link">{{ section.settings.button_label }}</a>
+        </div>
+        <!-- End .banner-content -->
+      </div>
+      <!-- End .banner -->
+    </div>
+    <!-- End .col-sm-6 -->
+
+    <div class="col-lg-4">
+      <div class="row">
+        <div class="col-sm-6 col-lg-12">
+          <div class="banner banner-display banner-link-anim">
+            <a href="/collections/{{ section.blocks[2].settings.collection.handle }}">
+              <img src="{{ section.blocks[2].settings.collection.image.src }}"
+                alt="Banner" style="height: 240px; object-fit: cover;" />
+            </a>
+
+            <div class="banner-content banner-content-center">
+              <h3 class="banner-title text-white">
+                {{ section.blocks[2].settings.collection.title }}
+              </h3>
+              <!-- End .banner-title -->
+              <h4 class="banner-subtitle text-white">
+                {{ section.blocks[2].settings.collection.nbProducts }} Items
+              </h4>
+              <!-- End .banner-subtitle -->
+              <a href="/collections/{{ section.blocks[2].settings.collection.handle }}" class="btn btn-outline-white banner-link">{{ section.settings.button_label }}</a>
+            </div>
+            <!-- End .banner-content -->
+          </div>
+          <!-- End .banner -->
+        </div>
+        <!-- End .col-sm-6 -->
+
+        <div class="col-sm-6 col-lg-12">
+          <div class="banner banner-display banner-link-anim">
+            <a href="/collections/{{ section.blocks[3].settings.collection.handle }}">
+              <img src="{{ section.blocks[3].settings.collection.image.src }}"
+                alt="Banner" style="height: 240px; object-fit: cover;" />
+            </a>
+
+            <div class="banner-content banner-content-center">
+              <h3 class="banner-title text-white">
+                {{ section.blocks[3].settings.collection.title }}
+              </h3>
+              <!-- End .banner-title -->
+              <h4 class="banner-subtitle text-white">
+                {{ section.blocks[3].settings.collection.nbProducts }} Items
+              </h4>
+              <!-- End .banner-subtitle -->
+              <a href="/collections/{{ section.blocks[3].settings.collection.handle }}" class="btn btn-outline-white banner-link">{{ section.settings.button_label }}</a>
+            </div>
+            <!-- End .banner-content -->
+          </div>
+          <!-- End .banner -->
+        </div>
+        <!-- End .col-sm-6 -->
+      </div>
+      <!-- End .row -->
+    </div>
+    <!-- End .col-lg-6 -->
+  </div>
+  <!-- End .row -->
+</div>
+<!-- End .container -->

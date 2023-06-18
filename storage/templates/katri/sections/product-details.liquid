@@ -1,0 +1,278 @@
+<nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
+  <div class="container d-flex align-items-center">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Home</a></li>
+      {% if product.collection %}
+        <li class="breadcrumb-item"><a href="/collections/{{ product.collection.handle }}">
+        {{ product.collection.title }}</a>
+        </li>
+      {% endif %}
+      <li class="breadcrumb-item active" aria-current="page">{{ product.title }}</li>
+    </ol>
+  </div><!-- End .container -->
+</nav><!-- End .breadcrumb-nav -->
+
+<div class="page-content">
+  <div class="container">
+    {% if presets.cart.settings.product_form_type == 'add-to-cart' %}
+      <add-to-cart-form>
+    {% elsif presets.cart.settings.product_form_type == 'buy-now' %}
+      <buy-now-form>
+    {% elsif presets.cart.settings.product_form_type == 'order-now' %}
+      <order-now-form>
+    {% endif %}
+        <!-------------- selected variant ------------>
+        <input hidden id="variant-id" type="text" name="variant_id" value="{{ product.variants[0].id }}">
+
+        <div class="product-details-top">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="product-gallery product-gallery-vertical">
+                <div class="row">
+                  <figure class="product-main-image">
+                    <img id="product-zoom" style="max-height: 550px;object-fit: cover;" src="{{ product.default_image.src }}"
+                      data-zoom-image="{{ product.default_image.src }}" alt="product image">
+
+                    <a href="#" id="btn-product-gallery" class="btn-product-gallery">
+                      <i class="icon-arrows"></i>
+                    </a>
+                  </figure><!-- End .product-main-image -->
+
+                  <div id="product-zoom-gallery" class="product-image-gallery">
+                    {% for image in product.images %}
+                    <a class="product-gallery-item" href="#" data-image="{{ image.src }}" data-zoom-image="{{ image.src }}" style="height: 140px">
+                      <img src="{{ image.src }}" alt="product side" style="height: 100%;object-fit: cover;">
+                    </a>
+                    {% endfor %}
+                  </div><!-- End .product-image-gallery -->
+                </div><!-- End .row -->
+              </div><!-- End .product-gallery -->
+            </div><!-- End .col-md-6 -->
+
+            <div class="col-md-6">
+              <div class="product-details" data-dashlane-rid="38344246cd837a53" data-form-type="other">
+                <h1 class="product-title mt-1">{{ product.title }}</h1><!-- End .product-title -->
+
+                {% if product.variants[0].price %}
+                  <div class="product-price mb-3">
+                    <span id="product-price" >{{ product.variants[0].price }}</span>
+                    <span class="ml-1"> {{ currency }}</span> 
+                  </div>
+                {% endif %}
+
+                {% for option in product.options %}
+                  <div class="details-filter-row details-row-size">
+                    <label for="size">{{ option.name }}:</label>
+                    <div class="select-custom" style="width: 180px;">
+
+                      <variant-options-select>
+                        <select name="{{ option.name }}" id="{{ option.name }}" class="form-control"
+                          data-dashlane-rid="6ccb70fc284dcc2e" data-form-type="other">
+                          {% for value in option.values %}
+                          <option id="{{ option.name }}-{{ value }}" value="{{ value }}">{{ value }}</option>
+                          {% endfor %}
+                        </select>
+                      </variant-options-select>
+
+                    </div><!-- End .select-custom -->
+                  </div><!-- End .details-filter-row -->
+                {% endfor %}
+
+
+                <div class="details-filter-row details-row-size mt-3">
+                  <label for="qty">Qty:</label>
+                  <div class="product-details-quantity">
+                    <input type="number" id="product-quantity" name="quantity" class="quantity form-control" value="1" min="1"
+                      max="10" step="1" data-decimals="0" style="min-width: 50px;">
+                  </div><!-- End .product-details-quantity -->
+                </div><!-- End .details-filter-row -->
+
+                <div class="product-details-action" >
+                  {% if presets.cart.settings.product_form_type == 'add-to-cart' %}
+                    <button type="submit" class="btn-product btn-cart" style="max-width: 100%; width: 100%">
+                      <span>Add to cart</span>
+                    </button>
+                  {% elsif presets.cart.settings.product_form_type == 'buy-now' %}
+                    <button type="submit" class="btn-product btn-cart" style="max-width: 100%; width: 100%">
+                      <span>Buy now</span>
+                    </button>
+                  {% elsif presets.cart.settings.product_form_type == 'order-now' %}
+                    <div id="order-now-form" style="width: 100%">
+                      <div style="border-top: 0.1rem solid #ebebeb;width: 100%; margin-bottom: 2rem"></div>
+
+                      <input type="text" placeholder="Full name" class="form-control" name="full_name" required="" data-dashlane-rid="968583940b94b3db" data-kwimpalastatus="alive" data-kwimpalaid="1686753473364-2" data-form-type="full_name">
+
+                      <input type="tel" placeholder="Phone" class="form-control" name="phone" required="" data-dashlane-rid="c98ccd76f018de44" data-kwimpalastatus="alive" data-kwimpalaid="1686753473364-8" data-form-type="phone">
+
+                      <input type="text" placeholder="City" class="form-control" name="city" required="" data-dashlane-rid="16c9c7a7bfedd91a" data-kwimpalastatus="alive" data-kwimpalaid="1686753473364-3" data-form-type="city">
+
+                      <button type="submit" class="btn-product btn-cart" style="max-width: 100%; width: 100%">
+                        <span>Order now</span>
+                      </button>
+                    </div>
+                  {% endif %}
+                </div><!-- End .product-details-action -->
+
+                <div class="product-details-footer">
+                  <div class="product-cat">
+                    {% if product.collection %}
+                      <span>Category:</span>
+                      <a href="/collections/{{ product.collection.handle }}">{{ product.collection.title }}</a>
+                    {% endif %}
+                  </div><!-- End .product-cat -->
+
+                  <div class="social-icons social-icons-sm">
+                    <span class="social-label">Share:</span>
+                    <a href="#" class="social-icon" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
+                    <a href="#" class="social-icon" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
+                    <a href="#" class="social-icon" title="Instagram" target="_blank"><i class="icon-instagram"></i></a>
+                    <a href="#" class="social-icon" title="Pinterest" target="_blank"><i class="icon-pinterest"></i></a>
+                  </div>
+                </div><!-- End .product-details-footer -->
+              </div><!-- End .product-details -->
+            </div><!-- End .col-md-6 -->
+          </div><!-- End .row -->
+        </div><!-- End .product-details-top -->
+
+    {% if presets.cart.settings.product_form_type == 'add-to-cart' %}
+      </add-to-cart-form>
+    {% elsif presets.cart.settings.product_form_type == 'buy-now' %}
+      </buy-now-form>
+    {% elsif presets.cart.settings.product_form_type == 'order-now' %}
+      </order-now-form>
+    {% endif %}
+
+
+    {% if product.body_html != blank %}
+      <div class="product-details-tab">
+        <ul class="nav nav-pills justify-content-center" role="tablist">
+          <li class="nav-item">
+            <a class="nav-link" id="product-desc-link" data-toggle="tab" href="#product-desc-tab" role="tab"
+              aria-controls="product-desc-tab" aria-selected="false">Description</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane fade show active" id="product-desc-tab" role="tabpanel" aria-labelledby="product-desc-link">
+            <div class="product-desc-content">
+
+              {{ product.body_html }}
+              
+            </div><!-- End .product-desc-content -->
+          </div><!-- .End .tab-pane -->
+        </div><!-- End .tab-content -->
+      </div><!-- End .product-details-tab -->
+    {% endif %}
+    <h2 class="title text-center mb-4">You May Also Like</h2><!-- End .title text-center -->
+
+    <div class="owl-carousel owl-simple" data-toggle="owl" data-owl-options='{
+                                                                            "nav": false, 
+                                                                            "dots": true,
+                                                                            "margin": 20,
+                                                                            "loop": false,
+                                                                            "responsive": {
+                                                                                "0": {
+                                                                                    "items":1
+                                                                                },
+                                                                                "480": {
+                                                                                    "items":2
+                                                                                },
+                                                                                "768": {
+                                                                                    "items":3
+                                                                                },
+                                                                                "992": {
+                                                                                    "items":4
+                                                                                },
+                                                                                "1200": {
+                                                                                    "items":4,
+                                                                                    "nav": true
+                                                                                }
+                                                                            }
+                                                                        }'>
+
+      {% for product in similar_products %}
+        {% assign product_link = '/products/' | append: product.handle %}
+
+        <div class="product product-4">
+          <figure class="product-media">
+            <a href="{{ product_link }}">
+              <img src="{{ product.default_image.src }}"
+                alt="Product image" class="product-image" />
+              {% if product.images.size > 1 %}
+                <img src="{{ product.images[1].src }}"
+                  alt="Product image" class="product-image-hover" />
+              {% endif %}
+            </a>
+
+            <div class="product-action-vertical">
+              <a href="#" class="btn-product-icon btn-wishlist btn-expandable">
+                <span>add to wishlist</span>
+              </a>
+              <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view">
+                <span>Quick view</span>
+              </a>
+              <a href="#" class="btn-product-icon btn-compare" title="Compare">
+                <span>Compare</span>
+              </a>
+            </div>
+            <!-- End .product-action -->
+
+
+              {% if presets.cart.settings.product_form_type == 'add-to-cart' %}
+                <add-to-cart-form>
+                  <div class="product-action">
+                    <input hidden id="variant-id" type="text" name="variant_id" value="{{ product.variants[0].id }}">
+                    <input hidden type="number" name="quantity" value="1">
+
+                    <button type="submit" class="btn-product btn-cart">
+                      <span>add to cart</span>
+                    </button>
+                  </div>
+                </add-to-cart-form>
+              {% elsif presets.cart.settings.product_form_type == 'buy-now' %}
+                <buy-now-form>
+                  <div class="product-action">
+                    <input hidden id="variant-id" type="text" name="variant_id" value="{{ product.variants[0].id }}">
+                    <input hidden type="number" name="quantity" value="1">
+                    <button type="submit" class="btn-product btn-cart">
+                      <span>Buy now</span>
+                    </button>
+                  </div>
+                </buy-now-form>
+              {% elsif presets.cart.settings.product_form_type == 'order-now' %}
+                <div class="product-action">
+                  <a href="{{ product_link }}" class="btn-product btn-cart">
+                    <span>Buy now</span>
+                  </a>
+                </div>
+              {% endif %}
+            <!-- End .product-action -->
+          </figure>
+          <!-- End .product-media -->
+
+          <div class="product-body">
+            {% if product.collection != null %}
+              <div class="product-cat">
+                <a href="#">{{ product.collection.title }}</a>
+              </div>
+            {% endif %}
+            <!-- End .product-cat -->
+            <h3 class="product-title">
+              <a href="{{ product_link }}">{{ product.title }}</a>
+            </h3>
+            <!-- End .product-title -->
+            <div class="product-price">{{ product.variants[0].price }} {{ currency }}</div>
+            <!-- End .product-price -->
+          </div>
+          <!-- End .product-body -->
+        </div>
+
+      {% endfor %}
+
+    </div>
+  </div><!-- End .container -->
+</div><!-- End .page-content -->
+
+
+<script>
+  var product =  {{ product | json }}
+</script>

@@ -1,0 +1,52 @@
+{
+  "cart": {
+    "name": "Cart notification",
+    "settings": {
+      "product_form_type": {
+        "element": "select",
+        "label": "Product form type",
+        "options": [
+          {
+            "label": "Add to cart",
+            "value": "add-to-cart"
+          },
+          {
+            "label": "Buy now",
+            "value": "buy-now"
+          },
+          {
+            "label": "Order now",
+            "value": "order-now"
+          }
+        ],
+        "info": "if you want to use the cart or buy the product directly.",
+        "default": "add-to-cart"
+      }
+    }
+  },
+  "colors": {
+    "name": "Template colors",
+    "settings": {
+      "header": {
+        "element": "header",
+        "content": "header__1.content"
+      },
+      "primary": {
+        "element": "color",
+        "default": "#FFFFFF",
+        "label": "Primary color",
+        "info": ""
+      },
+      "secondary": {
+        "element": "color",
+        "default": "#121212",
+        "label": "Secondary color",
+        "info": ""
+      }
+    }
+  },
+  "settings_order": [
+    "colors",
+    "cart"
+  ]
+}

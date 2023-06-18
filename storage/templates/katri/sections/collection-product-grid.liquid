@@ -1,0 +1,92 @@
+<div class="page-content">
+  <div class="container">
+    {% if collection.products.size > 0 %}
+    <div class="products mt-3">
+      <div class="row justify-content-center">
+
+        {% for product in collection.products %}
+          {% assign product_link = '/products/' | append: product.handle %}
+          <div class="col-sm-6 col-md-4 col-xl-3">
+            <div class="product product-4">
+              <figure class="product-media">
+                <a href="{{ product_link }}">
+                  <img src="{{ product.default_image.src }}" alt="Product image" class="product-image" />
+                  {% if product.images.size > 1 %}
+                  <img src="{{ product.images[1].src }}" alt="Product image" class="product-image-hover" />
+                  {% endif %}
+                </a>
+
+                <div class="product-action-vertical">
+                  <a href="#" class="btn-product-icon btn-wishlist btn-expandable">
+                    <span>add to wishlist</span>
+                  </a>
+                  <a href="popup/quickView.html" class="btn-product-icon btn-quickview" title="Quick view">
+                    <span>Quick view</span>
+                  </a>
+                  <a href="#" class="btn-product-icon btn-compare" title="Compare">
+                    <span>Compare</span>
+                  </a>
+                </div>
+                <!-- End .product-action -->
+
+
+                {% if presets.cart.settings.product_form_type == 'add-to-cart' %}
+                <add-to-cart-form>
+                  <div class="product-action">
+                    <input hidden id="variant-id" type="text" name="variant_id" value="{{ product.variants[0].id }}">
+                    <input hidden type="number" name="quantity" value="1">
+
+                    <button type="submit" class="btn-product btn-cart">
+                      <span>add to cart</span>
+                    </button>
+                  </div>
+                </add-to-cart-form>
+                {% elsif presets.cart.settings.product_form_type == 'buy-now' %}
+                <buy-now-form>
+                  <div class="product-action">
+                    <input hidden id="variant-id" type="text" name="variant_id" value="{{ product.variants[0].id }}">
+                    <input hidden type="number" name="quantity" value="1">
+                    <button type="submit" class="btn-product btn-cart">
+                      <span>Buy now</span>
+                    </button>
+                  </div>
+                </buy-now-form>
+                {% elsif presets.cart.settings.product_form_type == 'order-now' %}
+                  <div class="product-action">
+                    <a href="{{ product_link }}" class="btn-product btn-cart">
+                      <span>Buy now</span>
+                    </a>
+                  </div>
+                {% endif %}
+                <!-- End .product-action -->
+              </figure>
+              <!-- End .product-media -->
+
+              <div class="product-body">
+                {% if product.collection != null %}
+                <div class="product-cat">
+                  <a href="#">{{ product.collection.title }}</a>
+                </div>
+                {% endif %}
+                <!-- End .product-cat -->
+                <h3 class="product-title">
+                  <a href="{{ product_link }}">{{ product.title }}</a>
+                </h3>
+                <!-- End .product-title -->
+                <div class="product-price">{{ product.variants[0].price }} {{ currency }}</div>
+                <!-- End .product-price -->
+              </div>
+              <!-- End .product-body -->
+            </div>
+          </div><!-- End .col-sm-6 col-lg-4 col-xl-3 -->
+        {% endfor %}
+
+      </div><!-- End .row -->
+    </div><!-- End .products -->
+    {% else %}
+      <div class="heading text-center my-5">
+        <p style="font-size: 22px">No product found</p>
+      </div>
+    {% endif %}
+  </div><!-- End .container -->
+</div><!-- End .page-content -->
