@@ -1,6 +1,6 @@
 class ShopController < ApplicationController
   protect_from_forgery except: :file_assets
-  before_action :initialize_shop, except: [:preview, :file_assets, :file_font_assets, :page]
+  before_action :initialize_shop, except: [:preview, :file_assets, :file_font_assets]
 
   def index
 
@@ -112,16 +112,7 @@ class ShopController < ApplicationController
       return
     end
 
-    unless check_store
-      return
-    end
-
-    unless @store
-      content_not_found
-      return
-    end
-
-    page_not_found
+    render_page('404.json')
   end
 
   public def product
