@@ -68,6 +68,7 @@ class ShopController < ApplicationController
       internal_server_error
       return
     end
+    @domain = response.app_domain
 
     data = response.parse
     shop_name = data['shop_name']
