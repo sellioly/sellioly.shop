@@ -132,6 +132,14 @@ class ShopController < ApplicationController
       page_not_found
       return
     end
+    
+    response = HTTP.post("https://api.sellioly.com/server/product/get-similar-by-handle", :form => { 'handle' => params[:product], 'user_id' => $shop_id, 'app_domain' => @domain })
+    if response.status.success?
+      @args['similar_products'] = response.parse
+    else
+      page_not_found
+      return
+    end
 
     render_page('product.json')
     return
