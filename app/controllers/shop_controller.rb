@@ -218,7 +218,7 @@ class ShopController < ApplicationController
   end
   
   public def productPreview
-    response = HTTP.post("https://api.sellioly.com/server/product/preview", :form => { 'user_id' => $shop_id, 'app_domain' => @domain })
+    response = HTTP.post("https://api.sellioly.com/server/product/preview-product", :form => { 'user_id' => $shop_id, 'app_domain' => @domain })
     if response.status.success?
       @args['product'] = response.parse
     else
@@ -226,7 +226,7 @@ class ShopController < ApplicationController
       return
     end
     
-    response = HTTP.post("https://api.sellioly.com/server/product/preview-similar-products-similar", :form => { 'user_id' => $shop_id, 'app_domain' => @domain })
+    response = HTTP.post("https://api.sellioly.com/server/product/preview-similar-products", :form => { 'user_id' => $shop_id, 'app_domain' => @domain })
     if response.status.success?
       @args['similar_products'] = response.parse
     end
