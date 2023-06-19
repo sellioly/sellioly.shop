@@ -32,6 +32,7 @@ Rails.application.routes.draw do
     post 'api/order/order-now', action: 'orderNow', controller: 'order'
     get '/collections/:collection', action: 'collection', controller: 'shop'
     get '/products/:product', action: 'product', controller: 'shop'
+    get '/product-preview', action: 'productPreview', controller: 'shop'
     get '/checkout', action: 'checkout', controller: 'shop'
     get '/cart', action: 'cart', controller: 'shop'
     get '/files/1/:shop_id/:template_id/assets/:filename', to: 'shop#file_assets', constraints: { filename: /[^\/]+/ }
