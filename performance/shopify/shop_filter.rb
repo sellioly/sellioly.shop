@@ -34,8 +34,8 @@ module ShopFilter
     %(<a href="#{url}" title="#{title}">#{link}</a>)
   end
 
-  def img_tag(url, alt = "", className = "")
-    %(<img src="#{url}" alt="#{alt}" class="#{className}" />)
+  def img_tag(url, alt = "", className = "", width="", height="")
+    %(<img src="#{url}" alt="#{alt}" class="#{className}" width="#{width}" height="#{height}" />)
   end
 
   def link_to_vendor(vendor)
