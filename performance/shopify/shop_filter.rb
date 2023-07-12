@@ -2,9 +2,16 @@
 
 module ShopFilter
   def asset_url(input)
-    context = Liquid::Context.current
+    begin
+      context = Liquid::Context.current
 
-    "/files/1/#{context['[shop_id]']}/#{context['[template_id]']}/assets/#{input}"
+      "/files/1/#{context['[shop_id]']}/#{context['[template_id]']}/assets/#{input}"
+    rescue Liquid::Error => e
+      # Display the error message
+      puts "Liquid Error: #{e.message}"
+      # Optionally, you can raise the error again to halt the rendering
+      # raise e
+    end
   end
 
   def global_asset_url(input)
