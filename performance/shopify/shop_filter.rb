@@ -6,7 +6,7 @@ module ShopFilter
     begin
       context = Liquid::Context.current
 
-      "/files/1/#{context['[shop_id]']}/#{context['[template_id]']}/assets/#{input}"
+      "/files/1/#{context['shop_id']}/#{context['template_id']}/assets/#{input}"
     rescue Liquid::Error => e
       # Display the error message
       "Liquid Error: #{e.message}"
