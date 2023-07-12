@@ -2,6 +2,7 @@
 
 module ShopFilter
   def asset_url(input)
+    puts(session[:shop_id])
     "/files/1/#{session[:shop_id]}/#{session[:template_id]}/assets/#{input}"
   end
 
