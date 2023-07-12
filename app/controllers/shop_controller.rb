@@ -16,8 +16,8 @@ class ShopController < ApplicationController
       return
     end
 
-    $shop_id = params[:shop_id]
-    $template_id = params[:template_id]
+    session[:shop_id] = params[:shop_id]
+    session[:template_id] = params[:template_id]
 
     unless File.exist?(@path + '/assets/' + params[:filename])
       content_not_found
@@ -34,8 +34,8 @@ class ShopController < ApplicationController
       return
     end
 
-    $shop_id = params[:shop_id]
-    $template_id = params[:template_id]
+    session[:shop_id] = params[:shop_id]
+    session[:template_id] = params[:template_id]
 
     unless File.exist?(@path + '/assets/fonts/' + params[:filename])
       content_not_found
@@ -58,8 +58,8 @@ class ShopController < ApplicationController
       return
     end
 
-    $shop_id = params[:shop_id]
-    $template_id = params[:template_id]
+    session[:shop_id] = params[:shop_id]
+    session[:template_id] = params[:template_id]
 
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
 
@@ -122,22 +122,22 @@ class ShopController < ApplicationController
             if schema_data['settings'][key]
               case schema_data['settings'][key]['element']
               when 'menu'
-                response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
+                response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => session[:shop_id], 'app_domain' => @domain })
                 if response.status.success?
                   presets[section_id]['settings'][key] = response.parse
                 end
               when 'product-picker'
-                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
+                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => value, 'user_id' => session[:shop_id], 'app_domain' => @domain })
                 if response.status.success?
                   presets[section_id]['settings'][key] = response.parse
                 end
               when 'products-picker'
-                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles[]' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
+                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles[]' => value, 'user_id' => session[:shop_id], 'app_domain' => @domain })
                 if response.status.success?
                   presets[section_id]['settings'][key] = response.parse
                 end
               when 'collection-picker'
-                response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => value, 'user_id' => $shop_id, 'app_domain' => @domain })
+                response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => value, 'user_id' => session[:shop_id], 'app_domain' => @domain })
                 if response.status.success?
                   presets[section_id]['settings'][key] = response.parse
                 end
@@ -171,7 +171,7 @@ class ShopController < ApplicationController
   end
 
   public def product
-    response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => params[:product], 'user_id' => $shop_id, 'app_domain' => @domain })
+    response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => params[:product], 'user_id' => session[:shop_id], 'app_domain' => @domain })
     if response.status.success?
       @args['product'] = response.parse
     else
@@ -179,7 +179,7 @@ class ShopController < ApplicationController
       return
     end
     
-    response = HTTP.post("https://api.sellioly.com/server/product/get-similar-by-handle", :form => { 'handle' => params[:product], 'user_id' => $shop_id, 'app_domain' => @domain })
+    response = HTTP.post("https://api.sellioly.com/server/product/get-similar-by-handle", :form => { 'handle' => params[:product], 'user_id' => session[:shop_id], 'app_domain' => @domain })
     if response.status.success?
       @args['similar_products'] = response.parse
     end
@@ -189,11 +189,11 @@ class ShopController < ApplicationController
   end
 
   public def collection
-    response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => params[:collection], 'user_id' => $shop_id, 'app_domain' => @domain })
+    response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => params[:collection], 'user_id' => session[:shop_id], 'app_domain' => @domain })
     @args['collection'] = nil
     if response.status.success?
       @args['collection'] = response.parse
-      response = HTTP.post("https://api.sellioly.com/server/product/get-by-collection", :form => { 'handle' => params[:collection], 'user_id' => $shop_id, 'app_domain' => @domain })
+      response = HTTP.post("https://api.sellioly.com/server/product/get-by-collection", :form => { 'handle' => params[:collection], 'user_id' => session[:shop_id], 'app_domain' => @domain })
       @args['collection']['products'] = nil
       if response.status.success?
         @args['collection']['products'] = response.parse
@@ -218,7 +218,7 @@ class ShopController < ApplicationController
   end
   
   public def productPreview
-    response = HTTP.post("https://api.sellioly.com/server/product/product-preview", :form => { 'user_id' => $shop_id, 'app_domain' => @domain })
+    response = HTTP.post("https://api.sellioly.com/server/product/product-preview", :form => { 'user_id' => session[:shop_id], 'app_domain' => @domain })
     if response.status.success?
       @args['product'] = response.parse
     else
@@ -226,7 +226,7 @@ class ShopController < ApplicationController
       return
     end
     
-    response = HTTP.post("https://api.sellioly.com/server/product/similar-products-preview", :form => { 'user_id' => $shop_id, 'app_domain' => @domain })
+    response = HTTP.post("https://api.sellioly.com/server/product/similar-products-preview", :form => { 'user_id' => session[:shop_id], 'app_domain' => @domain })
     if response.status.success?
       @args['similar_products'] = response.parse
     end
