@@ -8,7 +8,7 @@ module ShopFilter
       "/files/1/#{context['[shop_id]']}/#{context['[template_id]']}/assets/#{input}"
     rescue Liquid::Error => e
       # Display the error message
-      puts "Liquid Error: #{e.message}"
+      "Liquid Error: #{e.message}"
       # Optionally, you can raise the error again to halt the rendering
       # raise e
     end
