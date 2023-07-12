@@ -356,7 +356,6 @@ class ApplicationController < ActionController::Base
       @args['layout_data'] = layout_data['sections']
     end
 
-    @path = Rails.root.to_s + @store.template_path.to_s
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
     template = Liquid::Template.parse(File.read(@path + "/layout/#{layout}.liquid")) # Parses and compiles the template
     origin = request.base_url

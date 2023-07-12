@@ -266,7 +266,6 @@ class ShopController < ApplicationController
       return ''
     end
 
-    @path = Rails.root.to_s + @store.template_path.to_s
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
     template = Liquid::Template.parse(File.read(@path + '/snippets/' + section_id + '.liquid'))
     template.render(@args)
