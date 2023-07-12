@@ -2,6 +2,7 @@
 require 'action_controller'
 
 module ShopFilter
+  extend ActiveSupport::Concern
   include ActionController::Helpers
   def asset_url(input)
     puts("1")
