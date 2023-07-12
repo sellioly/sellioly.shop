@@ -32,7 +32,6 @@ class ApplicationController < ActionController::Base
     if @store
       session[:shop_id] = @store.shop_id
       session[:template_id] = @store.template_id
-
       puts("session ====> #{ session[:shop_id]} ")
       puts("session ====> #{ session[:shop_id]} ")
       puts("session ====> #{ session[:shop_id]} ")
@@ -91,6 +90,7 @@ class ApplicationController < ActionController::Base
     @path = Rails.root.to_s + @store.template_path.to_s
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
 
+    @liquid_context = Liquid::Context.new('session' => session_data)
     response = HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'app_domain' => @domain })
     unless response.status.success?
       internal_server_error
@@ -104,6 +104,9 @@ class ApplicationController < ActionController::Base
     logo = (data['shop_logo_default'])
 
     @args = {}
+    @args['[shop_id]'] = session[:shop_id]
+    @args['[template_id]'] = session[:template_id]
+    @args['page_title'] = "HOME - #{shop_name}"
     @args['page_title'] = "HOME - #{shop_name}"
     @args['shop_name'] = shop_name
     @args['shop_description'] = shop_description

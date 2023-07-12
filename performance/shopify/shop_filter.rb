@@ -1,10 +1,8 @@
 # frozen_string_literal: true
 
-module Sellioly
+module ShopFilter
   def asset_url(input)
-    puts(session[:shop_id])
-    puts("10000000000")
-    "/files/1/#{session[:shop_id]}/#{session[:template_id]}/assets/#{input}"
+    "/files/1/[shop_id]/[template_id]/assets/#{input}"
   end
 
   def global_asset_url(input)
