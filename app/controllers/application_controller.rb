@@ -181,7 +181,7 @@ class ApplicationController < ActionController::Base
   end
 
   def render_page(filename)
-    puts(request.host + " - " + @store.inspect)
+    puts(request.host + " - " + Liquid::Template.file_system.inspect)
     file = File.read(@path + '/templates/' + filename)
     data = JSON.load file
     layout = 'theme'
@@ -201,7 +201,7 @@ class ApplicationController < ActionController::Base
         @args['section'] = {}
         section_data = data["sections"][section_id]
         section_schema = nil
-        puts(request.host + " - " + @store.inspect)
+        puts(request.host + " - " + Liquid::Template.file_system.inspect)
         if File.file? @path + '/schemas/' + section_data['type'] + '.json'
           file = File.read @path + '/schemas/' + section_data['type'] + '.json'
           section_schema = JSON.load file
@@ -293,7 +293,7 @@ class ApplicationController < ActionController::Base
         @args['section']['settings'] = section_settings
         @args['section']['blocks'] = section_blocks
 
-        puts(request.host + " - " + @store.inspect)
+        puts(request.host + " - " + Liquid::Template.file_system.inspect)
         unless File.file? @path + '/sections/' + section_data['type'] + '.liquid'
           render plain: 'could not found sections/' + section_data['type'] + '.liquid file missing!', status: 400
           return
@@ -309,7 +309,7 @@ class ApplicationController < ActionController::Base
       layout_data['sections'].keys.each do |section_id|
         section_data = layout_data['sections'][section_id]
         schema_data = nil
-        puts(request.host + " - " + @store.inspect)
+        puts(request.host + " - " + Liquid::Template.file_system.inspect)
         if File.file? @path + '/schemas/' + section_data['type'] + '.json'
           file = File.read(@path + '/schemas/' + section_data['type'] + '.json')
           schema_data = JSON.load file
