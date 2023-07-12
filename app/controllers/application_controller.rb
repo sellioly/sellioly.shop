@@ -181,6 +181,7 @@ class ApplicationController < ActionController::Base
   end
 
   def render_page(filename)
+    puts(request.host + " - " + @store.inspect)
     file = File.read(@path + '/templates/' + filename)
     data = JSON.load file
     layout = 'theme'
