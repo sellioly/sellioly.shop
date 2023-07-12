@@ -78,8 +78,8 @@ class ShopController < ApplicationController
     logo = (data['shop_logo_default'])
 
     @args = {}
-    @args['[shop_id]'] = session[:shop_id]
-    @args['[template_id]'] = session[:template_id]
+    @args['shop_id'] = session[:shop_id]
+    @args['template_id'] = session[:template_id]
     @args['page_title'] = "HOME - #{shop_name}"
     @args['shop_name'] = shop_name
     @args['shop_description'] = shop_description
