@@ -32,6 +32,12 @@ class ApplicationController < ActionController::Base
     if @store
       session[:shop_id] = @store.shop_id
       session[:template_id] = @store.template_id
+
+      puts("session ====> #{ session[:shop_id]} ")
+      puts("session ====> #{ session[:shop_id]} ")
+      puts("session ====> #{ session[:shop_id]} ")
+      puts("session ====> #{ session[:shop_id]} ")
+      puts("session ====> #{ session[:shop_id]} ")
     end
 
     true
