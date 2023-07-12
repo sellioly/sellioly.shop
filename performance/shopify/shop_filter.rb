@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'liquid'
 
 module ShopFilter
   def asset_url(input)
