@@ -90,7 +90,6 @@ class ApplicationController < ActionController::Base
     @path = Rails.root.to_s + @store.template_path.to_s
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
 
-    @liquid_context = Liquid::Context.new('session' => session_data)
     response = HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'app_domain' => @domain })
     unless response.status.success?
       internal_server_error
