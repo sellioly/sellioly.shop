@@ -39,7 +39,7 @@ class ApplicationController < ActionController::Base
 
   def page_not_found
     @path = Rails.root.to_s + @store.template_path.to_s
-    Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
+    @liquid_instance.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
 
     @response = HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'app_domain' => @domain })
     unless (@response.status.success?)
@@ -83,7 +83,8 @@ class ApplicationController < ActionController::Base
     end
 
     @path = Rails.root.to_s + @store.template_path.to_s
-    Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
+    @liquid_instance = @liquid_instance.new
+    @liquid_instance.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
 
     response = HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'app_domain' => @domain })
     unless response.status.success?
@@ -181,7 +182,7 @@ class ApplicationController < ActionController::Base
   end
 
   def render_page(filename)
-    puts(request.host + " - " + Liquid::Template.file_system.inspect)
+    puts(request.host + " - " + @liquid_instance.file_system.inspect)
     file = File.read(@path + '/templates/' + filename)
     data = JSON.load file
     layout = 'theme'
@@ -201,7 +202,7 @@ class ApplicationController < ActionController::Base
         @args['section'] = {}
         section_data = data["sections"][section_id]
         section_schema = nil
-        puts(request.host + " - " + Liquid::Template.file_system.inspect)
+        puts(request.host + " - " + @liquid_instance.file_system.inspect)
         if File.file? @path + '/schemas/' + section_data['type'] + '.json'
           file = File.read @path + '/schemas/' + section_data['type'] + '.json'
           section_schema = JSON.load file
@@ -293,12 +294,12 @@ class ApplicationController < ActionController::Base
         @args['section']['settings'] = section_settings
         @args['section']['blocks'] = section_blocks
 
-        puts(request.host + " - " + Liquid::Template.file_system.inspect)
+        puts(request.host + " - " + @liquid_instance.file_system.inspect)
         unless File.file? @path + '/sections/' + section_data['type'] + '.liquid'
           render plain: 'could not found sections/' + section_data['type'] + '.liquid file missing!', status: 400
           return
         end
-        template = Liquid::Template.parse(File.read(@path + '/sections/' + section_data['type'] + '.liquid'))
+        template = @liquid_instance.parse(File.read(@path + '/sections/' + section_data['type'] + '.liquid'))
         @content_for_layout += template.render(@args)
       }
     end
@@ -309,7 +310,7 @@ class ApplicationController < ActionController::Base
       layout_data['sections'].keys.each do |section_id|
         section_data = layout_data['sections'][section_id]
         schema_data = nil
-        puts(request.host + " - " + Liquid::Template.file_system.inspect)
+        puts(request.host + " - " + @liquid_instance.file_system.inspect)
         if File.file? @path + '/schemas/' + section_data['type'] + '.json'
           file = File.read(@path + '/schemas/' + section_data['type'] + '.json')
           schema_data = JSON.load file
@@ -353,7 +354,7 @@ class ApplicationController < ActionController::Base
       @args['layout_data'] = layout_data['sections']
     end
 
-    template = Liquid::Template.parse(File.read(@path + "/layout/#{layout}.liquid")) # Parses and compiles the template
+    template = @liquid_instance.parse(File.read(@path + "/layout/#{layout}.liquid")) # Parses and compiles the template
     origin = request.base_url
     @args['content_for_layout'] = @content_for_layout
     @args['request'] = { 'origin' => origin }

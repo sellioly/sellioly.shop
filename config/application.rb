@@ -21,14 +21,14 @@ module Sellioly
     config.load_defaults 7.0
     config.active_job.queue_adapter = :sidekiq
 
-    Liquid::Template.register_filter(JsonFilter)
-    Liquid::Template.register_filter(MoneyFilter)
-    Liquid::Template.register_filter(WeightFilter)
-    Liquid::Template.register_filter(ShopFilter)
-    Liquid::Template.register_filter(TagFilter)
-    Liquid::Template.register_tag('section', SectionTag)
-    Liquid::Template.register_tag('render', RenderTag)
-    Liquid::Template.register_tag('snippet', SnippetTag)
+    @liquid_instance.register_filter(JsonFilter)
+    @liquid_instance.register_filter(MoneyFilter)
+    @liquid_instance.register_filter(WeightFilter)
+    @liquid_instance.register_filter(ShopFilter)
+    @liquid_instance.register_filter(TagFilter)
+    @liquid_instance.register_tag('section', SectionTag)
+    @liquid_instance.register_tag('render', RenderTag)
+    @liquid_instance.register_tag('snippet', SnippetTag)
 
     # Configuration for the application, engines, and railties goes here.
     #

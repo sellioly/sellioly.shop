@@ -61,7 +61,7 @@ class ShopController < ApplicationController
     @shop_id = params[:shop_id]
     @template_id = params[:template_id]
 
-    Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
+    @liquid_instance.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
 
     response = HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'user_id' => params[:shop_id] })
     unless response.status.success?
@@ -266,7 +266,7 @@ class ShopController < ApplicationController
       return ''
     end
 
-    template = Liquid::Template.parse(File.read(@path + '/snippets/' + section_id + '.liquid'))
+    template = @liquid_instance.parse(File.read(@path + '/snippets/' + section_id + '.liquid'))
     template.render(@args)
   end
 
