@@ -3,7 +3,7 @@ require 'liquid'
 
 module ShopFilter
   def asset_url(input)
-      "#{@context.environments.inspect}/files/1/#{@context["page_title"]}/#{@context.environments["[template_id]"]}/assets/#{input}"
+      "/files/1/#{@context["page_title"]}/#{@context["[template_id]"]}/assets/#{input}"
   end
 
   def global_asset_url(input)
