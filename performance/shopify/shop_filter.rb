@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 module ShopFilter
-  def asset_url(input, context)
+  def asset_url(input)
+    context = @context
     "/files/1/#{context['[shop_id]']}/#{context['[template_id]']}/assets/#{input}"
   end
 
