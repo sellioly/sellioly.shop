@@ -2,15 +2,8 @@
 require 'liquid'
 
 module ShopFilter
-  def asset_url(input, context)
-    begin
-      "/files/1/#{context['shop_id']}/#{context['template_id']}/assets/#{input}"
-    rescue StandardError  => e
-      # Display the error message
-      "Liquid Error: #{e.message}"
-      # Optionally, you can raise the error again to halt the rendering
-      # raise e
-    end
+  def asset_url(input)
+      @context.inspect
   end
 
   def global_asset_url(input)
