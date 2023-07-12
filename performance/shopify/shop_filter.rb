@@ -9,6 +9,7 @@ module ShopFilter
     puts("1")
     puts("1")
     puts(session[:shop_id])
+    puts("10000000000")
     "/files/1/#{session[:shop_id]}/#{session[:template_id]}/assets/#{input}"
   end
 
