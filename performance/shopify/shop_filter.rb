@@ -2,10 +2,8 @@
 require 'liquid'
 
 module ShopFilter
-  def asset_url(input)
+  def asset_url(input, context)
     begin
-      context = Liquid::Context.current
-
       "/files/1/#{context['shop_id']}/#{context['template_id']}/assets/#{input}"
     rescue StandardError  => e
       # Display the error message
