@@ -30,13 +30,8 @@ class ApplicationController < ActionController::Base
 
     @store = Store.where(app_domain: @domain).first
     if @store
-      session[:shop_id] = @store.shop_id
-      session[:template_id] = @store.template_id
-      puts("session ====> #{ session[:shop_id]} ")
-      puts("session ====> #{ session[:shop_id]} ")
-      puts("session ====> #{ session[:shop_id]} ")
-      puts("session ====> #{ session[:shop_id]} ")
-      puts("session ====> #{ session[:shop_id]} ")
+      @shop_id = @store.shop_id
+      @template_id = @store.template_id
     end
 
     true
@@ -103,8 +98,8 @@ class ApplicationController < ActionController::Base
     logo = (data['shop_logo_default'])
 
     @args = {}
-    @args['shop_id'] = session[:shop_id]
-    @args['template_id'] = session[:template_id]
+    @args['shop_id'] = @shop_id
+    @args['template_id'] = @template_id
     @args['page_title'] = "HOME - #{shop_name}"
     @args['page_title'] = "HOME - #{shop_name}"
     @args['shop_name'] = shop_name
@@ -150,22 +145,22 @@ class ApplicationController < ActionController::Base
             if schema_data['settings'][key]
               case schema_data['settings'][key]['element']
               when 'menu'
-                response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => session[:shop_id], 'app_domain' => @domain })
+                response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
                 if response.status.success?
                   presets[section_id]['settings'][key] = response.parse
                 end
               when 'product-picker'
-                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => value, 'user_id' => session[:shop_id], 'app_domain' => @domain })
+                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
                 if response.status.success?
                   presets[section_id]['settings'][key] = response.parse
                 end
               when 'products-picker'
-                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles[]' => value, 'user_id' => session[:shop_id], 'app_domain' => @domain })
+                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles[]' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
                 if response.status.success?
                   presets[section_id]['settings'][key] = response.parse
                 end
               when 'collection-picker'
-                response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => value, 'user_id' => session[:shop_id], 'app_domain' => @domain })
+                response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
                 if response.status.success?
                   presets[section_id]['settings'][key] = response.parse
                 end
@@ -217,22 +212,22 @@ class ApplicationController < ActionController::Base
             if section_schema['settings'][key]
               case section_schema['settings'][key]['element']
               when 'menu'
-                response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => session[:shop_id], 'app_domain' => @domain })
+                response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
                 if response.status.success?
                   section_data['settings'][key] = response.parse
                 end
               when 'product-picker'
-                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => value, 'user_id' => session[:shop_id], 'app_domain' => @domain })
+                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
                 if response.status.success?
                   section_data['settings'][key] = response.parse
                 end
               when 'products-picker'
-                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles[]' => value, 'user_id' => session[:shop_id], 'app_domain' => @domain })
+                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles[]' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
                 if response.status.success?
                   section_data['settings'][key] = response.parse
                 end
               when 'collection-picker'
-                response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => value, 'user_id' => session[:shop_id], 'app_domain' => @domain })
+                response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
                 if response.status.success?
                   section_data['settings'][key] = response.parse
                 end
@@ -261,22 +256,22 @@ class ApplicationController < ActionController::Base
                   if block_schema['settings'][key]
                     case block_schema['settings'][key]['element']
                     when 'menu'
-                      response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => session[:shop_id], 'app_domain' => @domain })
+                      response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
                       if response.status.success?
                         block_data['settings'][key] = response.parse
                       end
                     when 'product-picker'
-                      response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => value, 'user_id' => session[:shop_id], 'app_domain' => @domain })
+                      response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
                       if response.status.success?
                         block_data['settings'][key] = response.parse
                       end
                     when 'products-picker'
-                      response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles[]' => value, 'user_id' => session[:shop_id], 'app_domain' => @domain })
+                      response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles[]' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
                       if response.status.success?
                         section_data['settings'][key] = response.parse
                       end
                     when 'collection-picker'
-                      response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => value, 'user_id' => session[:shop_id], 'app_domain' => @domain })
+                      response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
                       if response.status.success?
                         block_data['settings'][key] = response.parse
                       end
@@ -321,22 +316,22 @@ class ApplicationController < ActionController::Base
             if schema_data['settings'][key]
               case schema_data['settings'][key]['element']
               when 'menu'
-                response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => session[:shop_id], 'app_domain' => @domain })
+                response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
                 if response.status.success?
                   layout_data['sections'][section_id]['settings'][key] = response.parse
                 end
               when 'product-picker'
-                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => value, 'user_id' => session[:shop_id], 'app_domain' => @domain })
+                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
                 if response.status.success?
                   layout_data['sections'][section_id]['settings'][key] = response.parse
                 end
               when 'products-picker'
-                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles[]' => value, 'user_id' => session[:shop_id], 'app_domain' => @domain })
+                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles[]' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
                 if response.status.success?
                   section_data['settings'][key] = response.parse
                 end
               when 'collection-picker'
-                response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => value, 'user_id' => session[:shop_id], 'app_domain' => @domain })
+                response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
                 if response.status.success?
                   layout_data['sections'][section_id]['settings'][key] = response.parse
                 end
