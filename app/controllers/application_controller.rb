@@ -83,8 +83,8 @@ class ApplicationController < ActionController::Base
     end
 
     @path = Rails.root.to_s + @store.template_path.to_s
-    @liquid_instance = Liquid::Template.new
-    @liquid_instance.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
+    @file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
+    @liquid_instance = Liquid::Template.new(file_system: file_system)
 
     response = HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'app_domain' => @domain })
     unless response.status.success?
