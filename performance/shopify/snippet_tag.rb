@@ -13,14 +13,14 @@ class SnippetTag < Liquid::Tag
 
   def render(context)
     new_context = context.environments.first
-    full_path = @liquid_instance.file_system.root + "/snippets/" + @name + ".liquid"
+    full_path = Liquid::Template.file_system.root + "/snippets/" + @name + ".liquid"
     unless File.exist?(full_path)
       raise "No such '#{@name}' in section folder!"
     end
     # Remember here we are not passing extension
     content = File.read(full_path)
 
-    @liquid_instance.parse(content).render(new_context).html_safe
+    Liquid::Template.parse(content).render(new_context).html_safe
   end
 
 end
