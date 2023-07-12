@@ -1,23 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 
-  def self.instance
-    @instance ||= new
-  end
-
-  def process(action_name)
-    super(action_name)
-    reset_instance_variables
-  end
-
-  private
-
-  def reset_instance_variables
-    instance_variables.each do |var|
-      instance_variable_set(var, nil)
-    end
-  end
-
   def content_not_found
     render file: "#{Rails.root}/public/404.html", layout: true, status: :not_found
     # render  json: {domain: "not found! #{@domain}  #{@cname.inspect}"}
