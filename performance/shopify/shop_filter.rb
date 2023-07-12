@@ -1,16 +1,7 @@
 # frozen_string_literal: true
-require 'action_controller'
 
-module ShopFilter
-  extend ActiveSupport::Concern
-  include ActionController::Helpers
+module Sellioly
   def asset_url(input)
-    puts("1")
-    puts("1")
-    puts("1")
-    puts("1")
-    puts("1")
-    puts("1")
     puts(session[:shop_id])
     puts("10000000000")
     "/files/1/#{session[:shop_id]}/#{session[:template_id]}/assets/#{input}"
