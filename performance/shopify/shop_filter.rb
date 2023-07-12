@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module ShopFilter
+  include ActionController::Base
   def asset_url(input)
     puts("1")
     puts("1")
