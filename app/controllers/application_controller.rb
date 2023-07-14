@@ -215,6 +215,7 @@ class ApplicationController < ActionController::Base
               value = _data[1]
             else 
               value = section_schema['settings'][key]['default']
+            end
 
             if section_schema['settings'][key]
               case section_schema['settings'][key]['element']
@@ -263,6 +264,7 @@ class ApplicationController < ActionController::Base
                     value = _data[1]
                   else 
                     value = section_schema['settings'][key]['default']
+                  end
 
                   if block_schema['settings'][key]
                     case block_schema['settings'][key]['element']
@@ -331,6 +333,7 @@ class ApplicationController < ActionController::Base
               value = section_data['settings'][key]
             else 
               value = schema_data['settings'][key]['default']
+            end
 
             if schema_data['settings'][key]
               case schema_data['settings'][key]['element']
