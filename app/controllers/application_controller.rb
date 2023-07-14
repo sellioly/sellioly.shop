@@ -331,13 +331,12 @@ class ApplicationController < ActionController::Base
         if schema_data
           section_data['settings'].keys.each do |key|
             value = section_data['settings'][key]
-
-            # read the default value
-            if value.nil? || value.empty?
-              value = schema_data['settings'][key]['default']
-            end
-
             if schema_data['settings'][key]
+              # read the default value
+              if value.nil? || value.empty?
+                value = schema_data['settings'][key]['default']
+              end
+
               case schema_data['settings'][key]['element']
               when 'menu'
                 response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
