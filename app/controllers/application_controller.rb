@@ -210,10 +210,10 @@ class ApplicationController < ActionController::Base
         if section_schema
           section_data['settings'].each do |_data|
             key = _data[0]
+            value = _data[1]
             
-            if _data[1]
-              value = _data[1]
-            else
+            # read the default value
+            if value.nil? || value.empty?
               value = section_schema['settings'][key]['default']
             end
 
@@ -260,9 +260,10 @@ class ApplicationController < ActionController::Base
                 block_schema = section_schema['blocks'][block_data['type']]
                 block_data['settings'].each do |_data|
                   key = _data[0]
-                  if _data[1]
-                    value = _data[1]
-                  else 
+                  value = _data[1]
+
+                  # read the default value
+                  if value.nil? || value.empty?
                     value = block_schema['settings'][key]['default']
                   end
 
@@ -329,9 +330,10 @@ class ApplicationController < ActionController::Base
         end
         if schema_data
           section_data['settings'].keys.each do |key|
-            if section_data['settings'][key]
-              value = section_data['settings'][key]
-            else 
+            value = section_data['settings'][key]
+
+            # read the default value
+            if value.nil? || value.empty?
               value = schema_data['settings'][key]['default']
             end
 
