@@ -263,7 +263,7 @@ class ApplicationController < ActionController::Base
                   if _data[1]
                     value = _data[1]
                   else 
-                    value = section_schema['settings'][key]['default']
+                    value = block_schema['settings'][key]['default']
                   end
 
                   if block_schema['settings'][key]
