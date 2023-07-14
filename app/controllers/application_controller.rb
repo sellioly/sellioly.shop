@@ -214,7 +214,7 @@ class ApplicationController < ActionController::Base
             
             if section_schema['settings'][key]
               # read the default value
-              if value.nil? || value.empty?
+              if value.nil?
                 value = section_schema['settings'][key]['default']
               end
 
@@ -264,7 +264,7 @@ class ApplicationController < ActionController::Base
 
                   if block_schema['settings'][key]
                     # read the default value
-                    if value.nil? || value.empty?
+                    if value.nil?
                       value = block_schema['settings'][key]['default']
                     end
 
@@ -333,7 +333,7 @@ class ApplicationController < ActionController::Base
             value = section_data['settings'][key]
             if schema_data['settings'][key]
               # read the default value
-              if value.nil? || value.empty?
+              if value.nil?
                 value = schema_data['settings'][key]['default']
               end
 
