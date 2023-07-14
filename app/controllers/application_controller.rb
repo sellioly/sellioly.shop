@@ -212,12 +212,12 @@ class ApplicationController < ActionController::Base
             key = _data[0]
             value = _data[1]
             
-            # read the default value
-            if value.nil? || value.empty?
-              value = section_schema['settings'][key]['default']
-            end
-
             if section_schema['settings'][key]
+              # read the default value
+              if value.nil? || value.empty?
+                value = section_schema['settings'][key]['default']
+              end
+
               case section_schema['settings'][key]['element']
               when 'menu'
                 response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
@@ -262,12 +262,12 @@ class ApplicationController < ActionController::Base
                   key = _data[0]
                   value = _data[1]
 
-                  # read the default value
-                  if value.nil? || value.empty?
-                    value = block_schema['settings'][key]['default']
-                  end
-
                   if block_schema['settings'][key]
+                    # read the default value
+                    if value.nil? || value.empty?
+                      value = block_schema['settings'][key]['default']
+                    end
+
                     case block_schema['settings'][key]['element']
                     when 'menu'
                       response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
