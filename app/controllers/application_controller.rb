@@ -265,6 +265,13 @@ class ApplicationController < ActionController::Base
                   if block_schema['settings'][key]
                     # read the default value
                     if value.nil?
+                      puts '------------------------------------------------'
+                      puts '---------------- value.nil? ----------------'
+                      puts '------------------------------------------------'
+
+                      puts value
+                      puts block_schema['settings'][key]
+
                       value = block_schema['settings'][key]['default']
                     end
 
