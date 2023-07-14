@@ -210,7 +210,12 @@ class ApplicationController < ActionController::Base
         if section_schema
           section_data['settings'].each do |_data|
             key = _data[0]
-            value = _data[1]
+            
+            if _data[1]
+              value = _data[1]
+            else 
+              value = section_schema['settings'][key]['default']
+
             if section_schema['settings'][key]
               case section_schema['settings'][key]['element']
               when 'menu'
@@ -254,7 +259,11 @@ class ApplicationController < ActionController::Base
                 block_schema = section_schema['blocks'][block_data['type']]
                 block_data['settings'].each do |_data|
                   key = _data[0]
-                  value = _data[1]
+                  if _data[1]
+                    value = _data[1]
+                  else 
+                    value = section_schema['settings'][key]['default']
+
                   if block_schema['settings'][key]
                     case block_schema['settings'][key]['element']
                     when 'menu'
@@ -318,7 +327,11 @@ class ApplicationController < ActionController::Base
         end
         if schema_data
           section_data['settings'].keys.each do |key|
-            value = section_data['settings'][key]
+            if section_data['settings'][key]
+              value = section_data['settings'][key]
+            else 
+              value = schema_data['settings'][key]['default']
+
             if schema_data['settings'][key]
               case schema_data['settings'][key]['element']
               when 'menu'
