@@ -215,6 +215,7 @@ class ApplicationController < ActionController::Base
             if section_schema['settings'][key]
               # read the default value
               if value.nil?
+                value = section_schema['settings'][key]['default']
                 section_data['settings'][key] = section_schema['settings'][key]['default']
               end
 
@@ -265,6 +266,7 @@ class ApplicationController < ActionController::Base
                   if block_schema['settings'][key]
                     # read the default value
                     if value.nil?
+                      value = block_schema['settings'][key]['default']
                       block_data['settings'][key] = block_schema['settings'][key]['default']
                     end
 
@@ -334,6 +336,7 @@ class ApplicationController < ActionController::Base
             if schema_data['settings'][key]
               # read the default value
               if value.nil?
+                value = schema_data['settings'][key]['default']
                 layout_data['sections'][section_id]['settings'][key] = schema_data['settings'][key]['default']
               end
 
