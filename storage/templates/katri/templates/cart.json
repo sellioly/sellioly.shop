@@ -2,9 +2,7 @@
   "sections": {
     "cart-details": {
       "type": "cart-details",
-      "settings": {
-        
-      }
+      "settings": {}
     }
   },
   "order": [

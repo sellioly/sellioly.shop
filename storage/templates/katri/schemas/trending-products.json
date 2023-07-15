@@ -22,7 +22,7 @@
         "product": {
           "element": "product-picker",
           "label": "Product",
-          "default": ""
+          "default": "exemple-product"
         }
       }
     }

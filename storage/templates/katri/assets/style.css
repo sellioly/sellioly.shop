@@ -177,7 +177,7 @@ a {
 }
 
 a:hover,a:focus {
-    color: #bf8040;
+    color: var(--primary-color);
     text-decoration: none
 }
 
@@ -6772,14 +6772,14 @@ p {
     color: #333;
     background-color: transparent;
     background-image: none;
-    border-color: #d7d7d7;
+    border-color: #333;
     box-shadow: none
 }
 
 .btn-outline-dark:hover,.btn-outline-dark:focus,.btn-outline-dark.focus,.btn-outline-dark:not(:disabled):not(.disabled):active,.btn-outline-dark:not(:disabled):not(.disabled).active,.show>.btn-outline-dark.dropdown-toggle {
-    color: var(--primary-color);
-    background-color: transparent;
-    border-color: #ebebeb;
+    color: white;
+    background-color: #333;
+    border-color: #333;
     box-shadow: 0 5px 10px rgba(0,0,0,0.05)
 }
 
@@ -7039,7 +7039,6 @@ p {
     height: 330px;
     object-fit: cover;
 }
-
 .product-image-hover {
     position: absolute;
     left: 0;
@@ -11812,6 +11811,7 @@ button:focus {
 
 .product-image-gallery {
     display: flex;
+    align-self: start;
     flex-flow: row wrap;
     margin-left: -.5rem;
     margin-right: -.5rem

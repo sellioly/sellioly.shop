@@ -25,7 +25,7 @@
     "products": {
       "element": "products-picker",
       "label": "Products",
-      "default": []
+      "default": ["exemple-product", "exemple-product", "exemple-product", "exemple-product", "exemple-product", "exemple-product"]
     }
   }
 }

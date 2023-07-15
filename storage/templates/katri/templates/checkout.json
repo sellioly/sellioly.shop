@@ -2,9 +2,7 @@
   "sections": {
     "checkout-details": {
       "type": "checkout-details",
-      "settings": {
-        
-      }
+      "settings": {}
     }
   },
   "order": [

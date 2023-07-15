@@ -4,12 +4,12 @@
 		"Default": {
 			"cart": {
 				"settings": {
-					"product_form_type": "order-now"
+					"product_form_type": "add-to-cart"
 				}
 			},
 			"colors": {
 				"settings": {
-					"primary": "#21c45d",
+					"primary": "#088178",
 					"secondary": "#dbdbdb"
 				}
 			}

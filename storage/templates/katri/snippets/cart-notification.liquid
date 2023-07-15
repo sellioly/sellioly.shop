@@ -17,9 +17,9 @@
     </a>
 
     <div class="dropdown-menu dropdown-menu-right">
-      {% if cart and cart.items.size > 0 %}
 
-        <div class="dropdown-cart-products">
+      <div class="dropdown-cart-products">
+        {% if cart and cart.items.size > 0 %}
           {% for item in cart.items %}
             <remove-from-cart-form>
               <form>
@@ -70,14 +70,21 @@
           
               </form>
             </remove-from-cart-form>
-          {% endfor %}    
+          {% endfor %}
+        {% else %}
+          <div style="border-bottom: 1px solid #ebebeb;">
+            <br />
+            <h6 class="text-center my-5">Empty cart!</h3>
+            <br />
+          </div>
+        {% endif %}    
         </div>
         <!-- End .cart-product -->
 
         <div class="dropdown-cart-total">
           <span>Total</span>
 
-          <span class="cart-total-price">$160.00</span>
+          <span class="cart-total-price">{{ cart.subtotal }} {{ currency }}</span>
         </div>
         <!-- End .dropdown-cart-total -->
 
@@ -89,12 +96,6 @@
           </a>
         </div>
         <!-- End .dropdown-cart-total -->
-
-      {% else %}
-        <div>
-          <h5 class="text-center my-3">Empty cart!</h3>
-        </div>
-      {% endif %}
     </div>
     <!-- End .dropdown-menu -->
   </div>
