@@ -69,6 +69,12 @@ class VerifyThemeJob < ApplicationJob
       end
 
       if @error.length <= 0
+        @sub_path = "/storage/themes/temp"
+        @path = Rails.root.to_s + @sub_path
+
+        unless File.directory?(@path)
+          FileUtils.mkdir_p(@path)
+        end
 
         file = File.read(@path + '/config/settings_theme.json')
         @data = JSON.load file
@@ -76,6 +82,8 @@ class VerifyThemeJob < ApplicationJob
         @theme_version = @data['theme_version']
         @theme_author = @data['theme_author']
         @theme_support_url = @data['theme_support_url']
+
+        FileUtils.rm_rf(@path)
 
         @response = HTTP.post("https://api.sellioly.com/server/theme/verification-result",
                               :form => { 'status' => 'success', 'url_theme' => url_theme, 'data' => { 'theme_name' => @theme_name, 'theme_version' => @theme_version, 'theme_author' => @theme_author, 'theme_support_url' => @theme_support_url } })
