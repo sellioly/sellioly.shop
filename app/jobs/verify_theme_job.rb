@@ -78,15 +78,15 @@ class VerifyThemeJob < ApplicationJob
         @theme_support_url = @data['theme_support_url']
 
         @response = HTTP.post("https://api.sellioly.com/server/verify-theme",
-                              :form => { 'status' => 'success', 'data' => { 'theme_name' => @theme_name, 'theme_version' => @theme_version, 'theme_author' => @theme_author, 'theme_support_url' => @theme_support_url } })
+                              :form => { 'status' => 'success', 'url_theme' => url_theme, 'data' => { 'theme_name' => @theme_name, 'theme_version' => @theme_version, 'theme_author' => @theme_author, 'theme_support_url' => @theme_support_url } })
       else
         @response = HTTP.post("https://api.sellioly.com/server/verify-theme",
-                              :form => { 'status' => 'failed', 'reason' => @error })
+                              :form => { 'status' => 'failed', 'url_theme' => url_theme, 'reason' => @error })
       end
     else
       @error = ['Cannot open your zip file!']
       @response = HTTP.post("https://api.sellioly.com/server/verify-theme",
-                            :form => { 'status' => 'failed', 'reason' => @error })
+                            :form => { 'status' => 'failed', 'url_theme' => url_theme, 'reason' => @error })
     end
   end
 end
