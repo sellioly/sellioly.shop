@@ -95,7 +95,7 @@ class VerifyThemeJob < ApplicationJob
         FileUtils.rm_rf(@path)
 
         @response = HTTP.post("https://api.sellioly.com/server/theme/verification-result",
-                              :form => { 'status' => 'success', 'url_theme' => url_theme, 'data' => { 'theme_name' => @theme_name, 'theme_version' => @theme_version, 'theme_author' => @theme_author, 'theme_support_url' => @theme_support_url } })
+                              :form => { 'status' => 'success', 'url_theme' => url_theme, 'data' => ['theme_name' => @theme_name, 'theme_version' => @theme_version, 'theme_author' => @theme_author, 'theme_support_url' => @theme_support_url] })
       else
         @response = HTTP.post("https://api.sellioly.com/server/theme/verification-result",
                               :form => { 'status' => 'failed', 'url_theme' => url_theme, 'reason' => @error })
