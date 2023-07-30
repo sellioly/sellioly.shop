@@ -65,6 +65,7 @@ class StoreController < ApplicationController
     # result
     render json: { msg: 'Wait for checking template' }
   end
+
   public def publish_template
     # data
     @shop_id = params[:shop_id].to_i
@@ -81,6 +82,17 @@ class StoreController < ApplicationController
 
     # result
     render json: { msg: 'template has been published', id: @store.id, template_path: @sub_path }
+  end
+
+  public def verify_theme
+    # data
+    @url_theme = params[:url_theme].to_s
+
+    # traitement
+    VerifyThemeJob.perform_later @url_theme
+
+    # result
+    render json: { msg: 'Wait for checking the theme' }
   end
 
   public

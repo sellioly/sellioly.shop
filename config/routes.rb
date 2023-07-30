@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     get 'api/ssl/verify', action: 'verify_ssl', controller: 'store'
     post 'api/store/create', action: 'create', controller: 'store'
     post 'api/template/import', action: 'import_template', controller: 'store'
+    post 'api/theme/verify', action: 'verify_theme', controller: 'store'
     post 'api/template/publish', action: 'publish_template', controller: 'store'
     post 'api/template/:page', action: 'request_template_page', controller: 'store'
     get 'api/template/download', action: 'request_template', controller: 'store'
