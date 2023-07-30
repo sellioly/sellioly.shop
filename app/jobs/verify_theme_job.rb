@@ -76,6 +76,15 @@ class VerifyThemeJob < ApplicationJob
           FileUtils.mkdir_p(@path)
         end
 
+        unless File.directory?(@path + '/config')
+          FileUtils.mkdir_p(@path + '/config')
+          zipfile.glob('config/*.json').each do
+          |entry|
+            next unless %w[config/settings_templates.json config/settings_theme.json config/settings_data.json config/settings_schema.json].include? entry.name
+            entry.extract(@path + '/' + entry.name)
+          end
+        end
+
         file = File.read(@path + '/config/settings_theme.json')
         @data = JSON.load file
         @theme_name = @data['theme_name']
