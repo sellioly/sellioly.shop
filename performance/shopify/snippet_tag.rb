@@ -9,6 +9,12 @@ class SnippetTag < Liquid::Tag
     unless @name =~ /(.+?)(\.[^.]*$|$)/
       raise "Illegal template name '#{@name}'"
     end
+
+    @attributes = {}
+    markup.scan(TagAttributes) do |key, value|
+      @attributes[key] = parse_expression(value)
+    end
+
   end
 
   def render(context)
@@ -20,6 +26,7 @@ class SnippetTag < Liquid::Tag
     # Remember here we are not passing extension
     content = File.read(full_path)
 
+    new_context['params'] = @attributes
     Liquid::Template.parse(content).render(new_context).html_safe
   end
 

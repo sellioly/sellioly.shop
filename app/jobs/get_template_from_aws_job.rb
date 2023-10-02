@@ -163,6 +163,16 @@ class GetTemplateFromAwsJob < ApplicationJob
           end
         end
 
+
+
+        unless File.directory?(@path + '/components')
+          FileUtils.mkdir_p(@path + '/components')
+          zipfile.glob('components/*.liquid').each do
+          |entry|
+            entry.extract(@path + '/' + entry.name)
+          end
+        end
+
         unless File.directory?(@path + '/templates')
           FileUtils.mkdir_p(@path + '/templates')
           zipfile.glob('templates/*.json').each do
