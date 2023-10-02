@@ -63,7 +63,7 @@ class ShopController < ApplicationController
 
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
 
-    response = HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'user_id' => params[:shop_id] })
+    response = HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'shop_id' => params[:shop_id] })
     unless response.status.success?
       internal_server_error
       return
