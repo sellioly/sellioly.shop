@@ -33,7 +33,10 @@ class SnippetTag < Liquid::Tag
     # Remember here we are not passing extension
     content = File.read(full_path)
 
+    puts new_context
+
     new_context['params'] = @attributes
+    puts new_context
     Liquid::Template.parse(content).render(new_context).html_safe
   end
 
