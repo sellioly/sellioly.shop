@@ -19,7 +19,9 @@ class SnippetTag < Liquid::Tag
   end
 
   def render(context)
+    puts context
     new_context = context.environments.first
+    puts new_context
     full_path = Liquid::Template.file_system.root + "/snippets/" + @name + ".liquid"
     unless File.exist?(full_path)
       raise "No such '#{@name}' in section folder!"
@@ -29,7 +31,6 @@ class SnippetTag < Liquid::Tag
 
     puts @attributes
 
-    puts new_context
 
     new_context['params'] = @attributes
     Liquid::Template.parse(content).render(new_context).html_safe
