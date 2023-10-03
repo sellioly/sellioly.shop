@@ -37,9 +37,8 @@ class SnippetTag < Liquid::Tag
       new_context['params'] = @attributes
       Liquid::Template.parse(content).render(new_context).html_safe
 
-    rescue Exception
-      # handle everything else
-      raise
+    rescue => e
+      puts e.message
     end
 
   end
