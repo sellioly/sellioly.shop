@@ -17,7 +17,7 @@ class SnippetTag < Liquid::Tag
       puts value
       puts parse_expression(value)
       
-      @attributes[key] = parse_expression(value)
+      @attributes[key] = value
     end
     puts @attributes    
 
