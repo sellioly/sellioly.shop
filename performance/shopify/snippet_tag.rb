@@ -29,6 +29,8 @@ class SnippetTag < Liquid::Tag
 
     puts @attributes
 
+    puts new_context
+
     new_context['params'] = @attributes
     Liquid::Template.parse(content).render(new_context).html_safe
   end
