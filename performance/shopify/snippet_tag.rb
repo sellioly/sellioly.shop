@@ -5,7 +5,7 @@ class SnippetTag < Liquid::Tag
   def initialize(tag_name, markup, options)
     super
     puts markup
-    @name = markup.strip.remove("'")
+    @name = markup.strip.remove("'").split(',')[0]
     puts @name
     unless @name =~ /(.+?)(\.[^.]*$|$)/
       raise "Illegal template name '#{@name}'"
