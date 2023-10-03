@@ -4,7 +4,7 @@ require 'liquid'
 class SnippetTag < Liquid::Tag
   def initialize(tag_name, markup, options)
     super
-
+    puts markup
     @name = markup.strip.remove("'")
     puts @name
     unless @name =~ /(.+?)(\.[^.]*$|$)/
