@@ -10,11 +10,11 @@ class SnippetTag < Liquid::Tag
       raise "Illegal template name '#{@name}'"
     end
 
-    @attributes = {}
+    @attrs = {}
     markup.scan(Liquid::TagAttributes) do |key, value|
-      @attributes[key] = parse_expression(value)
+      @attrs[key] = parse_expression(value)
     end
-    puts @attributes
+    puts @attrs
 
   end
 
@@ -27,9 +27,9 @@ class SnippetTag < Liquid::Tag
     # Remember here we are not passing extension
     content = File.read(full_path)
 
-    puts @attributes
+    puts @attrs
 
-    new_context['params'] = @attributes
+    new_context['params'] = @attrs
     Liquid::Template.parse(content).render(new_context).html_safe
   end
 
