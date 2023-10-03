@@ -6,6 +6,7 @@ class SnippetTag < Liquid::Tag
     super
 
     @name = markup.strip.remove("'")
+    puts @name
     unless @name =~ /(.+?)(\.[^.]*$|$)/
       raise "Illegal template name '#{@name}'"
     end
@@ -21,7 +22,7 @@ class SnippetTag < Liquid::Tag
   def render(context)
     begin
 
-      puts context
+      puts @name
       new_context = context.environments.first
       puts new_context
       full_path = Liquid::Template.file_system.root + "/snippets/" + @name + ".liquid"
@@ -40,7 +41,6 @@ class SnippetTag < Liquid::Tag
     rescue => e
       puts e.message
     end
-
   end
 
 end
