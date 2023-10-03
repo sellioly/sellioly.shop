@@ -5,7 +5,7 @@ class SectionTag < Liquid::Tag
   def initialize(tag_name, markup, options)
     super
 
-    @name = markup.strip.remove("'")
+    @name = markup.strip.remove("'").split(',')[0]
     unless @name =~ /(.+?)(\.[^.]*$|$)/
       "Illegal template name '#{@name}'"
     end

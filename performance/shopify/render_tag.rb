@@ -5,7 +5,7 @@ class RenderTag < Liquid::Tag
   def initialize(tag_name, markup, options)
     super
 
-    @name = markup.strip.remove("'")
+    @name = markup.strip.remove("'").split(',')[0]
     unless @name =~ /(.+?)(\.[^.]*$|$)/
       raise "Illegal template name '#{@name}'"
     end
