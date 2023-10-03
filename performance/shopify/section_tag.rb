@@ -11,7 +11,7 @@ class SectionTag < Liquid::Tag
     end
 
     @attributes = {}
-    markup.scan(TagAttributes) do |key, value|
+    markup.scan(Liquid::TagAttributes) do |key, value|
       @attributes[key] = parse_expression(value)
     end
   end
