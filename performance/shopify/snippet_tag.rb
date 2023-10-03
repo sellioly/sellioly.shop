@@ -9,6 +9,7 @@ class SnippetTag < Liquid::Tag
     unless @name =~ /(.+?)(\.[^.]*$|$)/
       raise "Illegal template name '#{@name}'"
     end
+    puts markup
 
     @attributes = {}
     markup.scan(Liquid::TagAttributes) do |key, value|
