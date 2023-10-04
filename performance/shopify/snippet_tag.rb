@@ -15,7 +15,7 @@ class SnippetTag < Liquid::Tag
       markup.scan(Liquid::TagAttributes) do |key, value|
         puts value
         puts parse_expression(value)
-        @attributes[key] = value
+        @attributes[key] = parse_expression(value)
       end
     rescue => e
       puts e.message
