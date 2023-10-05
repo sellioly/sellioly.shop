@@ -25,7 +25,11 @@ class ComponentTag < Liquid::Tag
     end
     # Remember here we are not passing extension
     content = File.read(full_path)
-    new_context['params'] = @attributes
+    new_context['params'] = {}
+    @attributes.each do |key, value|
+      new_context['params'][key] = context.evaluate(value)
+    end
+
 
     Liquid::Template.parse(content).render(new_context).html_safe
   end

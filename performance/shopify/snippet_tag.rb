@@ -13,8 +13,6 @@ class SnippetTag < Liquid::Tag
 
       @attributes = {}
       markup.scan(Liquid::TagAttributes) do |key, value|
-        puts value
-        puts parse_expression(value)
         @attributes[key] = parse_expression(value)
       end
     rescue => e
@@ -33,6 +31,12 @@ class SnippetTag < Liquid::Tag
       # Remember here we are not passing extension
       content = File.read(full_path)
       new_context['params'] = @attributes
+
+
+      new_context['params'] = {}
+      @attributes.each do |key, value|
+        new_context['params'][key] = context.evaluate(value)
+      end
 
       Liquid::Template.parse(content).render(new_context).html_safe
     rescue => e
