@@ -16,7 +16,7 @@ class RenderTag < Liquid::Tag
       @attributes["#{key}_test"] = value
     end
 
-    puts(@attributes)
+    # puts(@attributes)
 
   end
 
