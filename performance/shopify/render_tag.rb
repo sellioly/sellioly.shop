@@ -13,7 +13,10 @@ class RenderTag < Liquid::Tag
     @attributes = {}
     markup.scan(Liquid::TagAttributes) do |key, value|
       @attributes[key] = parse_expression(value)
+      @attributes["#{key}_test"] = value
     end
+
+    puts(@attributes)
 
   end
 
