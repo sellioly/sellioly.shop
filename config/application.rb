@@ -7,6 +7,7 @@ require_relative "../performance/shopify/json_filter"
 require_relative "../performance/shopify/money_filter"
 require_relative "../performance/shopify/weight_filter"
 require_relative "../performance/shopify/tag_filter"
+require_relative "../performance/shopify/t_filter"
 require_relative "../performance/shopify/section_tag"
 require_relative "../performance/shopify/render_tag"
 require_relative "../performance/shopify/snippet_tag"
@@ -27,6 +28,7 @@ module Sellioly
     Liquid::Template.register_filter(WeightFilter)
     Liquid::Template.register_filter(ShopFilter)
     Liquid::Template.register_filter(TagFilter)
+    Liquid::Template.register_filter(TFilter)
     Liquid::Template.register_tag('section', SectionTag)
     Liquid::Template.register_tag('render', RenderTag)
     Liquid::Template.register_tag('component', ComponentTag)
