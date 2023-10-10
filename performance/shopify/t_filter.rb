@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-require 'liquid'
 require 'json'
+require 'liquid'
 
 module TFilter
   def t(key)
