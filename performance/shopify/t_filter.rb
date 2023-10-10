@@ -6,7 +6,7 @@ module TFilter
   def t(key)
     locale = 'en'
 
-    file = File.read(@path + '/config/settings_data.json')
+    file = File.read(Liquid::Template.file_system.root + '/config/settings_data.json')
     settings_data = JSON.load file
 
     if settings_data['presets'][settings_data['current']]['language']
