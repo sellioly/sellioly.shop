@@ -21,7 +21,8 @@ module TFilter
   def load_translation_data(locale)
     translation_file_path = Liquid::Template.file_system.root + "/locales/" + locale + ".default.json"
     puts translation_file_path
-    JSON.parse(File.read(translation_file_path))[locale.to_s]
+    file = File.read(translation_file_path)
+    JSON.load file
   rescue => e
     puts e.message
   end
