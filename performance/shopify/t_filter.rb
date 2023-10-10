@@ -6,6 +6,7 @@ module TFilter
   def t(key)
     locale = 'en'
     translation_data = load_translation_data(locale)
+    puts translation_data
     value = key.split('.').reduce(translation_data) do |data, subkey|
       data.is_a?(Hash) ? data[subkey] : nil
     end
