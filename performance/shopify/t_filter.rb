@@ -14,8 +14,12 @@ module TFilter
     end
     translation_data = load_translation_data(locale)
     value = key.split('.').reduce(translation_data) do |data, subkey|
-      data.is_a?(Hash) ? data[subkey] : subkey
+      puts data
+      puts subkey
+      data.is_a?(Hash) ? data[subkey] : nil
     end
+
+    puts value
 
     value
   rescue => e
