@@ -16,7 +16,15 @@ module TFilter
     value = key.split('.').reduce(translation_data) do |data, subkey|
       puts data
       puts subkey
-      data.is_a?(Hash) ? data[subkey] : nil
+      unless data.is_a?(Hash) 
+        nil
+      else
+        if data[subkey]
+          data[subkey]
+        else
+          subkey
+        end
+      end
     end
 
     puts value
