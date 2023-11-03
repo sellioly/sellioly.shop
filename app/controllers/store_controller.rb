@@ -1,4 +1,5 @@
 require "zip"
+
 class StoreController < ApplicationController
   public def generate_ssl
     cert = LetsEncrypt::Certificate.create(domain: params[:app_domain])
@@ -14,18 +15,22 @@ class StoreController < ApplicationController
   public def renew_ssl
     cert = LetsEncrypt::Certificate.find_by(domain: params[:app_domain])
     # alias  `verify && issue`
-    if cert.renew
-      LetsEncrypt::RenewCertificatesJob.perform_later
-      render :json => { :msg => 'OK' }
+    if cert
+      if cert.renew
+        LetsEncrypt::RenewCertificatesJob.perform_later
+        render :json => { :msg => 'OK' }
+      else
+        render :json => { :msg => 'NOT OK' }, status: 400
+      end
     else
-      render :json => { :msg => 'NOT OK' }, status: 400
+      generate_ssl
     end
   end
 
   public def verify_ssl
     cert = LetsEncrypt::Certificate.find_by(domain: params[:app_domain])
     # alias  `verify && issue`
-    if cert.verify
+    if cert&.verify
       render :json => { :msg => 'OK' }, status: 200
     else
       render :json => { :msg => 'NOT OK' }, status: 400
@@ -222,8 +227,6 @@ class StoreController < ApplicationController
     render body: content, mime_type: mime_type
   end
 
-
-
   def request_template
     # code here
     @shop_id = params[:shop_id].to_s
@@ -232,17 +235,17 @@ class StoreController < ApplicationController
     @path = Rails.root.to_s + @sub_path
 
     unless Dir.exist? @path
-      return :json => {msg: "template not found"}, status: 400
+      return :json => { msg: "template not found" }, status: 400
     end
 
     bundle_filename = Rails.root.to_s + "/storage/" + @shop_id + "/" + @template_id + ".zip"
-    FileUtils.rm bundle_filename,:force => true
+    FileUtils.rm bundle_filename, :force => true
     Zip::File.open(bundle_filename, Zip::File::CREATE) do |zipfile|
       Dir.chdir @path
       Dir.glob("**/*").each do |file|
         zipfile.add(file.sub(@path + '/', ''), file)
       end
     end
-    send_file bundle_filename, :type=>"application/zip", :x_sendfile=>true
+    send_file bundle_filename, :type => "application/zip", :x_sendfile => true
   end
 end
