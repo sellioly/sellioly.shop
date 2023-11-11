@@ -138,7 +138,7 @@ class ApplicationController < ActionController::Base
         section_data = settings_data['presets'][settings_data['current']][section_id]
         schema_data = settings_schema[section_id]
         presets[section_id] = section_data # to verify !
-        
+
         if schema_data
           section_data['settings'].keys.each do |key|
             value = section_data['settings'][key]
@@ -211,7 +211,7 @@ class ApplicationController < ActionController::Base
           section_data['settings'].each do |_data|
             key = _data[0]
             value = _data[1]
-            
+
             if section_schema['settings'][key]
               # read the default value
               if value.nil?
@@ -378,6 +378,24 @@ class ApplicationController < ActionController::Base
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
     template = Liquid::Template.parse(File.read(@path + "/layout/#{layout}.liquid")) # Parses and compiles the template
     origin = request.base_url
+
+    response = HTTP.post("https://api.sellioly.com/server/metadata/store/namespace", :form => { 'meta_id' => @shop_id, 'app_domain' => @domain })
+    @args['content_for_header'] = ""
+    if response.status.success?
+      metadata = response.parse
+      @args['metadata'] = metadata
+
+      if metadata.has_key? "pixels"
+        metadata['pixels'].keys.each do |pixel_type|
+          metadata['pixels'][pixel_type].each do |pixel|
+            if pixel.has_key? "pixel_code"
+              @args['content_for_header'] = pixel['pixel_code'] + "\n\n"
+            end
+          end
+        end
+      end
+    end
+
     @args['content_for_layout'] = @content_for_layout
     @args['request'] = { 'origin' => origin }
     temp = template.render(@args)
