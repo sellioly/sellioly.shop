@@ -389,7 +389,7 @@ class ApplicationController < ActionController::Base
         metadata['pixels'].keys.each do |pixel_type|
           metadata['pixels'][pixel_type].each do |pixel|
             if pixel.has_key? "pixel_code"
-              @args['content_for_header'] = pixel['pixel_code'] + "\n\n"
+              @args['content_for_header'] = @args['content_for_header'] +  pixel['pixel_code'] + "\n\n"
             end
           end
         end
