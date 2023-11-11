@@ -379,7 +379,7 @@ class ApplicationController < ActionController::Base
     template = Liquid::Template.parse(File.read(@path + "/layout/#{layout}.liquid")) # Parses and compiles the template
     origin = request.base_url
 
-    response = HTTP.post("https://api.sellioly.com/server/metadata/store/namespace", :form => { 'meta_id' => @shop_id, 'app_domain' => @domain })
+    response = HTTP.post("https://api.sellioly.com/server/metadata/store/list", :form => { 'meta_id' => @shop_id, 'app_domain' => @domain })
     @args['content_for_header'] = ""
     if response.status.success?
       metadata = response.parse
