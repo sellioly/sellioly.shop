@@ -12,12 +12,12 @@
     "heading": {
       "element": "text",
       "label": "Heading",
-      "default": true
+      "default": "Popular Categories"
     },
     "subheading": {
       "element": "text",
       "label": "Sub Heading",
-      "default": true
+      "default": "Discover popular categories"
     },
     "divider_2": {
       "element": "divider"
@@ -25,7 +25,7 @@
     "button_label": {
       "element": "text",
       "label": "Button label",
-      "default": true
+      "default": "Discover more"
     }
   },
   "blocks": {
@@ -35,7 +35,7 @@
         "collection": {
           "element": "collection-picker",
           "label": "Collection",
-          "default": "exemple-collection"
+          "default": "collection-a"
         }
       }
     }

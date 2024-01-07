@@ -3,8 +3,8 @@
 		"slideshow": {
 			"type": "slideshow",
 			"settings": {
-				"show": true,
-				"text_align": "text-left"
+				"show": null,
+				"text_align": null
 			},
 			"block_order": [
 				"slide"
@@ -25,8 +25,8 @@
 		"trending-products": {
 			"type": "trending-products",
 			"settings": {
-				"show": true,
-				"button_label": "Shop now"
+				"show": null,
+				"button_label": null
 			},
 			"block_order": [
 				"product-0",
@@ -57,19 +57,19 @@
 		"new-arrivals": {
 			"type": "new-arrivals",
 			"settings": {
-				"show": true,
-				"heading": "New Arrivals",
-				"subheading": "Vestibulum auctor dapibus neque",
+				"show": null,
+				"heading": null,
+				"subheading": null,
 				"products": null
 			}
 		},
 		"popular-collections": {
 			"type": "popular-collections",
 			"settings": {
-				"show": true,
-				"heading": "Popular Collections",
-				"subheading": "Vestibulum auctor dapibus neque",
-				"button_label": "Discover now"
+				"show": null,
+				"heading": null,
+				"subheading": null,
+				"button_label": null
 			},
 			"block_order": [
 				"collection-0",
@@ -107,7 +107,7 @@
 		"customer-features": {
 			"type": "customer-features",
 			"settings": {
-				"show": true
+				"show": null
 			}
 		}
 	},

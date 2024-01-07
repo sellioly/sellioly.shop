@@ -12,7 +12,7 @@
     "button_label": {
       "element": "text",
       "label": "Button label",
-      "default": ""
+      "default": "Shop now"
     }
   },
   "blocks": {
@@ -22,7 +22,7 @@
         "product": {
           "element": "product-picker",
           "label": "Product",
-          "default": "exemple-product"
+          "default": "exemple-product-1"
         }
       }
     }
