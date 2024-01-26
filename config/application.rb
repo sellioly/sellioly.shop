@@ -1,6 +1,7 @@
 require_relative "boot"
 
 require "rails/all"
+require 'http'
 
 require_relative "../performance/shopify/shop_filter"
 require_relative "../performance/shopify/json_filter"
@@ -22,6 +23,8 @@ module Sellioly
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 7.0
     config.active_job.queue_adapter = :sidekiq
+    HTTP.default_options = { ssl: { verify_mode: OpenSSL::SSL::VERIFY_NONE } }
+
 
     Liquid::Template.register_filter(JsonFilter)
     Liquid::Template.register_filter(MoneyFilter)
