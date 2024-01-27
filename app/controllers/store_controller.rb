@@ -260,6 +260,7 @@ class StoreController < ApplicationController
     id = params[:id]
     app_domain = params[:app_domain]
     shop_id = params[:shop_id].to_s
+    event_id = 'user_id'
 
     case event
     when 'product'
@@ -308,6 +309,9 @@ class StoreController < ApplicationController
         return
       end
     when 'metadata'
+
+      event_id = 'meta_id'
+
       case operation
       when 'update', 'insert'
         # Handle metadata update/insert
@@ -322,6 +326,7 @@ class StoreController < ApplicationController
         render json: { error: "Invalid operation: #{operation}" }, status: :unprocessable_entity
         return
       end
+
     when 'shop'
       case operation
       when 'update', 'insert'
@@ -343,7 +348,7 @@ class StoreController < ApplicationController
     end
 
     # Make an HTTP request to the appropriate endpoint
-    response = HTTP.post("https://api.sellioly.com/server/#{endpoint}", :form => { 'handle' => handle, 'user_id' => shop_id, 'app_domain' => app_domain })
+    response = HTTP.post("https://api.sellioly.com/server/#{endpoint}", :form => { 'handle' => handle, event_id => shop_id, 'app_domain' => app_domain })
     if response.status.success?
       response_string = response.body.to_s
       if handle
@@ -357,6 +362,5 @@ class StoreController < ApplicationController
       render json: { error: "unsuccessful api #{endpoint}" }, status: :unprocessable_entity
     end
   end
-
 
 end
