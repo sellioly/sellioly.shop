@@ -252,7 +252,9 @@ class StoreController < ApplicationController
     send_file bundle_filename, :type => "application/zip", :x_sendfile => true
   end
 
+  # This method processes events based on their type and operation
   def process_event
+    # Extract parameters from the request
     event = params[:event]
     operation = params[:operation]
     id = params[:id]
@@ -263,97 +265,98 @@ class StoreController < ApplicationController
     when 'product'
       case operation
       when 'update', 'insert'
-        response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => id, 'user_id' => shop_id, 'app_domain' => app_domain })
-        if response.status.success?
-          response_string = response.body.to_s
-          redis_set(app_domain, shop_id, "#{event}:#{id}", response_string)
-
-          render json: { message: "Synchronized #{event} with id #{id}" }
-        else
-          render json: { error: "unsuccessful api product/get-by-handle" }, status: :unprocessable_entity
-        end
-
+        # Handle product update/insert
+        handle = id
+        endpoint = "product/get-by-handle"
       when 'delete'
+        # Handle product deletion
         redis_del(app_domain, shop_id, "#{event}:#{id}")
         render json: { message: "Deleting #{event} with id #{id}" }
+        return
       else
         render json: { error: "Invalid operation: #{operation}" }, status: :unprocessable_entity
+        return
       end
-    when 'menu',
+    when 'menu'
       case operation
       when 'update', 'insert'
-        response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => id, 'user_id' => shop_id, 'app_domain' => app_domain })
-        if response.status.success?
-          response_string = response.body.to_s
-          redis_set(app_domain, shop_id, "#{event}:#{id}", response_string)
-
-          render json: { message: "Synchronized #{event} with id #{id}" }
-        else
-          render json: { error: "unsuccessful api menu/get-by-handle" }, status: :unprocessable_entity
-        end
+        # Handle menu update/insert
+        handle = id
+        endpoint = "menu/get-by-handle"
       when 'delete'
+        # Handle menu deletion
         redis_del(app_domain, shop_id, "#{event}:#{id}")
         render json: { message: "Deleting #{event} with id #{id}" }
+        return
       else
         render json: { error: "Invalid operation: #{operation}" }, status: :unprocessable_entity
+        return
       end
-    when 'collection',
+    when 'collection'
       case operation
       when 'update', 'insert'
-        response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => id, 'user_id' => shop_id, 'app_domain' => app_domain })
-        if response.status.success?
-          response_string = response.body.to_s
-          redis_set(app_domain, shop_id, "#{event}:#{id}", response_string)
-
-          render json: { message: "Synchronized #{event} with id #{id}" }
-        else
-          render json: { error: "unsuccessful api collection/get-by-handle" }, status: :unprocessable_entity
-        end
+        # Handle collection update/insert
+        handle = id
+        endpoint = "collection/get-by-handle"
       when 'delete'
+        # Handle collection deletion
         redis_del(app_domain, shop_id, "#{event}:#{id}")
         render json: { message: "Deleting #{event} with id #{id}" }
+        return
       else
         render json: { error: "Invalid operation: #{operation}" }, status: :unprocessable_entity
+        return
       end
-    when 'metadata',
+    when 'metadata'
       case operation
       when 'update', 'insert'
-        response = HTTP.post("https://api.sellioly.com/server/metadata/store/list", :form => { 'meta_id' => shop_id, 'app_domain' => app_domain })
-        if response.status.success?
-          response_string = response.body.to_s
-          redis_set(app_domain, shop_id, "#{event}", response_string)
-
-          render json: { message: "Synchronized #{event} with shop id #{shop_id}" }
-        else
-          render json: { error: "unsuccessful api metadata/store/list" }, status: :unprocessable_entity
-        end
+        # Handle metadata update/insert
+        handle = nil
+        endpoint = "metadata/store/list"
       when 'delete'
+        # Handle metadata deletion
         redis_del(app_domain, shop_id, "#{event}")
         render json: { message: "Deleting #{event} with shop id #{shop_id}" }
+        return
       else
         render json: { error: "Invalid operation: #{operation}" }, status: :unprocessable_entity
+        return
       end
-    when 'shop' # HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'app_domain' => @domain })
+    when 'shop'
       case operation
       when 'update', 'insert'
-        response = HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'app_domain' => app_domain })
-        if response.status.success?
-          response_string = response.body.to_s
-          redis_set(app_domain, -1, "#{event}", response_string)
-
-          render json: { message: "Synchronized #{event} with domain #{app_domain}" }
-        else
-          render json: { error: "unsuccessful api store/infos" }, status: :unprocessable_entity
-        end
+        # Handle shop update/insert
+        handle = nil
+        endpoint = "store/infos"
       when 'delete'
+        # Handle shop deletion
         redis_del(app_domain, -1, "#{event}")
         render json: { message: "Deleting #{event} with domain #{app_domain}" }
+        return
       else
         render json: { error: "Invalid operation: #{operation}" }, status: :unprocessable_entity
+        return
       end
     else
       render json: { error: "Invalid event: #{event}" }, status: :unprocessable_entity
+      return
+    end
+
+    # Make an HTTP request to the appropriate endpoint
+    response = HTTP.post("https://api.sellioly.com/server/#{endpoint}", :form => { 'handle' => handle, 'user_id' => shop_id, 'app_domain' => app_domain })
+    if response.status.success?
+      response_string = response.body.to_s
+      if handle
+        redis_set(app_domain, shop_id, "#{event}:#{id}", response_string)
+      else
+        redis_set(app_domain, -1, "#{event}", response_string)
+      end
+
+      render json: { message: "Synchronized #{event} with #{handle ? 'id' : 'domain'} #{handle || app_domain}" }
+    else
+      render json: { error: "unsuccessful api #{endpoint}" }, status: :unprocessable_entity
     end
   end
+
 
 end
