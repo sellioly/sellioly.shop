@@ -39,6 +39,24 @@ services:
       REDIS_CABLE_URL: redis://redis:6379/1
       REDIS_CACHE_URL: redis://redis:6379/2
 
+  app2:
+    <<: *app_base
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+
+  app3:
+    <<: *app_base
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+
+  app4:
+    <<: *app_base
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+
+  app5:
+    <<: *app_base
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+
+
+
   worker:
     <<: *app_base
     command: bundle exec sidekiq -C config/sidekiq.yml
@@ -61,6 +79,10 @@ services:
     links:
       - redis
       - app:ruby_app
+      - app2:ruby_app2
+      - app3:ruby_app3
+      - app4:ruby_app4
+      - app5:ruby_app5
     environment:
       redis: redis
     depends_on:
