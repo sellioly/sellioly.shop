@@ -20,7 +20,7 @@ services:
   app: &app_base
     build: .
     restart: always
-    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    command: bundle exec rails s -p 3000 -b '0.0.0.0' --pid tmp/pids/server.pid
     volumes:
       - sellioly:/app
       - mysqld_data_container:/var/run/mysqld
@@ -41,19 +41,19 @@ services:
 
   app2:
     <<: *app_base
-    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    command: bundle exec rails s -p 3000 -b '0.0.0.0' --pid tmp/pids/server2.pid
 
   app3:
     <<: *app_base
-    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    command: bundle exec rails s -p 3000 -b '0.0.0.0' --pid tmp/pids/server3.pid
 
   app4:
     <<: *app_base
-    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    command: bundle exec rails s -p 3000 -b '0.0.0.0' --pid tmp/pids/server4.pid
 
   app5:
     <<: *app_base
-    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    command: bundle exec rails s -p 3000 -b '0.0.0.0' --pid tmp/pids/server5.pid
 
 
 
