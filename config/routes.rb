@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     get 'api/assets', action: 'request_asset_content', controller: 'store'
     put 'api/assets', action: 'update_asset_content', controller: 'store'
     post 'api/assets', action: 'request_assets_template', controller: 'store'
+    post 'api/process_event', action: 'process_event', controller: 'store'
     get '/', action: 'not_found', controller: 'shop'
     get '/*path', action: 'not_found', controller: 'shop'
   end

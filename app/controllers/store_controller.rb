@@ -1,6 +1,9 @@
 require "zip"
 
 class StoreController < ApplicationController
+
+  include StoreHelper
+
   public def generate_ssl
     cert = LetsEncrypt::Certificate.create(domain: params[:app_domain])
     # alias  `verify && issue`
@@ -248,4 +251,109 @@ class StoreController < ApplicationController
     end
     send_file bundle_filename, :type => "application/zip", :x_sendfile => true
   end
+
+  def process_event
+    event = params[:event]
+    operation = params[:operation]
+    id = params[:id]
+    app_domain = params[:app_domain]
+    shop_id = params[:shop_id].to_s
+
+    case event
+    when 'product'
+      case operation
+      when 'update', 'insert'
+        response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => id, 'user_id' => shop_id, 'app_domain' => app_domain })
+        if response.status.success?
+          response_string = response.body.to_s
+          redis_set(app_domain, shop_id, "#{event}:#{id}", response_string)
+
+          render json: { message: "Synchronized #{event} with id #{id}" }
+        else
+          render json: { error: "unsuccessful api product/get-by-handle" }, status: :unprocessable_entity
+        end
+
+      when 'delete'
+        redis_del(app_domain, shop_id, "#{event}:#{id}")
+        render json: { message: "Deleting #{event} with id #{id}" }
+      else
+        render json: { error: "Invalid operation: #{operation}" }, status: :unprocessable_entity
+      end
+    when 'menu',
+      case operation
+      when 'update', 'insert'
+        response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => id, 'user_id' => shop_id, 'app_domain' => app_domain })
+        if response.status.success?
+          response_string = response.body.to_s
+          redis_set(app_domain, shop_id, "#{event}:#{id}", response_string)
+
+          render json: { message: "Synchronized #{event} with id #{id}" }
+        else
+          render json: { error: "unsuccessful api menu/get-by-handle" }, status: :unprocessable_entity
+        end
+      when 'delete'
+        redis_del(app_domain, shop_id, "#{event}:#{id}")
+        render json: { message: "Deleting #{event} with id #{id}" }
+      else
+        render json: { error: "Invalid operation: #{operation}" }, status: :unprocessable_entity
+      end
+    when 'collection',
+      case operation
+      when 'update', 'insert'
+        response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => id, 'user_id' => shop_id, 'app_domain' => app_domain })
+        if response.status.success?
+          response_string = response.body.to_s
+          redis_set(app_domain, shop_id, "#{event}:#{id}", response_string)
+
+          render json: { message: "Synchronized #{event} with id #{id}" }
+        else
+          render json: { error: "unsuccessful api collection/get-by-handle" }, status: :unprocessable_entity
+        end
+      when 'delete'
+        redis_del(app_domain, shop_id, "#{event}:#{id}")
+        render json: { message: "Deleting #{event} with id #{id}" }
+      else
+        render json: { error: "Invalid operation: #{operation}" }, status: :unprocessable_entity
+      end
+    when 'metadata',
+      case operation
+      when 'update', 'insert'
+        response = HTTP.post("https://api.sellioly.com/server/metadata/store/list", :form => { 'meta_id' => shop_id, 'app_domain' => app_domain })
+        if response.status.success?
+          response_string = response.body.to_s
+          redis_set(app_domain, shop_id, "#{event}", response_string)
+
+          render json: { message: "Synchronized #{event} with shop id #{shop_id}" }
+        else
+          render json: { error: "unsuccessful api metadata/store/list" }, status: :unprocessable_entity
+        end
+      when 'delete'
+        redis_del(app_domain, shop_id, "#{event}")
+        render json: { message: "Deleting #{event} with shop id #{shop_id}" }
+      else
+        render json: { error: "Invalid operation: #{operation}" }, status: :unprocessable_entity
+      end
+    when 'shop' # HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'app_domain' => @domain })
+      case operation
+      when 'update', 'insert'
+        response = HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'app_domain' => app_domain })
+        if response.status.success?
+          response_string = response.body.to_s
+          redis_set(app_domain, -1, "#{event}", response_string)
+
+          render json: { message: "Synchronized #{event} with domain #{app_domain}" }
+        else
+          render json: { error: "unsuccessful api store/infos" }, status: :unprocessable_entity
+        end
+      when 'delete'
+        redis_del(app_domain, -1, "#{event}")
+        render json: { message: "Deleting #{event} with domain #{app_domain}" }
+      else
+        render json: { error: "Invalid operation: #{operation}" }, status: :unprocessable_entity
+      end
+    else
+      render json: { error: "Invalid event: #{event}" }, status: :unprocessable_entity
+    end
+  end
+
 end
