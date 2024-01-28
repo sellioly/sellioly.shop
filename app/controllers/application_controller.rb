@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
+  include ShopHelper
 
   def content_not_found
     render file: "#{Rails.root}/public/404.html", layout: true, status: :not_found
@@ -41,8 +42,8 @@ class ApplicationController < ActionController::Base
     @path = Rails.root.to_s + @store.template_path.to_s
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
 
-    @response = HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'app_domain' => @domain })
-    unless (@response.status.success?)
+    @response = get_shop(@domain)
+    unless @response
       internal_server_error
       return
     end
@@ -85,8 +86,8 @@ class ApplicationController < ActionController::Base
     @path = Rails.root.to_s + @store.template_path.to_s
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
 
-    response = HTTP.post("https://api.sellioly.com/server/store/infos", :form => { 'app_domain' => @domain })
-    unless response.status.success?
+    response = get_shop(@domain)
+    unless response
       internal_server_error
       return
     end
@@ -145,24 +146,22 @@ class ApplicationController < ActionController::Base
             if schema_data['settings'][key]
               case schema_data['settings'][key]['element']
               when 'menu'
-                response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
-                if response.status.success?
-                  presets[section_id]['settings'][key] = response.parse
+                response = get_menu(value, @shop_id, @domain)
+                if response
+                  presets[section_id]['settings'][key] = response
                 end
+
               when 'product-picker'
-                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
-                if response.status.success?
-                  presets[section_id]['settings'][key] = response.parse
+                response = get_product(value, @shop_id, @domain)
+                if response
+                  presets[section_id]['settings'][key] = response
                 end
               when 'products-picker'
-                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles[]' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
-                if response.status.success?
-                  presets[section_id]['settings'][key] = response.parse
-                end
+                presets[section_id]['settings'][key] = get_products(value, @shop_id, @domain)
               when 'collection-picker'
-                response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
-                if response.status.success?
-                  presets[section_id]['settings'][key] = response.parse
+                response = get_collection(value, @shop_id, @domain)
+                if response
+                  presets[section_id]['settings'][key] = response
                 end
               else
                 next
@@ -221,24 +220,21 @@ class ApplicationController < ActionController::Base
 
               case section_schema['settings'][key]['element']
               when 'menu'
-                response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
-                if response.status.success?
-                  section_data['settings'][key] = response.parse
+                response = get_menu(value, @shop_id, @domain)
+                if response
+                  section_data['settings'][key] = response
                 end
               when 'product-picker'
-                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
-                if response.status.success?
-                  section_data['settings'][key] = response.parse
+                response = get_product(value, @shop_id, @domain)
+                if response
+                  section_data['settings'][key] = response
                 end
               when 'products-picker'
-                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles[]' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
-                if response.status.success?
-                  section_data['settings'][key] = response.parse
-                end
+                section_data['settings'][key] = get_products(value, @shop_id, @domain)
               when 'collection-picker'
-                response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
-                if response.status.success?
-                  section_data['settings'][key] = response.parse
+                response = get_collection(value, @shop_id, @domain)
+                if response
+                  section_data['settings'][key] = response
                 end
               else
                 next
@@ -272,24 +268,21 @@ class ApplicationController < ActionController::Base
 
                     case block_schema['settings'][key]['element']
                     when 'menu'
-                      response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
-                      if response.status.success?
-                        block_data['settings'][key] = response.parse
+                      response = get_menu(value, @shop_id, @domain)
+                      if response
+                        block_data['settings'][key] = response
                       end
                     when 'product-picker'
-                      response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
-                      if response.status.success?
-                        block_data['settings'][key] = response.parse
+                      response = get_product(value, @shop_id, @domain)
+                      if response
+                        block_data['settings'][key] = response
                       end
                     when 'products-picker'
-                      response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles[]' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
-                      if response.status.success?
-                        section_data['settings'][key] = response.parse
-                      end
+                      section_data['settings'][key] = get_products(value, @shop_id, @domain)
                     when 'collection-picker'
-                      response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
-                      if response.status.success?
-                        block_data['settings'][key] = response.parse
+                      response = get_collection(value, @shop_id, @domain)
+                      if response
+                        block_data['settings'][key] = response
                       end
                     else
                       next
@@ -342,24 +335,23 @@ class ApplicationController < ActionController::Base
 
               case schema_data['settings'][key]['element']
               when 'menu'
-                response = HTTP.post("https://api.sellioly.com/server/menu/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
-                if response.status.success?
-                  layout_data['sections'][section_id]['settings'][key] = response.parse
+
+                response = get_menu(value, @shop_id, @domain)
+                if response
+                  layout_data['sections'][section_id]['settings'][key] = response
                 end
+
               when 'product-picker'
-                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
-                if response.status.success?
-                  layout_data['sections'][section_id]['settings'][key] = response.parse
+                response = get_product(value, @shop_id, @domain)
+                if response
+                  layout_data['sections'][section_id]['settings'][key] = response
                 end
               when 'products-picker'
-                response = HTTP.post("https://api.sellioly.com/server/product/get-by-handles", :form => { 'handles[]' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
-                if response.status.success?
-                  section_data['settings'][key] = response.parse
-                end
+                section_data['settings'][key] = get_products(value, @shop_id, @domain)
               when 'collection-picker'
-                response = HTTP.post("https://api.sellioly.com/server/collection/get-by-handle", :form => { 'handle' => value, 'user_id' => @shop_id, 'app_domain' => @domain })
-                if response.status.success?
-                  layout_data['sections'][section_id]['settings'][key] = response.parse
+                response = get_collection(value, @shop_id, @domain)
+                if response
+                  layout_data['sections'][section_id]['settings'][key] = response
                 end
               else
                 next
@@ -379,17 +371,17 @@ class ApplicationController < ActionController::Base
     template = Liquid::Template.parse(File.read(@path + "/layout/#{layout}.liquid")) # Parses and compiles the template
     origin = request.base_url
 
-    response = HTTP.post("https://api.sellioly.com/server/metadata/store/list", :form => { 'meta_id' => @shop_id, 'app_domain' => @domain })
+    response= get_metadata(@shop_id, @domain)
     @args['content_for_header'] = ""
-    if response.status.success?
-      metadata = response.parse
+    if response
+      metadata = response
       @args['metadata'] = metadata
 
       if metadata.has_key? "pixels"
         metadata['pixels'].keys.each do |pixel_type|
           metadata['pixels'][pixel_type].each do |pixel|
             if pixel.has_key? "pixel_code"
-              @args['content_for_header'] = @args['content_for_header'] +  pixel['pixel_code'] + "\n\n"
+              @args['content_for_header'] = @args['content_for_header'] + pixel['pixel_code'] + "\n\n"
             end
           end
         end
