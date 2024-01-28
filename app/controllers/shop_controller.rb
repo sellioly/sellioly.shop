@@ -63,7 +63,7 @@ class ShopController < ApplicationController
 
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
 
-    response = get_shop(params[:shop_id])
+    response = get_shop_id(params[:shop_id])
     unless response
       internal_server_error
       return

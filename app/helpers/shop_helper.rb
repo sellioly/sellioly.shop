@@ -108,6 +108,25 @@ module ShopHelper
     nil
   end
 
+
+  def get_shop_id(shop_id)
+    shop = redis_get(-1, shop_id, "shop")
+
+    if shop == nil
+      endpoint = "store/infos"
+      response = HTTP.post("https://api.sellioly.com/server/#{endpoint}", :form => { 'shop_id' => shop_id })
+      if response.status.success?
+        response_string = response.body.to_s
+        redis_set(-1, shop_id, "shop", response_string)
+
+        return response.parse
+      end
+    else
+      return JSON.parse(shop)
+    end
+    nil
+  end
+
   def get_metadata(shop_id, app_domain)
     metadata = redis_get(app_domain, shop_id, "metadata")
 
