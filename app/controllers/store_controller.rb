@@ -260,7 +260,7 @@ class StoreController < ApplicationController
     id = params[:handle]
     app_domain = params[:app_domain]
     shop_id = params[:shop_id].to_s
-    event_id = 'user_id'
+    event_id = 'shop_id'
 
     case event
     when 'product'
