@@ -69,7 +69,7 @@ class ShopController < ApplicationController
       return
     end
     
-    data = response.parse
+    data = response
     @domain = data['app_domain']
     
     shop_name = data['shop_name']

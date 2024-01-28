@@ -92,7 +92,7 @@ class ApplicationController < ActionController::Base
       return
     end
 
-    data = response.parse
+    data = response
     shop_name = data['shop_name']
     shop_description = data['shop_description']
     currency = data['currency']
