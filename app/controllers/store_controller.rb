@@ -257,7 +257,7 @@ class StoreController < ApplicationController
     # Extract parameters from the request
     event = params[:event]
     operation = params[:operation]
-    id = params[:id]
+    id = params[:handle]
     app_domain = params[:app_domain]
     shop_id = params[:shop_id].to_s
     event_id = 'user_id'
