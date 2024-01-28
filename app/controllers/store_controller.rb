@@ -252,112 +252,53 @@ class StoreController < ApplicationController
     send_file bundle_filename, :type => "application/zip", :x_sendfile => true
   end
 
-  # This method processes events based on their type and operation
   def process_event
-    # Extract parameters from the request
     event = params[:event]
     operation = params[:operation]
-    id = params[:handle]
+    handle_param = params[:handle]
     app_domain = params[:app_domain]
     shop_id = params[:shop_id].to_s
-    event_id = 'shop_id'
+    event_id = event == 'metadata' ? 'meta_id' : 'shop_id'
 
-    case event
-    when 'product'
-      case operation
-      when 'update', 'insert'
-        # Handle product update/insert
-        handle = id
-        endpoint = "product/get-by-handle"
-      when 'delete'
-        # Handle product deletion
-        redis_del(app_domain, shop_id, "#{event}:#{id}")
-        render json: { message: "Deleting #{event} with id #{id}" }
-        return
-      else
-        render json: { error: "Invalid operation: #{operation}" }, status: :unprocessable_entity
-        return
-      end
-    when 'menu'
-      case operation
-      when 'update', 'insert'
-        # Handle menu update/insert
-        handle = id
-        endpoint = "menu/get-by-handle"
-      when 'delete'
-        # Handle menu deletion
-        redis_del(app_domain, shop_id, "#{event}:#{id}")
-        render json: { message: "Deleting #{event} with id #{id}" }
-        return
-      else
-        render json: { error: "Invalid operation: #{operation}" }, status: :unprocessable_entity
-        return
-      end
-    when 'collection'
-      case operation
-      when 'update', 'insert'
-        # Handle collection update/insert
-        handle = id
-        endpoint = "collection/get-by-handle"
-      when 'delete'
-        # Handle collection deletion
-        redis_del(app_domain, shop_id, "#{event}:#{id}")
-        render json: { message: "Deleting #{event} with id #{id}" }
-        return
-      else
-        render json: { error: "Invalid operation: #{operation}" }, status: :unprocessable_entity
-        return
-      end
-    when 'metadata'
+    # Check for valid operations
+    unless %w[update insert delete].include?(operation)
+      render json: { error: "Invalid operation: #{operation}" }, status: :unprocessable_entity
+      return
+    end
 
-      event_id = 'meta_id'
-
-      case operation
-      when 'update', 'insert'
-        # Handle metadata update/insert
-        handle = nil
-        endpoint = "metadata/store/list"
-      when 'delete'
-        # Handle metadata deletion
-        redis_del(app_domain, shop_id, "#{event}")
-        render json: { message: "Deleting #{event} with shop id #{shop_id}" }
-        return
-      else
-        render json: { error: "Invalid operation: #{operation}" }, status: :unprocessable_entity
-        return
-      end
-
-    when 'shop'
-      case operation
-      when 'update', 'insert'
-        # Handle shop update/insert
-        handle = nil
-        endpoint = "store/infos"
-      when 'delete'
-        # Handle shop deletion
-        redis_del(app_domain, -1, "#{event}")
-        render json: { message: "Deleting #{event} with domain #{app_domain}" }
-        return
-      else
-        render json: { error: "Invalid operation: #{operation}" }, status: :unprocessable_entity
-        return
-      end
-    else
+    # Check for valid events
+    unless %w[product menu collection metadata shop].include?(event)
       render json: { error: "Invalid event: #{event}" }, status: :unprocessable_entity
       return
     end
 
+    if operation == 'delete'
+      # Handle deletion for all types
+      redis_del(app_domain, event == 'shop' ? -1 : shop_id, "#{event}:#{handle_param}")
+      message = event == 'shop' ? "Deleting #{event} with domain #{app_domain}" : "Deleting #{event} with handle #{handle_param}"
+      render json: { message: message }
+      return
+    end
+
+    # Set handle and endpoint based on event
+    handle, endpoint = case event
+                       when 'product', 'menu', 'collection'
+                         [handle_param, "#{event}/get-by-handle"]
+                       when 'metadata'
+                         [nil, "metadata/store/list"]
+                       when 'shop'
+                         [nil, "store/infos"]
+                       else
+                         [nil, nil]
+                       end
+
     # Make an HTTP request to the appropriate endpoint
-    response = HTTP.post("https://api.sellioly.com/server/#{endpoint}", :form => { 'handle' => handle, event_id => shop_id, 'app_domain' => app_domain })
+    response = HTTP.post("https://api.sellioly.com/server/#{endpoint}", form: { 'handle' => handle, event_id => shop_id, 'app_domain' => app_domain })
     if response.status.success?
       response_string = response.body.to_s
-      if handle
-        redis_set(app_domain, shop_id, "#{event}:#{id}", response_string)
-      else
-        redis_set(app_domain, -1, "#{event}", response_string)
-      end
-
-      render json: { message: "Synchronized #{event} with #{handle ? 'id' : 'domain'} #{handle || app_domain}" }
+      redis_set(app_domain, event == 'shop' ? -1 : shop_id, "#{event}:#{handle_param}", response_string)
+      message = "Synchronized #{event} with #{handle ? 'handle' : 'domain'} #{handle || app_domain}"
+      render json: { message: message }
     else
       render json: { error: "unsuccessful api #{endpoint}" }, status: :unprocessable_entity
     end
