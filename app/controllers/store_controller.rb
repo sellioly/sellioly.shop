@@ -57,7 +57,6 @@ class StoreController < ApplicationController
     @store.template_path = @subpath
     @store.save
 
-
     cert = LetsEncrypt::Certificate.find_by(domain: params[:app_domain])
     unless cert
       cert = LetsEncrypt::Certificate.create(domain: params[:app_domain]) rescue nil
@@ -308,9 +307,10 @@ class StoreController < ApplicationController
     response = HTTP.post("https://api.sellioly.com/server/#{endpoint}", form: { 'handle' => handle, event_id => shop_id, 'app_domain' => app_domain })
     if response.status.success?
       response_string = response.body.to_s
-      redis_set(app_domain, event == 'shop' ? -1 : shop_id, "#{event}#{event == 'shop' ? "" : ":" }#{handle_param}", response_string)
       if event === "shop"
         redis_set(-1, shop_id, "shop", response_string)
+      else
+        redis_set(app_domain,  shop_id, "#{event}:#{handle_param}", response_string)
       end
       message = "Synchronized #{event} with #{handle ? 'handle' : 'domain'} #{handle || app_domain}"
       render json: { message: message }

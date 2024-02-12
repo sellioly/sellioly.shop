@@ -42,7 +42,7 @@ class ApplicationController < ActionController::Base
     @path = Rails.root.to_s + @store.template_path.to_s
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
 
-    @response = get_shop(@domain)
+    @response = get_shop_id(@shop_id)
     unless @response
       internal_server_error
       return
@@ -86,7 +86,7 @@ class ApplicationController < ActionController::Base
     @path = Rails.root.to_s + @store.template_path.to_s
     Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
 
-    response = get_shop(@domain)
+    response = get_shop_id(@shop_id)
     unless response
       internal_server_error
       return
