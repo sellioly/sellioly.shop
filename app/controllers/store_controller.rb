@@ -309,6 +309,9 @@ class StoreController < ApplicationController
     if response.status.success?
       response_string = response.body.to_s
       redis_set(app_domain, event == 'shop' ? -1 : shop_id, "#{event}#{event == 'shop' ? "" : ":" }#{handle_param}", response_string)
+      if event === "shop"
+        redis_set(-1, shop_id, "shop", response_string)
+      end
       message = "Synchronized #{event} with #{handle ? 'handle' : 'domain'} #{handle || app_domain}"
       render json: { message: message }
     else
