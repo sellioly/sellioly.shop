@@ -5,6 +5,12 @@ class StoreController < ApplicationController
   include StoreHelper
 
   public def generate_ssl
+
+    cert = LetsEncrypt::Certificate.find_by(domain: params[:app_domain])
+    if cert
+      return :json => { :msg => 'This domain Already Certified' }
+    end
+
     cert = LetsEncrypt::Certificate.create(domain: params[:app_domain])
     # alias  `verify && issue`
     if cert.get
@@ -50,10 +56,16 @@ class StoreController < ApplicationController
     @path = Rails.root.to_s + @subpath
     @store.template_path = @subpath
     @store.save
-    cert = LetsEncrypt::Certificate.create(domain: params[:app_domain]) rescue nil
-    cert.get if cert
 
-    LetsEncrypt::RenewCertificatesJob.perform_later
+
+    cert = LetsEncrypt::Certificate.find_by(domain: params[:app_domain])
+    unless cert
+      cert = LetsEncrypt::Certificate.create(domain: params[:app_domain]) rescue nil
+      cert.get if cert
+
+      LetsEncrypt::RenewCertificatesJob.perform_later
+    end
+
     UploadLocalTemplateJob.perform_later @path, @store.app_domain, @subpath
 
     # upload local file template  /app/storage/63/28/config/settings_schema.json
