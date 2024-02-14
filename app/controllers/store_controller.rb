@@ -67,6 +67,16 @@ class StoreController < ApplicationController
 
     UploadLocalTemplateJob.perform_later @path, @store.app_domain, @subpath
 
+
+    endpoint = "collection/get-by-handle"
+    response = HTTP.post("https://api.sellioly.com/server/#{endpoint}", :form => { 'handle' => 'all', 'user_id' => @store.shop_id, 'app_domain' => @store.app_domain })
+    if response.status.success?
+      response_string = response.body.to_s
+      redis_set(@store.app_domain, @store.shop_id, "collection:all", response_string)
+
+      return response.parse
+    end
+
     # upload local file template  /app/storage/63/28/config/settings_schema.json
 
     render json: { msg: 'Template in progress', id: @store.id, template_path: @subpath }
