@@ -63,6 +63,19 @@ class ApplicationController < ActionController::Base
     render_page('404.json')
   end
 
+  def verify_ssl
+    @domain = request.host
+    cert = LetsEncrypt::Certificate.find_by(domain: @domain)
+    # alias  `verify && issue`
+    if cert
+      unless cert.verify
+        if cert.renew
+          LetsEncrypt::RenewCertificatesJob.perform_later
+        end
+      end
+    end
+  end
+
   def initialize_shop
     puts '--------------------- initialize_shop --------------------'
     puts "initialize_shop Format: " + request.format.to_s + "/" + (request.format.html?).to_s
@@ -371,7 +384,7 @@ class ApplicationController < ActionController::Base
     template = Liquid::Template.parse(File.read(@path + "/layout/#{layout}.liquid")) # Parses and compiles the template
     origin = request.base_url
 
-    response= get_metadata(@shop_id, @domain)
+    response = get_metadata(@shop_id, @domain)
     @args['content_for_header'] = ""
     if response
       metadata = response
