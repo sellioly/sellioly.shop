@@ -63,12 +63,12 @@ class ApplicationController < ActionController::Base
     render_page('404.json')
   end
 
-  def verify_ssl
+  def verify_ssl_hook
     @domain = request.host
     cert = LetsEncrypt::Certificate.find_by(domain: @domain)
     # alias  `verify && issue`
     if cert
-      unless cert.verify
+      if cert.expired?
         if cert.renew
           LetsEncrypt::RenewCertificatesJob.perform_later
         end

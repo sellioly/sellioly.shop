@@ -1,6 +1,6 @@
 class ShopController < ApplicationController
   protect_from_forgery except: :file_assets
-  before_action :verify_ssl, :initialize_shop, except: [:preview, :file_assets, :file_font_assets]
+  before_action :verify_ssl_hook, :initialize_shop, except: [:preview, :file_assets, :file_font_assets]
 
   def index
 

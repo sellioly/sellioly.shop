@@ -3,7 +3,7 @@ require "zip"
 class StoreController < ApplicationController
 
   include StoreHelper
-  before_action :verify_ssl
+  before_action :verify_ssl_hook
 
   public def generate_ssl
 
