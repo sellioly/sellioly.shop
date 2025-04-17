@@ -20,11 +20,13 @@ class ApplicationController < ActionController::Base
       @cname = @cname.name.to_s
       @response = HTTP.post("https://api.sellioly.com/server/domain/verify", :form => { 'domain' => @domain, 'app_domain' => @cname })
       unless @response.status.success?
+        puts "Verify domain failed! #{@domain} #{@cname}"
         content_not_found
         return false
       end
       @domain = @cname
     elsif not (@domain =~ /^[A-za-z0-9-.]+.sellioly.com$/)
+      puts "Domain format error! #{@domain}"
       content_not_found
       return false
     end
