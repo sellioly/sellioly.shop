@@ -79,7 +79,7 @@ class ApplicationController < ActionController::Base
   end
 
   def initialize_shop
-    puts '--------------------- # initialize_shop # --------------------'
+    puts '--------------------- initialize_shop --------------------'
     puts "initialize_shop Format: " + request.format.to_s + "/" + (request.format.html?).to_s
 
     # remove html format check because we need initialize_shop for cart_controller
@@ -193,6 +193,7 @@ class ApplicationController < ActionController::Base
       @args['presets'] = presets
     end
 
+    puts '--------------------- initialize_shop end --------------------'
   end
 
   def render_page(filename)
