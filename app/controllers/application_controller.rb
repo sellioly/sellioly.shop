@@ -94,6 +94,7 @@ class ApplicationController < ActionController::Base
     end
 
     unless @store
+      puts "Store not found! #{@domain}"
       content_not_found
       return
     end
