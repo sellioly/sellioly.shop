@@ -157,18 +157,6 @@ class ShopController < ApplicationController
     render_page('index.json')
   end
 
-  public def page
-
-    puts "page Format: " + request.format.to_s + "/" + (request.format.html?).to_s
-
-    unless request.format.html?
-      content_not_found
-      return
-    end
-
-    render_page('404.json')
-  end
-
   public def product
     response = get_product(params[:product], @shop_id, @domain)
     if response
@@ -214,6 +202,40 @@ class ShopController < ApplicationController
   public def cart
     render_page('cart.json')
     nil
+  end
+
+  public def our_store
+    render_page('our-store.json')
+    nil
+  end
+
+  public def about_us
+    render_page('about-us.json')
+    nil
+  end
+
+  # other pages
+  public def page
+    puts "page Format: " + request.format.to_s + "/" + (request.format.html?).to_s
+
+    unless request.format.html?
+      content_not_found
+      return
+    end
+
+    # Check if the page exists, if exists, render it using render_page method
+    # else render 404 page
+    if params[:path].present?
+      path = params[:path]
+      # Check if file exists
+      if File.exist?(@path + '/templates/' + path + '.json')
+        render_page(path + '.json')
+        return
+      end
+    end
+    
+    # Render 404 page
+    render_page('404.json')
   end
   
   public def productPreview
