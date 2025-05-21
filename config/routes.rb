@@ -25,13 +25,13 @@ Rails.application.routes.draw do
   end
 
   constraints lambda { |req| req.host != 'shop.sellioly.com' &&  req.host != 'preview.sellioly.com' } do
-    post 'api/cart/add', action: 'add', controller: 'cart'
-    post 'api/cart/remove', action: 'remove', controller: 'cart'
-    post 'api/cart/update-quantity', action: 'updateQuantity', controller: 'cart'
-    post 'api/cart/buynow', action: 'buynow', controller: 'cart'
+    post '/api/cart/add', action: 'add', controller: 'cart'
+    post '/api/cart/remove', action: 'remove', controller: 'cart'
+    post '/api/cart/update-quantity', action: 'updateQuantity', controller: 'cart'
+    post '/api/cart/buynow', action: 'buynow', controller: 'cart'
     # post 'api/product/select-option', action: 'selectOption', controller: 'cart'
-    post 'api/order/add', action: 'add', controller: 'order'
-    post 'api/order/order-now', action: 'orderNow', controller: 'order'
+    post '/api/order/add', action: 'add', controller: 'order'
+    post '/api/order/order-now', action: 'orderNow', controller: 'order'
     get '/collections/:collection', action: 'collection', controller: 'shop'
     get '/products/:product', action: 'product', controller: 'shop'
     get '/product-preview', action: 'productPreview', controller: 'shop'
@@ -39,7 +39,7 @@ Rails.application.routes.draw do
     get '/cart', action: 'cart', controller: 'shop'
     get '/our-store', action: 'our_store', controller: 'shop'
     get '/about-us', action: 'about_us', controller: 'shop'
-    get '404', action: 'not_found', controller: 'shop'
+    get '/404', action: 'not_found', controller: 'shop'
 
     get '/files/1/:shop_id/:template_id/assets/:filename', to: 'shop#file_assets', constraints: { filename: /[^\/]+/ }
     get '/files/1/:shop_id/:template_id/assets/fonts/:filename', to: 'shop#file_font_assets', constraints: { filename: /[^\/]+/ }

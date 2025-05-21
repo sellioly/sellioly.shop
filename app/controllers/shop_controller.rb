@@ -215,12 +215,14 @@ class ShopController < ApplicationController
   end
 
   public def not_found
+    puts "ShopController => not_found"
     render_page('404.json')
     nil
   end
 
   # other pages
   public def page
+    puts "ShopController => page"
     puts "page Format: " + request.format.to_s + "/" + (request.format.html?).to_s
 
     unless request.format.html?
