@@ -41,26 +41,26 @@ class ApplicationController < ActionController::Base
   end
 
   def page_not_found
-    @path = Rails.root.to_s + @store.template_path.to_s
-    Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
+    # @path = Rails.root.to_s + @store.template_path.to_s
+    # Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
 
-    @response = get_shop_id(@shop_id)
-    unless @response
-      internal_server_error
-      return
-    end
+    # @response = get_shop_id(@shop_id)
+    # unless @response
+    #   internal_server_error
+    #   return
+    # end
 
-    @data = @response.parse
-    @shop_name = @data['shop_name']
-    @currency = @data['currency']
-    @shop_description = @data['shop_description']
-    @logo = (@data['shop_logo_default'])
-    args = {}
-    args['logo'] = @logo
-    args['shop_name'] = @shop_name
-    args['currency'] = @currency
-    args['page_title'] = "HOME - #{@shop_name}"
-    args['shop_description'] = @shop_description
+    # @data = @response.parse
+    # @shop_name = @data['shop_name']
+    # @currency = @data['currency']
+    # @shop_description = @data['shop_description']
+    # @logo = (@data['shop_logo_default'])
+    # args = {}
+    # args['logo'] = @logo
+    # args['shop_name'] = @shop_name
+    # args['currency'] = @currency
+    # args['page_title'] = "HOME - #{@shop_name}"
+    # args['shop_description'] = @shop_description
 
     render_page('404.json')
   end
