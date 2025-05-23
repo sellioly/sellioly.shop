@@ -35,6 +35,7 @@ Rails.application.routes.draw do
     get '/collections/:collection', action: 'collection', controller: 'shop'
     get '/products/:product', action: 'product', controller: 'shop'
     get '/product-preview', action: 'productPreview', controller: 'shop'
+    get '/collection-preview', action: 'collectionPreview', controller: 'shop'
     get '/checkout', action: 'checkout', controller: 'shop'
     get '/cart', action: 'cart', controller: 'shop'
     get '/our-store', action: 'our_store', controller: 'shop'

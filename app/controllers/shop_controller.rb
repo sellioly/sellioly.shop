@@ -246,20 +246,29 @@ class ShopController < ApplicationController
   end
   
   public def productPreview
-    response = HTTP.post("https://api.sellioly.com/server/product/product-preview", :form => { 'user_id' => @shop_id, 'app_domain' => @domain })
-    if response.status.success?
-      @args['product'] = response.parse
-    else
-      page_not_found
-      return
-    end
+    # response = HTTP.post("https://api.sellioly.com/server/product/product-preview", :form => { 'user_id' => @shop_id, 'app_domain' => @domain })
+    # if response.status.success?
+    #   @args['product'] = response.parse
+    # else
+    #   page_not_found
+    #   return
+    # end
     
-    response = HTTP.post("https://api.sellioly.com/server/product/similar-products-preview", :form => { 'user_id' => @shop_id, 'app_domain' => @domain })
-    if response.status.success?
-      @args['similar_products'] = response.parse
-    end
+    # response = HTTP.post("https://api.sellioly.com/server/product/similar-products-preview", :form => { 'user_id' => @shop_id, 'app_domain' => @domain })
+    # if response.status.success?
+    #   @args['similar_products'] = response.parse
+    # end
+
+    @args['product'] = nil
 
     render_page('product.json')
+    return
+  end
+  
+  public def collectionPreview
+    @args['collection'] = nil
+
+    render_page('collection.json')
     return
   end
 
