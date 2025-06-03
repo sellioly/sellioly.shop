@@ -46,7 +46,6 @@ class ShopController < ApplicationController
   end
 
   public def preview
-
     headers['Access-Control-Allow-Origin'] = '*'
     headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
     headers['Access-Control-Request-Method'] = '*'
@@ -194,13 +193,13 @@ class ShopController < ApplicationController
     return
   end
 
-  public def checkout
-    render_page('checkout.json')
+  public def cart
+    render_page('cart.json')
     nil
   end
 
-  public def cart
-    render_page('cart.json')
+  public def checkout
+    render_page('checkout.json')
     nil
   end
 
@@ -246,29 +245,30 @@ class ShopController < ApplicationController
   end
   
   public def productPreview
-    # response = HTTP.post("https://api.sellioly.com/server/product/product-preview", :form => { 'user_id' => @shop_id, 'app_domain' => @domain })
-    # if response.status.success?
-    #   @args['product'] = response.parse
-    # else
-    #   page_not_found
-    #   return
-    # end
-    
-    # response = HTTP.post("https://api.sellioly.com/server/product/similar-products-preview", :form => { 'user_id' => @shop_id, 'app_domain' => @domain })
-    # if response.status.success?
-    #   @args['similar_products'] = response.parse
-    # end
-
-    @args['product'] = nil
+    @args['preview'] = true
 
     render_page('product.json')
     return
   end
   
   public def collectionPreview
-    @args['collection'] = nil
+    @args['preview'] = true
 
     render_page('collection.json')
+    return
+  end
+
+  public def cartPreview
+    @args['preview'] = true
+
+    render_page('cart.json')
+    return
+  end
+
+  public def checkoutPreview
+    @args['preview'] = true
+
+    render_page('checkout.json')
     return
   end
 
