@@ -160,6 +160,12 @@ class ApplicationController < ActionController::Base
           section_data['settings'].keys.each do |key|
             value = section_data['settings'][key]
             if schema_data['settings'][key]
+              # read the default value
+              if value.nil?
+                value = schema_data['settings'][key]['default']
+                section_data['settings'][key] = schema_data['settings'][key]['default']
+              end
+
               case schema_data['settings'][key]['element']
               when 'menu'
                 response = get_menu(value, @shop_id, @domain)
