@@ -1,0 +1,25 @@
+{
+  "name": "Notfound",
+  "settings": {
+    "heading": {
+      "element": "text",
+      "label": "Heading",
+      "default": "Oops... Page not found!"
+    },
+    "subheading": {
+      "element": "text",
+      "label": "Subheading",
+      "default": "Sorry for the inconvenience. Go to our homepage to check out our latest collections."
+    },
+    "button_label": {
+      "element": "text",
+      "label": "Button label",
+      "default": "Shop now"
+    },
+    "button_link": {
+      "element": "url",
+      "label": "Button link",
+      "default": "/"
+    }
+  }
+}

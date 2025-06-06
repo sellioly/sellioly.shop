@@ -1,0 +1,6 @@
+<a id="cart-notification-icon" href="#cart-notification-sidebar" data-bs-toggle="modal" class="nav-icon-item">
+    <i class="icon icon-bag"></i>
+    {% if cart and cart.items.size > 0 %}
+        <span class="count-box text-black">{{ cart.items.size }}</span>
+    {% endif %}
+</a>

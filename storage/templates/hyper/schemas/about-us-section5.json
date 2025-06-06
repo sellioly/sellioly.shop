@@ -1,0 +1,48 @@
+{
+    "name": "Section 5",
+    "settings": {
+        "show": {
+            "element": "checkbox",
+            "label": "Show section",
+            "default": true
+        },
+        "divider_1": {
+            "element": "divider"
+        },
+        "heading": {
+            "element": "text",
+            "label": "Heading",
+            "default": "Online Store"
+        },
+        "description": {
+            "element": "textarea",
+            "label": "Description",
+            "default": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form."
+        },
+        "image1_url": {
+            "element": "image-picker",
+            "label": "Image 1",
+            "default": "https://sellioly.s3.eu-west-3.amazonaws.com/shared/images/placeholder-images-image_large.webp"
+        },
+        "image2_url": {
+            "element": "image-picker",
+            "label": "Image 2",
+            "default": "https://sellioly.s3.eu-west-3.amazonaws.com/shared/images/placeholder-images-image_large.webp"
+        },
+        "image3_url": {
+            "element": "image-picker",
+            "label": "Image 3",
+            "default": "https://sellioly.s3.eu-west-3.amazonaws.com/shared/images/placeholder-images-image_large.webp"
+        },
+        "image4_url": {
+            "element": "image-picker",
+            "label": "Image 4",
+            "default": "https://sellioly.s3.eu-west-3.amazonaws.com/shared/images/placeholder-images-image_large.webp"
+        },
+        "image5_url": {
+            "element": "image-picker",
+            "label": "Image 5",
+            "default": "https://sellioly.s3.eu-west-3.amazonaws.com/shared/images/placeholder-images-image_large.webp"
+        }
+    }
+}

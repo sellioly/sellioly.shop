@@ -1,0 +1,57 @@
+<!-- Products -->
+{% if section.settings.show %}
+<section class="flat-spacing-19">
+  <div class="container">
+    <div class="flat-title flex-row justify-content-between px-0">
+      <span class="title wow fadeInUp" data-wow-delay="0s">{{ section.settings.heading }}</span>
+      <div class="box-sw-navigation">
+        <div class="nav-sw square nav-next-slider nav-next-sell-1"><span class="icon icon-arrow1-left"></span></div>
+        <div class="nav-sw square nav-prev-slider nav-prev-sell-1"><span class="icon icon-arrow1-right"></span>
+        </div>
+      </div>
+    </div>
+    <div class="hover-sw-nav hover-sw-2">
+      <div class="swiper tf-sw-product-sell-1 wrap-sw-over" data-preview="4" data-tablet="3" data-mobile="2"
+        data-space-lg="30" data-space-md="15" data-pagination="2" data-pagination-md="3" data-pagination-lg="3">
+        <div class="swiper-wrapper">
+          {% if section.settings.products.size > 0 %}
+
+            {% for product in section.settings.products %}
+            <div class="swiper-slide height-auto" lazy="true">
+              {% component 'product-card', product: product, currency: currency %}
+            </div>
+            {% endfor %}
+
+          {% else %}
+          
+            {% for i in (1..5) %}
+            <div class="swiper-slide height-auto" lazy="true">
+              <div class="card-product style-8">
+                <div class="card-product-wrapper">
+                  <a href="#" class="product-img">
+                    <img class="img-product ls-is-cached lazyloaded"
+                    src="https://sellioly.s3.eu-west-3.amazonaws.com/shared/images/placeholder-images-image_large.webp"
+                    data-src="https://sellioly.s3.eu-west-3.amazonaws.com/shared/images/placeholder-images-image_large.webp"
+                    alt="image-product">
+                      <img class="img-hover ls-is-cached lazyloaded"
+                          data-src="https://sellioly.s3.eu-west-3.amazonaws.com/shared/images/placeholder-images-image_large.webp"
+                          src="https://sellioly.s3.eu-west-3.amazonaws.com/shared/images/placeholder-images-image_large.webp" alt="image-product">
+                  </a>
+                </div>
+                <div class="card-product-info text-center">
+                  <a href="#" class="title link">Example product</a>
+                  <span class="price">299 MAD</span>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+
+          {% endif %}
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+<!-- /Products -->

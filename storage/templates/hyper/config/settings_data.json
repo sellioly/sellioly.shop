@@ -1,0 +1,31 @@
+{
+	"current": "Default",
+	"presets": {
+		"Default": {
+			"colors": {
+				"settings": {
+					"primary": null,
+					"black": null,
+					"white": null,
+					"text": null,
+					"text_2": null,
+					"text_3": null
+				}
+			},
+			"cart": {
+				"settings": {
+					"product_form_type": "add-to-cart"
+				}
+			},
+			"social_media": {
+				"settings": {
+					"facebook": "https://www.facebook.com",
+					"instagram": "https://www.instagram.com",
+					"tiktok": "https://www.tiktok.com/en/",
+					"twitter": "https://www.tiktok.com/en/",
+					"pinterest": "https://www.pinterest.fr/"
+				}
+			}
+		}
+	}
+}

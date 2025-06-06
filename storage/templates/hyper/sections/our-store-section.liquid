@@ -1,0 +1,31 @@
+<section class="flat-spacing-12">
+    <div class="container">
+        <div class="tf-grid-layout md-col-2">
+            <div class="tf-ourstore-img">
+                <img class=" ls-is-cached lazyloaded" data-src="{{ section.settings.image }}" src="{{ section.settings.image }}" alt="our-store">
+            </div>
+            <div class="tf-ourstore-content">
+                <h5 class="mb_24">{{ section.settings.heading }}</h5>
+                <div class="mb_20">
+                    <p class="mb_15"><strong>Address</strong></p>
+                    <p>{{ section.settings.address }}</p>
+                </div>
+                <div class="mb_20">
+                    <p class="mb_15"><strong>Phone</strong></p>
+                    <p>{{ section.settings.phone }}</p>
+                </div>
+                <div class="mb_20">
+                    <p class="mb_15"><strong>Email</strong></p>
+                    <p>{{ section.settings.email }}</p>
+                </div>
+                <div class="mb_36">
+                    <p class="mb_15"><strong>Open Time</strong></p>
+                    <p class="mb_15">{{ section.settings.open_time }}</p>
+                </div>
+                <div>
+                    <a href="{{ section.settings.button_link }}" class="tf-btn btn-outline-dark radius-3"><span>{{ section.settings.button_label }}</span><i class="icon icon-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

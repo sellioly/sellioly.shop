@@ -1,0 +1,28 @@
+{
+    "name": "Section 1",
+    "settings": {
+        "show": {
+            "element": "checkbox",
+            "label": "Show section",
+            "default": true
+        },
+        "divider_1": {
+            "element": "divider"
+        },
+        "image_url": {
+            "element": "image-picker",
+            "label": "Image",
+            "default": "https://sellioly.s3.eu-west-3.amazonaws.com/partners/23372036854776000/images/2147810713+(1).jpg"
+        },
+        "heading": {
+            "element": "text",
+            "label": "Heading",
+            "default": "About Us"
+        },
+        "text-color": {
+            "element": "color",
+            "label": "Text color",
+            "default": "#OOO"
+        }
+    }
+}

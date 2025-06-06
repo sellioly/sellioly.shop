@@ -1,0 +1,200 @@
+{% if preview %}
+
+<section class="flat-spacing-11">
+    <div class="container">
+        <div class="tf-page-cart-wrap">
+            <div class="tf-page-cart-item">
+                <table class="tf-table-page-cart">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for i in (1...2) %}
+                        <tr class="tf-cart-item file-delete" id="cart-item-{{ item.variant_id }}">
+                            <td class="tf-cart-item_product">
+                                <a href="product-detail.html" class="img-box">
+                                    <img src="https://sellioly.s3.eu-west-3.amazonaws.com/shared/images/placeholder-images-image_large.webp" alt="img-product">
+                                </a>
+                                <div class="cart-info">
+                                    <a href="product-detail.html" class="cart-title link">Product name</a>
+                                    <div class="cart-meta-variant">
+                                        <span>
+                                        <strong>Size: </strong>M
+                                        </span>
+                                    </div>
+                                    <button type="submit" class="remove-cart link" style="background: transparent; border: none;">
+                                        Remove
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="tf-cart-item_price" cart-data-title="Price">
+                                <div class="cart-price">300 MAD</div>
+                            </td>
+                            <td class="tf-cart-item_quantity" cart-data-title="Quantity">
+                                <div class="cart-quantity">
+                                    <div class="wg-quantity">
+                                        <!--
+                                        <span class="btn-quantity minus-btn">
+                                            <svg class="d-inline-block" width="9" height="1" viewBox="0 0 9 1" fill="currentColor"><path d="M9 1H5.14286H3.85714H0V1.50201e-05H3.85714L5.14286 0L9 1.50201e-05V1Z"></path></svg>
+                                        </span>
+                                        -->
+                                        <input 
+                                            name="quantity"
+                                            type="number"
+                                            value="2" 
+                                        >
+                                        <!--
+                                        <span class="btn-quantity plus-btn">
+                                            <svg class="d-inline-block" width="9" height="9" viewBox="0 0 9 9" fill="currentColor"><path d="M9 5.14286H5.14286V9H3.85714V5.14286H0V3.85714H3.85714V0H5.14286V3.85714H9V5.14286Z"></path></svg>
+                                        </span>
+                                        -->
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="tf-cart-item_total" cart-data-title="Total">
+                                <div class="cart-total"><span data-id="total-product-price">600</span> MAD</div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="tf-page-cart-footer">
+                <div class="tf-cart-footer-inner">
+                    <div class="tf-page-cart-checkout">
+                        <div class="tf-cart-totals-discounts">
+                            <h3>Subtotal</h3>
+                            <span class="total-value"><span data-id="total-price">1200</span> MAD</span>
+                        </div>
+                        <p class="tf-cart-tax">
+                            Taxes and <a href="shipping-delivery.html">shipping</a>  calculated at checkout
+                        </p>
+                        <div class="cart-checkout-btn">
+                            <a href="checkout.html" class="tf-btn w-100 btn-fill animate-hover-btn radius-3 justify-content-center">
+                                <span>Check out</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% else %}
+
+<section class="flat-spacing-11">
+    <div class="container">
+        {% if cart.items.size == 0 %}
+        <div class="tf-page-cart text-center mt_140 mb_200">
+            <h5 class="mb_24">Your cart is empty</h5>
+            <p class="mb_24">You may check out all the available products and buy some in the shop</p>
+            <a href="shop-default.html" class="tf-btn btn-sm radius-3 btn-fill btn-icon animate-hover-btn">Return to shop<i class="icon icon-arrow1-top-left"></i></a>
+        </div>
+        {% else %}
+        <div class="tf-page-cart-wrap">
+            <div class="tf-page-cart-item">
+                <form>
+                    <table class="tf-table-page-cart">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart.items %}
+                            <tr class="tf-cart-item file-delete" id="cart-item-{{ item.variant_id }}">
+                                <td class="tf-cart-item_product">
+                                    <a href="product-detail.html" class="img-box">
+                                        <img src="{{ item.image }}" alt="img-product">
+                                    </a>
+                                    <div class="cart-info">
+                                        <a href="product-detail.html" class="cart-title link">{{ item.title }}</a>
+                                        <div class="cart-meta-variant">
+                                        {% for option in item.options %}
+                                            <span>
+                                            <strong>{{ option.name }}: </strong>
+                                            {{ option.value }}
+                                            {% if forloop.last == false %} | {% endif %}
+                                            </span>
+                                        {% endfor %}
+                                        </div>
+                                        <remove-from-cart-form>
+                                            <!-------------- variant id ------------>
+                                            <input hidden type="number" name="variant_id" value="{{ item.variant_id }}">
+
+                                            <button type="submit" class="remove-cart link" style="background: transparent; border: none;">
+                                                Remove
+                                            </button>
+                                        </remove-from-cart-form>
+                                    </div>
+                                </td>
+                                <td class="tf-cart-item_price" cart-data-title="Price">
+                                    <div class="cart-price">{{ item.price }} {{ currency }}</div>
+                                </td>
+                                <td class="tf-cart-item_quantity" cart-data-title="Quantity">
+                                    <div class="cart-quantity">
+                                        <update-cart-quantity-form>
+                                        <input hidden type="number" name="variant_id" value="{{ item.variant_id }}">
+
+                                        <div class="wg-quantity">
+                                            <!--
+                                            <span class="btn-quantity minus-btn">
+                                                <svg class="d-inline-block" width="9" height="1" viewBox="0 0 9 1" fill="currentColor"><path d="M9 1H5.14286H3.85714H0V1.50201e-05H3.85714L5.14286 0L9 1.50201e-05V1Z"></path></svg>
+                                            </span>
+                                            -->
+                                            <input 
+                                                name="quantity"
+                                                type="number"
+                                                value="{{ item.quantity }}" 
+                                            >
+                                            <!--
+                                            <span class="btn-quantity plus-btn">
+                                                <svg class="d-inline-block" width="9" height="9" viewBox="0 0 9 9" fill="currentColor"><path d="M9 5.14286H5.14286V9H3.85714V5.14286H0V3.85714H3.85714V0H5.14286V3.85714H9V5.14286Z"></path></svg>
+                                            </span>
+                                            -->
+                                        </div>
+
+                                        </update-cart-quantity-form>
+                                    </div>
+                                </td>
+                                <td class="tf-cart-item_total" cart-data-title="Total">
+                                    <div class="cart-total"><span data-id="total-product-price">{{ item.price | times: item.quantity }}</span> {{ currency }}</div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+            <div class="tf-page-cart-footer">
+                <div class="tf-cart-footer-inner">
+                    <div class="tf-page-cart-checkout">
+                        <div class="tf-cart-totals-discounts">
+                            <h3>Subtotal</h3>
+                            <span class="total-value"><span data-id="total-price">{{ cart.subtotal }}</span> {{ currency }}</span>
+                        </div>
+                        <p class="tf-cart-tax">
+                            Taxes and <a href="shipping-delivery.html">shipping</a>  calculated at checkout
+                        </p>
+                        <div class="cart-checkout-btn">
+                            <a href="checkout.html" class="tf-btn w-100 btn-fill animate-hover-btn radius-3 justify-content-center">
+                                <span>Check out</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endif %}

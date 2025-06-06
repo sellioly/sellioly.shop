@@ -1,0 +1,53 @@
+{
+    "name": "Store informations",
+    "settings": {
+        "show": {
+            "element": "checkbox",
+            "label": "Show section",
+            "default": true
+        },
+        "divider_1": {
+            "element": "divider"
+        },
+        "image": {
+            "element": "image-picker",
+            "label": "Store image",
+            "default": "https://st.depositphotos.com/1389715/2502/i/450/depositphotos_25023965-stock-photo-modern-and-fashion-clothes-store.jpg"
+        },
+        "heading": {
+            "element": "text",
+            "label": "Heading",
+            "default": "Your Store"
+        },
+        "address": {
+            "element": "textarea",
+            "label": "Address",
+            "default": "66 Mott St, New York, New York, Zip Code: 10006"
+        },
+        "phone": {
+            "element": "text",
+            "label": "Phone",
+            "default": "+212611223344"
+        },
+        "email": {
+            "element": "text",
+            "label": "Email",
+            "default": "example@email.com"
+        },
+        "open_time": {
+            "element": "textarea",
+            "label": "Open Time",
+            "default": "Our store has re-opened for shopping,\nexchange Every day 11am to 7pm"
+        },
+        "button_label": {
+            "element": "text",
+            "label": "Button label",
+            "default": "Get Directions"
+        },
+        "button_link": {
+            "element": "link",
+            "label": "Button link",
+            "default": "/"
+        }
+    }
+}

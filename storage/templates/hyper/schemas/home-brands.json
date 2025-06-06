@@ -1,0 +1,29 @@
+{
+  "name": "Announcements",
+  "settings": {
+    "show": {
+      "element": "checkbox",
+      "label": "Show section",
+      "default": true
+    },
+    "header_1": {
+      "element": "header",
+      "content": "Announcements"
+    },
+    "text_1": {
+      "element": "text",
+      "label": "Annountcement 1",
+      "default": "LIMITED TIME OFFER: FASHION SALE YOU CAN'T RESIST"
+    },
+    "text_2": {
+      "element": "text",
+      "label": "Annountcement 2",
+      "default": "FREE SHIPPING AND RETURN"
+    },
+    "text_3": {
+      "element": "text",
+      "label": "Annountcement 3",
+      "default": "NEW SEASON, NEW STYLES: FASHION SALE YOU CAN'T MISS"
+    }
+  }
+}

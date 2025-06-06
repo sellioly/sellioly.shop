@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "notfound": {
+      "type": "notfound",
+      "settings": {
+        "heading": null,
+        "subheading": null,
+        "button_label": null,
+        "button_link": null
+      }
+    }
+  },
+  "order": [
+    "notfound"
+  ]
+}

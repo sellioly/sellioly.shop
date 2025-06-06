@@ -1,0 +1,69 @@
+{
+  "name": "Categories",
+  "settings": {
+    "show": {
+      "element": "checkbox",
+      "label": "Show section",
+      "default": true
+    },
+    "divider_1": {
+      "element": "divider"
+    },
+    "heading": {
+      "element": "text",
+      "label": "Heading",
+      "default": "Shop by category"
+    }
+  },
+  "blocks": {
+    "single-category": {
+      "name": "Single category",
+      "settings": {
+        "image": {
+          "element": "image-picker",
+          "label": "Image",
+          "default": "https://sellioly.s3.eu-west-3.amazonaws.com/shared/images/placeholder-images-image_large.webp"
+        },
+        "heading": {
+          "element": "text",
+          "label": "Heading",
+          "default": "Category Name"
+        },
+        "subheading": {
+          "element": "text",
+          "label": "Subheading",
+          "default": "12 items"
+        },
+        "text_color": {
+          "element": "color",
+          "label": "Text color",
+          "default": "#000"
+        },
+        "divider_1": {
+          "element": "header",
+          "content": "Button"
+        },
+        "button_label": {
+          "element": "text",
+          "label": "Text",
+          "default": "Shop now"
+        },
+        "button_link": {
+          "element": "url",
+          "label": "Link",
+          "default": "#"
+        },
+        "btn_bg_color": {
+          "element": "color",
+          "label": "Background color",
+          "default": "#000"
+        },
+        "btn_text_color": {
+          "element": "color",
+          "label": "Text color",
+          "default": "#fff"
+        }
+      }
+    }
+  }
+}

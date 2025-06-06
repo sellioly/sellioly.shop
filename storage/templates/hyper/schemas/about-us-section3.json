@@ -1,0 +1,28 @@
+{
+    "name": "Section 3",
+    "settings": {
+        "show": {
+            "element": "checkbox",
+            "label": "Show section",
+            "default": true
+        },
+        "divider_1": {
+            "element": "divider"
+        },
+        "image_url": {
+            "element": "image-picker",
+            "label": "Image",
+            "default": "https://sellioly.s3.eu-west-3.amazonaws.com/partners/23372036854776000/images/2147810713+(1).jpg"
+        },
+        "heading": {
+            "element": "text",
+            "label": "Heading",
+            "default": "Established - 1995"
+        },
+        "description": {
+            "element": "textarea",
+            "label": "Description",
+            "default": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet."
+        }
+    }
+}

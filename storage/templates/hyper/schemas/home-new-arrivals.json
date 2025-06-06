@@ -1,0 +1,23 @@
+{
+  "name": "New Arrivals",
+  "settings": {
+    "show": {
+      "element": "checkbox",
+      "label": "Show section",
+      "default": true
+    },
+    "divider_1": {
+      "element": "divider"
+    },
+    "heading": {
+      "element": "text",
+      "label": "Heading",
+      "default": "New Arrivals"
+    },
+    "products": {
+      "element": "products-picker",
+      "label": "Products",
+      "default": []
+    }
+  }
+}

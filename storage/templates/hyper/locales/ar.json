@@ -1,0 +1,22 @@
+{
+  "common": {
+    "home": "الصفحة الرئيسية",
+    "fullname": "الاسم الكامل",
+    "phone": "الهاتف",
+    "city": "المدينة",
+    "address": "العنوان"
+  },
+  "home": {},
+  "product": {
+    "add_to_cart": "أضف إلى السلة",
+    "buy_now": "اشتر الآن",
+    "order_now": "اطلب الآن",
+    "categories": "الفئات",
+    "tags": "العلامات",
+    "description": "الوصف",
+    "reviews": "المراجعات",
+    "related_products": "منتجات ذات صله"
+  },
+  "cart": {},
+  "checkout": {}
+}

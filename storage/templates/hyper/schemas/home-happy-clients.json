@@ -1,0 +1,54 @@
+{
+  "name": "Client reviews",
+  "settings": {
+    "show": {
+      "element": "checkbox",
+      "label": "Show section",
+      "default": true
+    },
+    "divider_1": {
+      "element": "divider"
+    },
+    "heading": {
+      "element": "text",
+      "label": "Heading",
+      "default": "Happy Clients"
+    },
+    "subheading": {
+      "element": "text",
+      "label": "Subheading",
+      "default": "Some description"
+    }
+  },
+  "blocks": {
+    "client-review": {
+      "name": "Client review",
+      "settings": {
+        "stars": {
+          "element": "range",
+          "label": "Stars",
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "unit": " star",
+          "default": 5
+        },
+        "client_name": {
+          "element": "text",
+          "label": "Client name",
+          "default": "Client name"
+        },
+        "text": {
+          "element": "text",
+          "label": "Text",
+          "default": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s."
+        },
+        "product": {
+          "element": "product-picker",
+          "label": "Product",
+          "default": null
+        }
+      }
+    }
+  }
+}

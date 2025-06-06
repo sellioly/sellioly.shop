@@ -1,0 +1,29 @@
+{
+	"sections": {
+		"our-store-banner": {
+			"type": "our-store-banner",
+			"settings": {
+				"show": true,
+				"heading": null
+			}
+		},
+		"our-store-section": {
+			"type": "our-store-section",
+			"settings": {
+				"show": true,
+				"image": null,
+				"heading": null,
+				"address": null,
+				"phone": null,
+				"email": null,
+				"open_time": null,
+				"button_label": null,
+				"button_link": null
+			}
+		}
+	},
+	"order": [
+		"our-store-banner",
+		"our-store-section"
+	]
+}

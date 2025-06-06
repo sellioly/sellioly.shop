@@ -1,0 +1,61 @@
+{
+  "name": "Popular collections",
+  "settings": {
+    "show": {
+      "element": "checkbox",
+      "label": "Show section",
+      "default": true
+    }
+  },
+  "blocks": {
+    "single-collection": {
+      "name": "Single collection",
+      "settings": {
+        "image": {
+          "element": "image-picker",
+          "label": "Image",
+          "default": "https://sellioly.s3.eu-west-3.amazonaws.com/shared/images/placeholder-images-image_large.webp"
+        },
+        "subheading": {
+          "element": "text",
+          "label": "Subheading",
+          "default": "description"
+        },
+        "heading": {
+          "element": "text",
+          "label": "Heading",
+          "default": "Product Name"
+        },
+        "text_color": {
+          "element": "color",
+          "label": "Text color",
+          "default": "#000"
+        },
+        "divider_2": {
+          "element": "header",
+          "content": "Button"
+        },
+        "button_label": {
+          "element": "text",
+          "label": "Text",
+          "default": "Shop now"
+        },
+        "button_link": {
+          "element": "url",
+          "label": "Link",
+          "default": "#"
+        },
+        "btn_bg_color": {
+          "element": "color",
+          "label": "Background color",
+          "default": "#000"
+        },
+        "btn_text_color": {
+          "element": "color",
+          "label": "Text color",
+          "default": "#fff"
+        }
+      }
+    }
+  }
+}

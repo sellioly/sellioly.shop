@@ -1,0 +1,10 @@
+{
+  "name": "Collection banner",
+  "settings": {
+    "banner_image": {
+      "element": "image-picker",
+      "label": "Banner image",
+      "default": ""
+    }
+  }
+}

@@ -1,0 +1,158 @@
+{% if preview %}
+
+<section id="checkout" class="flat-spacing-11">
+    <div class="container">
+        <div class="tf-page-cart-wrap layout-2">
+            <div class="tf-page-cart-item">
+                <h5 class="fw-5 mb_20">Billing details</h5>
+                
+                <div class="form-checkout">
+                    <fieldset class="box fieldset">
+                        <label for="full_name">Full name</label>
+                        <input required type="text" name="full_name" id="full_name">
+                    </fieldset>
+                    <fieldset class="box fieldset">
+                        <label for="phone">Phone</label>
+                        <input required type="text" name="phone" id="phone">
+                    </fieldset>
+                    <fieldset class="box fieldset">
+                        <label for="city">City</label>
+                        <input required type="text" name="city" id="city">
+                    </fieldset>
+                    <fieldset class="box fieldset">
+                        <label for="address">Address</label>
+                        <textarea name="address" id="address"></textarea>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="tf-page-cart-footer">
+                <div class="tf-cart-footer-inner">
+                    <h5 class="fw-5 mb_20">Your order</h5>
+                    <div class="tf-page-cart-checkout widget-wrap-checkout">
+                        <ul class="wrap-checkout-product">
+                            {% for i in  (1...2) %}
+                            <li class="checkout-product-item">
+                                    <figure class="img-product">
+                                        <img src="https://sellioly.s3.eu-west-3.amazonaws.com/shared/images/placeholder-images-image_large.webp" alt="product">
+                                        <span class="quantity">2</span>
+                                    </figure>
+                                    <div class="content">
+                                        <div class="info">
+                                            <p class="name">Product name</p>
+                                            <span class="variant">
+                                                <span>Size</span>: 
+                                                <span>M</span>
+                                            </span>
+                                        </div>
+                                        <span class="price">300 MAD</span>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <div class="d-flex justify-content-between line pb_20 pt-3">
+                            <h6 class="fw-5">Total</h6>
+                            <h6 class="total fw-5">1200 MAD</h6>
+                        </div>
+                        <div class="wd-check-payment">
+                            <div class="fieldset-radio mb_20">
+                                <input type="radio" name="payment" id="delivery" class="tf-check" checked="">
+                                <label for="delivery">Cash on delivery</label>
+                            </div>
+                            <p class="text_black-2 mb_20">Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our <a href="privacy-policy.html" class="text-decoration-underline">privacy policy</a>.</p>
+                            <div class="box-checkbox fieldset-radio mb_20">
+                                <input type="checkbox" id="check-agree" class="tf-check">
+                                <label for="check-agree" class="text_black-2">I have read and agree to the website <a href="terms-conditions.html" class="text-decoration-underline">terms and conditions</a>.</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="tf-btn radius-3 btn-fill btn-icon animate-hover-btn justify-content-center">Place order</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% else %}
+
+<section id="checkout" class="flat-spacing-11">
+    <div class="container">
+        <add-order-form>
+        <form>
+            <div class="tf-page-cart-wrap layout-2">
+                <div class="tf-page-cart-item">
+                    <h5 class="fw-5 mb_20">Billing details</h5>
+                    
+                    <div class="form-checkout">
+                        <fieldset class="box fieldset">
+                            <label for="full_name">Full name</label>
+                            <input required type="text" name="full_name" id="full_name">
+                        </fieldset>
+                        <fieldset class="box fieldset">
+                            <label for="phone">Phone</label>
+                            <input required type="text" name="phone" id="phone">
+                        </fieldset>
+                        <fieldset class="box fieldset">
+                            <label for="city">City</label>
+                            <input required type="text" name="city" id="city">
+                        </fieldset>
+                        <fieldset class="box fieldset">
+                            <label for="address">Address</label>
+                            <textarea name="address" id="address"></textarea>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="tf-page-cart-footer">
+                    <div class="tf-cart-footer-inner">
+                        <h5 class="fw-5 mb_20">Your order</h5>
+                        <div class="tf-page-cart-checkout widget-wrap-checkout">
+                            <ul class="wrap-checkout-product">
+                                {% for item in cart.items %}
+                                <li class="checkout-product-item">
+                                        <figure class="img-product">
+                                            <img src="{{ item.image }}" alt="product">
+                                            <span class="quantity">{{ item.quantity }}</span>
+                                        </figure>
+                                        <div class="content">
+                                            <div class="info">
+                                                <p class="name">{{ item.title }}</p>
+                                                {% if item.options.size > 0 %}
+                                                    <span class="variant">
+                                                    {% for option in item.options %}
+                                                            <span>{{ option.name }}</span>: 
+                                                            <span>{{ option.value }}</span>
+                                                            {% unless forloop.last %} / {% endunless %}
+                                                    {% endfor %}
+                                                    </span>
+                                                {% endif %}
+                                            </div>
+                                            <span class="price">{{ item.price }} {{ currency }}</span>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <div class="d-flex justify-content-between line pb_20 pt-3">
+                                <h6 class="fw-5">Total</h6>
+                                <h6 class="total fw-5">{{ cart.subtotal }} {{ currency }}</h6>
+                            </div>
+                            <div class="wd-check-payment">
+                                <div class="fieldset-radio mb_20">
+                                    <input type="radio" name="payment" id="delivery" class="tf-check" checked="">
+                                    <label for="delivery">Cash on delivery</label>
+                                </div>
+                                <p class="text_black-2 mb_20">Your personal data will be used to process your order, support your experience throughout this website, and for other purposes described in our <a href="privacy-policy.html" class="text-decoration-underline">privacy policy</a>.</p>
+                                <div class="box-checkbox fieldset-radio mb_20">
+                                    <input type="checkbox" id="check-agree" class="tf-check">
+                                    <label for="check-agree" class="text_black-2">I have read and agree to the website <a href="terms-conditions.html" class="text-decoration-underline">terms and conditions</a>.</label>
+                                </div>
+                            </div>
+                            <button type="submit" class="tf-btn radius-3 btn-fill btn-icon animate-hover-btn justify-content-center">Place order</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        </add-order-form>
+    </div>
+</section>
+
+{% endif %}

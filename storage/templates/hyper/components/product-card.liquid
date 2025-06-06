@@ -1,0 +1,65 @@
+{% assign product_link = '/products/' | append: params.product.handle %}
+
+<div class="card-product style-8">
+    <div class="card-product-wrapper">
+        <a href="{{ product_link }}" class="product-img">
+            <img class="img-product ls-is-cached lazyloaded"
+            src="{{ params.product.default_image.src }}"
+            data-src="{{ params.product.default_image.src }}"
+            alt="image-product">
+            {% if params.product.images.size > 1 %}
+                <img class="img-hover ls-is-cached lazyloaded"
+                    data-src="{{ params.product.images[1].src }}"
+                    src="{{ params.product.images[1].src }}" alt="image-product">
+            {% else %}
+                <img class="img-hover ls-is-cached lazyloaded"
+                    data-src="{{ params.product.default_image.src }}"
+                    src="{{ params.product.default_image.src }}" alt="image-product">
+            {% endif %}
+        </a>
+    </div>
+
+    {% assign hasColorOption = false %}
+
+    {% for variant in params.product.variants %}
+        {% for option in variant.product_options %}
+            {% if option.name == 'color' %}
+                {% assign hasColorOption = true %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+
+    <div class="card-product-info text-center">
+        <a href="{{ product_link }}" class="title link">{{ params.product.title }}</a>
+        <span class="price">{{ params.product.variants[0].price }} {{ params.currency }}</span>
+    <!--
+        <ul class="list-color-product justify-content-center">
+            {% if hasColorOption %}
+                {% assign color = '' %}
+        
+                {% for variant in params.product.variants %}
+                    {% if variant.option.option1.name == 'color' %}
+                        {% assign color = variant.option.option1.value %}
+                    {% endif %}
+        
+                    {% if variant.option.option2.name == 'color' %}
+                        {% assign color = variant.option.option2.value %}
+                    {% endif %}
+        
+                    {% if variant.option.option3.name == 'color' %}
+                        {% assign color = variant.option.option3.value %}
+                    {% endif %}
+
+                    {% if color != '' %}   
+                    <li class="list-color-item color-swatch active">
+                        <span class="swatch-value" style="background-color: {{ color }}"></span>
+                        <img class=" ls-is-cached lazyloaded" data-src="{{ variant.image.src }}" src="{{ variant.image.src }}" alt="image-product">
+                    </li>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        </ul>
+    -->
+    </div>
+
+</div>

@@ -1,0 +1,21 @@
+{
+  "common": {
+    "home": "Accueil",
+    "fullname": "Nom complet",
+    "phone": "Téléphone",
+    "city": "Ville",
+    "address": "Adresse"
+  },
+  "home": {},
+  "product": {
+    "add_to_cart": "Ajouter au panier",
+    "buy_now": "Acheter maintenant",
+    "order_now": "Commander maintenant",
+    "categories": "Catégories",
+    "tags": "Étiquettes",
+    "description": "Description",
+    "reviews": "Avis"
+  },
+  "cart": {},
+  "checkout": {}
+}

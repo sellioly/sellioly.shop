@@ -1,0 +1,127 @@
+<!-- Footer -->
+
+<footer id="footer" class="footer background-black">
+  <div class="footer-wrap wow fadeIn" data-wow-delay="0s">
+    <div class="footer-body">
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-3 col-md-6 col-12">
+            <div class="footer-infor">
+              <div class="footer-logo">
+                <a href="/">
+                  {% if section.settings.logo %}
+                  <div style="width: {{ section.settings.logo_width }}px">
+                    {{ section.settings.logo | img_tag: page_title }}
+                  </div>
+                  {% else %}
+                  <span style="font-size: 24px; font-weight: 600; color: #fff">
+                    {{ shop_name | capitalize }}
+                  </span>
+                  {% endif %}
+                </a>
+              </div>
+              <ul>
+                <li>
+                  <p>{{ section.settings.store_description }}</p>
+                </li>
+              </ul>
+              <ul class="tf-social-icon d-flex gap-10 style-white mt-5">
+                <li><a href="{{ presets.social_media.settings.facebook }}" class="box-icon w_34 round social-facebook social-line"><i
+                      class="icon fs-14 icon-fb"></i></a></li>
+                <li><a href="{{ presets.social_media.settings.instagram }}" class="box-icon w_34 round social-instagram social-line"><i
+                      class="icon fs-14 icon-instagram"></i></a></li>
+                <li><a href="{{ presets.social_media.settings.tiktok }}" class="box-icon w_34 round social-tiktok social-line"><i
+                      class="icon fs-14 icon-tiktok"></i></a></li>
+                <li><a href="{{ presets.social_media.settings.pinterest }}" class="box-icon w_34 round social-pinterest social-line"><i
+                      class="icon fs-14 icon-pinterest-1"></i></a></li>
+              </ul>
+            </div>
+          </div>
+
+
+          <div class="col-xl-3 col-md-6 col-12 footer-col-block">
+            <div class="footer-heading footer-heading-desktop">
+              <h6>{{ section.settings.first_menu_heading }}</h6>
+            </div>
+            <div class="footer-heading footer-heading-moblie">
+              <h6>{{ section.settings.first_menu_heading }}</h6>
+            </div>
+            {% if section.settings.first_menu.items.size > 0 %}
+            <ul class="footer-menu-list tf-collapse-content">
+              {% for item in section.settings.first_menu.items %}
+              <li>
+                <a href="{{ item.link }}" class="footer-menu_item">{{ item.name }}</a>
+              </li>
+              {% endfor %}
+            </ul>
+            {% else %}
+            <ul class="footer-menu-list tf-collapse-content">
+              <li><a href="#" class="footer-menu_item">Menu item 1</a></li>
+              <li><a href="#" class="footer-menu_item">Menu item 2</a></li>
+              <li><a href="#" class="footer-menu_item">Menu item 3</a></li>
+              <li><a href="#" class="footer-menu_item">Menu item 4</a></li>
+            </ul>
+            {% endif %}
+
+          </div>
+
+          
+          <div class="col-xl-3 col-md-6 col-12 footer-col-block">
+            <div class="footer-heading footer-heading-desktop">
+              <h6>{{ section.settings.second_menu_heading }}</h6>
+            </div>
+            <div class="footer-heading footer-heading-moblie">
+              <h6>{{ section.settings.second_menu_heading }}</h6>
+            </div>
+            {% if section.settings.second_menu.items.size > 0 %}
+            <ul class="footer-menu-list tf-collapse-content">
+              {% for item in section.settings.second_menu.items %}
+              <li>
+                <a href="{{ item.link }}" class="footer-menu_item">{{ item.name }}</a>
+              </li>
+              {% endfor %}
+            </ul>
+            {% else %}
+            <ul class="footer-menu-list tf-collapse-content">
+              <li><a href="#" class="footer-menu_item">Menu item 1</a></li>
+              <li><a href="#" class="footer-menu_item">Menu item 2</a></li>
+              <li><a href="#" class="footer-menu_item">Menu item 3</a></li>
+              <li><a href="#" class="footer-menu_item">Menu item 4</a></li>
+            </ul>
+            {% endif %}
+          </div>
+
+
+          <div class="col-xl-3 col-md-6 col-12">
+            <div class="footer-newsletter footer-col-block">
+              <div class="footer-heading footer-heading-desktop">
+                <h6>{{ section.settings.store_infos_heading }}</h6>
+              </div>
+              <div class="footer-heading footer-heading-moblie">
+                <h6>{{ section.settings.store_infos_heading }}</h6>
+              </div>
+              <div class="tf-collapse-content">
+                <div class="footer-menu_item">
+                  {{ section.settings.store_infos }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <div class="footer-bottom-wrap d-flex gap-20 flex-wrap justify-content-between align-items-center">
+              <div class="footer-menu_item">© 2025 Hyper. All Rights Reserved</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+<!-- /Footer -->

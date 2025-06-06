@@ -1,0 +1,23 @@
+{
+    "name": "Section 1",
+    "settings": {
+        "show": {
+            "element": "checkbox",
+            "label": "Show section",
+            "default": true
+        },
+        "divider_1": {
+            "element": "divider"
+        },
+        "heading": {
+            "element": "text",
+            "label": "Heading",
+            "default": "Online store"
+        },
+        "description": {
+            "element": "textarea",
+            "label": "Description",
+            "default": "Welcome to our classic women's clothing store, <br/>where we believe that timeless style never goes out of fashion. <br/>Our collection features classic pieces that are both stylish and versatile, <br/>perfect for building a wardrobe that will last for years."
+        }
+    }
+}

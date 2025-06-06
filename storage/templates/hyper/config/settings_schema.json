@@ -1,0 +1,108 @@
+{
+  "colors": {
+    "name": "Template colors",
+    "settings": {
+      "primary": {
+        "element": "color",
+        "default": "#93f859",
+        "label": "Primary color",
+        "info": ""
+      },
+      "black": {
+        "element": "color",
+        "default": "#000000",
+        "label": "Black",
+        "info": ""
+      },
+      "white": {
+        "element": "color",
+        "default": "#ffffff",
+        "label": "White",
+        "info": ""
+      },
+      "text": {
+        "element": "color",
+        "default": "#545454",
+        "label": "Text",
+        "info": ""
+      },
+      "text_2": {
+        "element": "color",
+        "default": "#909090",
+        "label": "Text 2",
+        "info": ""
+      },
+      "text_3": {
+        "element": "color",
+        "default": "#868686",
+        "label": "Text 3",
+        "info": ""
+      }
+    }
+  },
+  "cart": {
+    "name": "Cart notification",
+    "settings": {
+      "product_form_type": {
+        "element": "select",
+        "label": "Product form type",
+        "options": [
+          {
+            "label": "Add to cart",
+            "value": "add-to-cart"
+          },
+          {
+            "label": "Buy now",
+            "value": "buy-now"
+          },
+          {
+            "label": "Order now",
+            "value": "order-now"
+          }
+        ],
+        "info": "if you want to use the cart or buy the product directly.",
+        "default": "add-to-cart"
+      }
+    }
+  },
+  "social_media": {
+    "name": "Social media",
+    "settings": {
+      "facebook": {
+        "element": "text",
+        "label": "Facebook",
+        "placeholder": "placeholder",
+        "default": ""
+      },
+      "instagram": {
+        "element": "text",
+        "label": "Instagram",
+        "placeholder": "placeholder",
+        "default": ""
+      },
+      "tiktok": {
+        "element": "text",
+        "label": "Tiktok",
+        "placeholder": "placeholder",
+        "default": ""
+      },
+      "twitter": {
+        "element": "text",
+        "label": "Twitter",
+        "placeholder": "placeholder",
+        "default": ""
+      },
+      "pinterest": {
+        "element": "text",
+        "label": "Pinterest",
+        "placeholder": "placeholder",
+        "default": ""
+      }
+    }
+  },
+  "settings_order": [
+    "colors",
+    "cart",
+    "social_media"
+  ]
+}

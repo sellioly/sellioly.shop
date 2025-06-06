@@ -1,0 +1,90 @@
+{
+	"sections": {
+		"about-us-banner": {
+			"type": "about-us-banner",
+			"settings": {
+				"show": false,
+				"heading": null
+			}
+		},
+		"about-us-section1": {
+			"type": "about-us-section1",
+			"settings": {
+				"show": true,
+				"heading": null,
+				"text_color": null,
+				"image_url": null
+			}
+		},
+		"about-us-section2": {
+			"type": "about-us-section2",
+			"settings": {
+				"show": true,
+				"heading": null,
+				"description": null
+			}
+		},
+		"about-us-section3": {
+			"type": "about-us-section3",
+			"settings": {
+				"show": true,
+				"image_url": null,
+				"heading": null,
+				"description": null
+			}
+		},
+		"about-us-section4": {
+			"type": "about-us-section4",
+			"settings": {
+				"show": true
+			},
+			"block_order": [
+				"review_1",
+				"review_2"
+			],
+			"blocks": {
+				"review_1": {
+					"type": "client-review",
+					"settings": {
+						"image_url": null,
+						"heading": null,
+						"stars": "5",
+						"review": null,
+						"author": null
+					}
+				},
+				"review_2": {
+					"type": "client-review",
+					"settings": {
+						"image_url": null,
+						"heading": null,
+						"stars": "4",
+						"review": null,
+						"author": null
+					}
+				}
+			}
+		},
+		"about-us-section5": {
+			"type": "about-us-section5",
+			"settings": {
+				"show": true,
+				"heading": null,
+				"description": null,
+				"image1_url": null,
+				"image2_url": null,
+				"image3_url": null,
+				"image4_url": null,
+				"image5_url": null
+			}
+		}
+	},
+	"order": [
+		"about-us-banner",
+		"about-us-section1",
+		"about-us-section2",
+		"about-us-section3",
+		"about-us-section4",
+		"about-us-section5"
+	]
+}

@@ -1,0 +1,41 @@
+<!-- Top bar -->
+{% if section.settings.show %}
+<div class="tf-top-bar bg_dark line">
+  <div class="px_15 lg-px_40">
+    <div class="tf-top-bar_wrap grid-3 gap-30 align-items-center">
+      <div class="tf-top-bar_left">
+        <div class="d-flex gap-30 text_white fw-5 ">
+          <span>
+            {{ section.settings.number }}
+          </span>
+        </div>
+      </div>
+      <div class="text-center overflow-hidden">
+        <div class="swiper tf-sw-top_bar" data-preview="1" data-space="0" data-loop="true" data-speed="1000"
+          data-delay="2000">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide">
+              <p class="top-bar-text fw-5 text_white">
+                {{ section.settings.welcome_1 }}
+              </p>
+            </div>
+            <div class="swiper-slide">
+              <p class="top-bar-text fw-5 text_white">
+                {{ section.settings.welcome_2 }}
+              </p>
+            </div>
+            <div class="swiper-slide">
+              <p class="top-bar-text fw-5 text_white">
+                {{ section.settings.welcome_3 }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="top-bar-language tf-cur justify-content-end">
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+<!-- /Top bar -->

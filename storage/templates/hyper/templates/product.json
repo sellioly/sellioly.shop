@@ -1,0 +1,19 @@
+{
+	"sections": {
+		"product-details": {
+			"type": "product-details",
+			"settings": []
+		},
+		"product-related-products": {
+			"type": "product-related-products",
+			"settings": {
+				"show": true,
+				"heading": null
+			}
+		}
+	},
+	"order": [
+		"product-details",
+		"product-related-products"
+	]
+}

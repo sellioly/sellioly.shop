@@ -1,0 +1,12 @@
+{% if section.settings.show %}
+<section class="tf-slideshow about-us-page position-relative">
+    <div class="banner-wrapper">
+        <img class=" ls-is-cached lazyloaded" src="{{ section.settings.image_url }}" data-src="{{ section.settings.image_url }}" alt="image-collection">
+        <div class="box-content text-center">
+            <div class="container">
+                <div class="text" style="color: {{ section.settings.text_color }}">{{ section.settings.heading }}</div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}

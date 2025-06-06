@@ -1,0 +1,141 @@
+<!-- category -->
+{% if section.settings.show %}
+<section class="flat-spacing-11 pb-0">
+    <div class="container">
+        <div class="position-relative">
+            <div class="flat-title flex-row justify-content-between px-0">
+                <span class="title wow fadeInUp" data-wow-delay="0s">
+                    {{ section.settings.heading }}
+                </span>
+            </div>
+            <div class="sw-pagination-wrapper">
+                <div class="swiper tf-sw-collection" data-preview="4" data-tablet="3" data-mobile="1" data-space-lg="30"
+                    data-space-md="30" data-space="15" data-loop="false" data-auto-play="false">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide" lazy="true">
+                            <div class="collection-item-v2 type-small hover-img">
+                                <a href="{{ section.blocks[0].settings.button_link }}" class="collection-inner">
+                                    <div class="collection-image img-style radius-10">
+                                        <img class="lazyload"
+                                            data-src="{{ section.blocks[0].settings.image }}"
+                                            src="{{ section.blocks[0].settings.image }}"
+                                            alt="collection-img">
+                                    </div>
+                                    <div class="collection-content">
+                                        <div class="top">
+                                            <h5 class="heading fw-5" style="color: {{ section.blocks[0].settings.text_color }}">{{ section.blocks[0].settings.heading }}</h5>
+                                            <p class="subheading" style="color: {{ section.blocks[0].settings.text_color }}">{{ section.blocks[0].settings.subheading }}</span></p>
+                                        </div>
+                                        <div class="bottom">
+                                            <button
+                                                class="tf-btn collection-title hover-icon btn-light rounded-full" style="color: {{ section.blocks[0].settings.btn_text_color }}; background: {{ section.blocks[0].settings.btn_bg_color }};"><span>
+                                                    {{ section.blocks[0].settings.button_label }}
+                                                    </span><i class="icon icon-arrow1-top-left"></i></button>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="swiper-slide" lazy="true">
+                            <div class="collection-item-v2 type-small hover-img">
+                                <a href="{{ section.blocks[1].settings.button_link }}" class="collection-inner">
+                                    <div class="collection-image img-style radius-10">
+                                        <img class="lazyload"
+                                            data-src="{{ section.blocks[1].settings.image }}"
+                                            src="{{ section.blocks[1].settings.image }}"
+                                            alt="collection-img">
+                                    </div>
+                                    <div class="collection-content">
+                                        <div class="top">
+                                            <h5 class="heading fw-5" style="color: {{ section.blocks[1].settings.text_color }}">{{ section.blocks[1].settings.heading }}</h5>
+                                            <p class="subheading" style="color: {{ section.blocks[1].settings.text_color }}">{{ section.blocks[1].settings.subheading }}</span></p>
+                                        </div>
+                                        <div class="bottom">
+                                            <button
+                                                class="tf-btn collection-title hover-icon btn-light rounded-full" style="color: {{ section.blocks[1].settings.btn_text_color }}; background: {{ section.blocks[1].settings.btn_bg_color }};"><span>{{ section.blocks[1].settings.button_label }}
+                                                    </span><i class="icon icon-arrow1-top-left"></i></button>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="swiper-slide" lazy="true">
+                            <div class="collection-item-v2 type-small hover-img">
+                                <a href="{{ section.blocks[2].settings.button_link }}" class="collection-inner">
+                                    <div class="collection-image img-style radius-10">
+                                        <img class="lazyload"
+                                            data-src="{{ section.blocks[2].settings.image }}"
+                                            src="{{ section.blocks[2].settings.image }}"
+                                            alt="collection-img">
+                                    </div>
+                                    <div class="collection-content">
+                                        <div class="top">
+                                            <h5 class="heading fw-5" style="color: {{ section.blocks[2].settings.text_color }}">{{ section.blocks[2].settings.heading }}</h5>
+                                            <p class="subheading" style="color: {{ section.blocks[2].settings.text_color }}">{{ section.blocks[2].settings.subheading }}</span></p>
+                                        </div>
+                                        <div class="bottom">
+                                            <button
+                                                class="tf-btn collection-title hover-icon btn-light rounded-full" style="color: {{ section.blocks[2].settings.btn_text_color }}; background: {{ section.blocks[2].settings.btn_bg_color }};"><span>{{ section.blocks[2].settings.button_label }}
+                                                    </span><i class="icon icon-arrow1-top-left"></i></button>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="swiper-slide" lazy="true">
+                            <div class="collection-item-v2 type-small hover-img">
+                                <a href="{{ section.blocks[3].settings.button_link }}" class="collection-inner">
+                                    <div class="collection-image img-style radius-10">
+                                        <img class="lazyload"
+                                            data-src="{{ section.blocks[3].settings.image }}"
+                                            src="{{ section.blocks[3].settings.image }}"
+                                            alt="collection-img">
+                                    </div>
+                                    <div class="collection-content">
+                                        <div class="top">
+                                            <h5 class="heading fw-5" style="color: {{ section.blocks[3].settings.text_color }}">{{ section.blocks[3].settings.heading }}</h5>
+                                            <p class="subheading" style="color: {{ section.blocks[3].settings.text_color }}">{{ section.blocks[3].settings.subheading }}</span></p>
+                                        </div>
+                                        <div class="bottom">
+                                            <button
+                                                class="tf-btn collection-title hover-icon btn-light rounded-full" style="color: {{ section.blocks[3].settings.btn_text_color }}; background: {{ section.blocks[3].settings.btn_bg_color }};"><span>{{ section.blocks[3].settings.button_label }}
+                                                    </span><i class="icon icon-arrow1-top-left"></i></button>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="swiper-slide" lazy="true">
+                            <div class="collection-item-v2 type-small hover-img">
+                                <a href="{{ section.blocks[4].settings.button_link }}" class="collection-inner">
+                                    <div class="collection-image img-style radius-10">
+                                        <img class="lazyload"
+                                            data-src="{{ section.blocks[4].settings.image }}"
+                                            src="{{ section.blocks[4].settings.image }}"
+                                            alt="collection-img">
+                                    </div>
+                                    <div class="collection-content">
+                                        <div class="top">
+                                            <h5 class="heading fw-5" style="color: {{ section.blocks[4].settings.text_color }}">{{ section.blocks[4].settings.heading }}</h5>
+                                            <p class="subheading" style="color: {{ section.blocks[4].settings.text_color }}">{{ section.blocks[4].settings.subheading }}</span></p>
+                                        </div>
+                                        <div class="bottom">
+                                            <button
+                                                class="tf-btn collection-title hover-icon btn-light rounded-full" style="color: {{ section.blocks[4].settings.btn_text_color }}; background: {{ section.blocks[4].settings.btn_bg_color }};"><span>{{ section.blocks[4].settings.button_label }}
+                                                    </span><i class="icon icon-arrow1-top-left"></i></button>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-sw-navigation">
+                    <div class="sw-dots style-2 medium sw-pagination-collection justify-content-center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+<!-- /category -->

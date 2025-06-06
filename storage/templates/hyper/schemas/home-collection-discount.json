@@ -1,0 +1,62 @@
+{
+  "name": "Collection discount",
+  "settings": {
+    "show": {
+      "element": "checkbox",
+      "label": "Show section",
+      "default": true
+    },
+    "divider_1": {
+      "element": "divider"
+    },
+    "image": {
+      "element": "image-picker",
+      "label": "Image",
+      "default": "https://themesflat.co/html/ecomus/images/collections/banner-collection-3.jpg"
+    },
+    "subheading": {
+      "element": "text",
+      "label": "Subheading",
+      "default": "SALE UP TO 30% OFF TODAY"
+    },
+    "heading": {
+      "element": "text",
+      "label": "Heading",
+      "default": "Best Deals Discounts"
+    },
+    "description": {
+      "element": "text",
+      "label": "Description",
+      "default": "Fast wireless charging on-the-go."
+    },
+    "text_color": {
+      "element": "color",
+      "label": "Text color",
+      "default": "#fff"
+    },
+    "divider_2": {
+      "element": "header",
+      "content": "Button"
+    },
+    "button_label": {
+      "element": "text",
+      "label": "Text",
+      "default": "Shop now"
+    },
+    "button_link": {
+      "element": "url",
+      "label": "Link",
+      "default": "#"
+    },
+    "btn_bg_color": {
+      "element": "color",
+      "label": "Background color",
+      "default": "#fff"
+    },
+    "btn_text_color": {
+      "element": "color",
+      "label": "Text color",
+      "default": "#000"
+    }
+  }
+}

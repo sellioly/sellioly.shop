@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+
+{% if presets.language.settings.locale == 'ar' %}
+{% assign dir = 'rtl' %}
+{% else %}
+{% assign dir = 'ltr' %}
+{% endif %}
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ presets.language.settings.locale }}" dir="{{ dir }}">
+
+<head>
+  <meta charset="utf-8">
+  <title>{{ page_title }}</title>
+
+  <meta name="author" content="themesflat.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <!-- font -->
+  {{ 'fonts.css' | asset_url | stylesheet_tag }}
+  <!-- Icons -->
+  {{ 'font-icons.css' | asset_url | stylesheet_tag }}
+  <!-- CSS -->
+  {{ 'bootstrap.min.css' | asset_url | stylesheet_tag }}
+  {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
+  {{ 'animate.css' | asset_url | stylesheet_tag }}
+  {{ 'styles.css' | asset_url | stylesheet_tag }}
+  <!-- Favicon and Touch Icons  -->
+  <link rel="shortcut icon" href="https://app.sellioly.com/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" href="https://app.sellioly.com/favicon.ico">
+
+</head>
+
+<body class="preload-wrapper">
+  <!-- preload -->
+  <div class="preload preload-container">
+    <div class="preload-logo">
+      <div class="spinner"></div>
+    </div>
+  </div>
+  <!-- /preload -->
+  <div id="wrapper">
+
+    {% section 'header-top-bar' %}
+    {% section 'header' %}
+
+    {{ content_for_layout }}
+
+    {% section 'footer' %}
+
+  </div>
+
+  <!-- gotop -->
+  <div class="progress-wrap">
+    <svg class="progress-circle svg-content" width="100%" height="100%" viewBox="-1 -1 102 102">
+      <path d="M50,1 a49,49 0 0,1 0,98 a49,49 0 0,1 0,-98"
+        style="transition: stroke-dashoffset 10ms linear 0s; stroke-dasharray: 307.919, 307.919; stroke-dashoffset: 286.138;">
+      </path>
+    </svg>
+  </div>
+  <!-- /gotop -->
+
+  {% snippet 'cart-notification-sidebar' %}
+
+  <!-- Javascript -->
+  <script src="{{ 'bootstrap.min.js' | asset_url }}"></script>
+  <script src="{{ 'jquery.min.js' | asset_url }}"></script>
+  <script src="{{ 'swiper-bundle.min.js' | asset_url }}"></script>
+  <script src="{{ 'carousel.js' | asset_url }}"></script>
+  <script src="{{ 'bootstrap-select.min.js' | asset_url }}"></script>
+  <script src="{{ 'lazysize.min.js' | asset_url }}"></script>
+  <script src="{{ 'bootstrap-select.min.js' | asset_url }}"></script>
+  <script src="{{ 'count-down.js' | asset_url }}"></script>
+  <script src="{{ 'wow.min.js' | asset_url }}"></script>
+  <script src="{{ 'multiple-modal.js' | asset_url }}"></script>
+  <script src="{{ 'main.js' | asset_url }}"></script>
+
+
+  <!----------------- Sellioly requirements | start ------------------->
+
+  <script src="{{ 'sellioly.js' | asset_url }}"></script>
+  <script>
+    window.routes = {
+      add_to_cart_url: '/api/cart/add',
+      remove_from_cart_url: '/api/cart/remove',
+      add_order_url: '/api/order/add',
+      buy_now_url: '/api/cart/buynow',
+      order_now_url: '/api/order/order-now',
+      update_cart_quantity_url: '/api/cart/update-quantity'
+    };
+
+    window.config = {
+      cart_id: '{{ cart.cart_id }}'
+    };
+  </script>
+
+  <!----------------- Sellioly requirements | end ------------------->
+
+  <style>
+    :root {
+      --primary: {{ presets.colors.settings.primary }};
+      --main: {{ presets.colors.settings.black }};
+      --white: {{ presets.colors.settings.white }};
+      --text: {{ presets.colors.settings.text }};
+      --text-2: {{ presets.colors.settings.text_2 }};
+      --text-3: {{ presets.colors.settings.text_3 }};
+    }
+  </style>
+</body>
+
+</html>

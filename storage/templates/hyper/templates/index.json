@@ -1,0 +1,306 @@
+{
+	"sections": {
+		"home-slideshow": {
+			"type": "home-slideshow",
+			"settings": {
+				"show": true,
+				"text_align": null
+			},
+			"block_order": [
+				"slide_1",
+				"slide_2",
+				"slide_3"
+			],
+			"blocks": {
+				"slide_1": {
+					"type": "slide",
+					"settings": {
+						"image": null,
+						"text_align": null,
+						"subheading": null,
+						"heading": null,
+						"text_color": null,
+						"button_label": null,
+						"button_link": null,
+						"btn_bg_color": null,
+						"btn_text_color": null
+					}
+				},
+				"slide_2": {
+					"type": "slide",
+					"settings": {
+						"image": null,
+						"text_align": null,
+						"subheading": null,
+						"heading": null,
+						"text_color": null,
+						"button_label": null,
+						"button_link": null,
+						"btn_bg_color": null,
+						"btn_text_color": null
+					}
+				},
+				"slide_3": {
+					"type": "slide",
+					"settings": {
+						"image": null,
+						"text_align": null,
+						"subheading": null,
+						"heading": null,
+						"text_color": null,
+						"button_label": null,
+						"button_link": null,
+						"btn_bg_color": null,
+						"btn_text_color": null
+					}
+				}
+			}
+		},
+		"home-brands": {
+			"type": "home-brands",
+			"settings": {
+				"show": true,
+				"text_1": null,
+				"text_2": null,
+				"text_3": null
+			}
+		},
+		"home-categories": {
+			"type": "home-categories",
+			"settings": {
+				"show": true,
+				"heading": null
+			},
+			"block_order": [
+				"category_1",
+				"category_2",
+				"category_3",
+				"category_4",
+				"category_5"
+			],
+			"blocks": {
+				"category_1": {
+					"type": "single-category",
+					"settings": {
+						"image": null,
+						"heading": null,
+						"subheading": null,
+						"text_color": null,
+						"button_label": null,
+						"button_link": null,
+						"btn_bg_color": null,
+						"btn_text_color": null
+					}
+				},
+				"category_2": {
+					"type": "single-category",
+					"settings": {
+						"image": null,
+						"heading": null,
+						"subheading": null,
+						"text_color": null,
+						"button_label": null,
+						"button_link": null,
+						"btn_bg_color": null,
+						"btn_text_color": null
+					}
+				},
+				"category_3": {
+					"type": "single-category",
+					"settings": {
+						"image": null,
+						"heading": null,
+						"subheading": null,
+						"text_color": null,
+						"button_label": null,
+						"button_link": null,
+						"btn_bg_color": null,
+						"btn_text_color": null
+					}
+				},
+				"category_4": {
+					"type": "single-category",
+					"settings": {
+						"image": null,
+						"heading": null,
+						"subheading": null,
+						"text_color": null,
+						"button_label": null,
+						"button_link": null,
+						"btn_bg_color": null,
+						"btn_text_color": null
+					}
+				},
+				"category_5": {
+					"type": "single-category",
+					"settings": {
+						"image": null,
+						"heading": null,
+						"subheading": null,
+						"text_color": null,
+						"button_label": null,
+						"button_link": null,
+						"btn_bg_color": null,
+						"btn_text_color": null
+					}
+				}
+			}
+		},
+		"home-collection-discount": {
+			"type": "home-collection-discount",
+			"settings": {
+				"show": true,
+				"image": null,
+				"subheading": null,
+				"heading": null,
+				"description": null,
+				"text_color": null,
+				"button_label": null,
+				"button_link": null,
+				"btn_bg_color": null,
+				"btn_text_color": null
+			}
+		},
+		"home-popular-collections": {
+			"type": "home-popular-collections",
+			"settings": {
+				"show": true,
+				"text_color": null
+			},
+			"block_order": [
+				"collection_1",
+				"collection_2"
+			],
+			"blocks": {
+				"collection_1": {
+					"type": "single-collection",
+					"settings": {
+						"image": null,
+						"subheading": null,
+						"heading": null,
+						"text_color": null,
+						"button_label": null,
+						"button_link": null,
+						"btn_bg_color": null,
+						"btn_text_color": null
+					}
+				},
+				"collection_2": {
+					"type": "single-collection",
+					"settings": {
+						"image": null,
+						"subheading": null,
+						"heading": null,
+						"text_color": null,
+						"button_label": null,
+						"button_link": null,
+						"btn_bg_color": null,
+						"btn_text_color": null
+					}
+				}
+			}
+		},
+		"home-discount": {
+			"type": "home-discount",
+			"settings": {
+				"show": true,
+				"image": null,
+				"subheading": null,
+				"heading": null,
+				"description": null,
+				"end_date": null,
+				"text_color": null,
+				"bg_color": null,
+				"button_label": null,
+				"button_link": null,
+				"btn_bg_color": null,
+				"btn_text_color": null
+			}
+		},
+		"home-new-arrivals": {
+			"type": "home-new-arrivals",
+			"settings": {
+				"show": true,
+				"heading": null,
+				"products": null
+			}
+		},
+		"home-happy-clients": {
+			"type": "home-happy-clients",
+			"settings": {
+				"show": true,
+				"heading": null,
+				"subheading": null
+			},
+			"block_order": [
+				"review_1",
+				"review_2",
+				"review_3",
+				"review_4"
+			],
+			"blocks": {
+				"review_1": {
+					"type": "client-review",
+					"settings": {
+						"stars": null,
+						"client_name": null,
+						"text": null,
+						"product": null
+					}
+				},
+				"review_2": {
+					"type": "client-review",
+					"settings": {
+						"stars": null,
+						"client_name": null,
+						"text": null,
+						"product": null
+					}
+				},
+				"review_3": {
+					"type": "client-review",
+					"settings": {
+						"stars": null,
+						"client_name": null,
+						"text": null,
+						"product": null
+					}
+				},
+				"review_4": {
+					"type": "client-review",
+					"settings": {
+						"stars": null,
+						"client_name": null,
+						"text": null,
+						"product": null
+					}
+				}
+			}
+		},
+		"home-customer-features": {
+			"type": "home-customer-features",
+			"settings": {
+				"show": true,
+				"heading_1": null,
+				"description_1": null,
+				"heading_2": null,
+				"description_2": null,
+				"heading_3": null,
+				"description_3": null,
+				"heading_4": null,
+				"description_4": null
+			}
+		}
+	},
+	"order": [
+		"home-slideshow",
+		"home-brands",
+		"home-categories",
+		"home-collection-discount",
+		"home-popular-collections",
+		"home-discount",
+		"home-new-arrivals",
+		"home-happy-clients",
+		"home-customer-features"
+	]
+}

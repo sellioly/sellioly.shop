@@ -1,0 +1,66 @@
+{
+  "name": "Footer",
+  "class": "section-footer",
+  "settings": {
+    "logo": {
+      "element": "image-picker",
+      "label": "Logo",
+      "default": null
+    },
+    "logo_width": {
+      "element": "slider",
+      "label": "Logo width",
+      "min": 60,
+      "max": 180,
+      "unit": "px",
+      "default": 120
+    },
+    "store_description": {
+      "element": "textarea",
+      "label": "Store description",
+      "default": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard."
+    },
+    "header_1": {
+      "element": "header",
+      "content": "First menu"
+    },
+    "first_menu_heading": {
+      "element": "text",
+      "label": "Heading",
+      "default": "Menu title"
+    },
+    "first_menu": {
+      "element": "menu",
+      "label": "Menu",
+      "default": null
+    },
+    "header_2": {
+      "element": "header",
+      "content": "Second menu"
+    },
+    "second_menu_heading": {
+      "element": "text",
+      "label": "Heading",
+      "default": "Menu title"
+    },
+    "second_menu": {
+      "element": "menu",
+      "label": "Menu",
+      "default": null
+    },
+    "header_3": {
+      "element": "header",
+      "content": "Store informations"
+    },
+    "store_infos_heading": {
+      "element": "text",
+      "label": "Heading",
+      "default": "Store informations"
+    },
+    "store_infos": {
+      "element": "textarea",
+      "label": "informations",
+      "default": "Address: 1234 Fashion Street, Suite 567, New York, NY 10001 <br>Phone: (212) 555-1234."
+    }
+  }
+}

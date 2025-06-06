@@ -1,0 +1,20 @@
+{
+  "name": "Header",
+  "class": "section-header",
+  "settings": {
+    "logo_width": {
+      "element": "range",
+      "min": 50,
+      "max": 140,
+      "step": 2,
+      "default": 100,
+      "unit": "px",
+      "label": "Logo width"
+    },
+    "menu": {
+      "element": "menu",
+      "default": "main-menu",
+      "label": "Menu"
+    }
+  }
+}

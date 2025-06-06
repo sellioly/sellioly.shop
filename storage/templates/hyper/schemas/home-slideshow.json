@@ -1,0 +1,83 @@
+{
+  "name": "Slidshow",
+  "settings": {
+    "show": {
+      "element": "checkbox",
+      "label": "Show section",
+      "default": true
+    },
+    "divider_1": {
+      "element": "divider"
+    }
+  },
+  "blocks": {
+    "slide": {
+      "name": "Slide item",
+      "settings": {
+        "image": {
+          "element": "image-picker",
+          "label": "Image",
+          "default": "https://sellioly.s3.eu-west-3.amazonaws.com/partners/23372036854776000/images/Slideshow_Electronics3.jpg"
+        },
+        "text_align": {
+          "element": "select",
+          "label": "Text position",
+          "options": [
+            {
+              "label": "Left",
+              "value": "left"
+            },
+            {
+              "label": "Center",
+              "value": "center"
+            },
+            {
+              "label": "Right",
+              "value": "right"
+            }
+          ],
+          "default": "left"
+        },
+        "subheading": {
+          "element": "text",
+          "label": "Subheading",
+          "default": "UP TO 40% OFF CHARGERS AND MORE."
+        },
+        "heading": {
+          "element": "text",
+          "label": "Heading",
+          "default": "Fast charging"
+        },
+        "text_color": {
+          "element": "color",
+          "label": "Text color",
+          "default": "#000"
+        },
+        "divider_1": {
+          "element": "header",
+          "content": "Button"
+        },
+        "button_label": {
+          "element": "text",
+          "label": "Text",
+          "default": "Shop now"
+        },
+        "button_link": {
+          "element": "url",
+          "label": "Link",
+          "default": "#"
+        },
+        "btn_bg_color": {
+          "element": "color",
+          "label": "Background color",
+          "default": "#000"
+        },
+        "btn_text_color": {
+          "element": "color",
+          "label": "Text color",
+          "default": "#fff"
+        }
+      }
+    }
+  }
+}

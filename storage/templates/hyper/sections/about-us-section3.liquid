@@ -1,0 +1,19 @@
+{% if section.settings.show %}
+<section class="flat-spacing-23 flat-image-text-section">
+    <div class="container">
+        <div class="tf-grid-layout md-col-2 tf-img-with-text style-4">
+            <div class="tf-image-wrap">
+                <img class="w-100 ls-is-cached lazyloaded" data-src="{{ section.settings.image_url }}" src="{{ section.settings.image_url }}" alt="collection-img">
+            </div>
+            <div class="tf-content-wrap px-0 d-flex justify-content-center w-100">
+                <div>
+                    <div class="heading">{{ section.settings.heading }}</div>
+                    <div class="text">
+                        {{ section.settings.description }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}

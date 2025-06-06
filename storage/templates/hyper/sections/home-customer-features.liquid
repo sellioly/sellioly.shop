@@ -1,0 +1,60 @@
+<!-- Icon box -->
+{% if section.settings.show %}
+<section class="flat-spacing-1 flat-iconbox bg_grey-7 wow fadeInUp" data-wow-delay="0s">
+  <div class="container">
+    <div class="wrap-carousel wrap-mobile">
+      <div class="swiper tf-sw-mobile" data-preview="1" data-space="15">
+        <div class="swiper-wrapper wrap-iconbox">
+          <div class="swiper-slide">
+            <div class="tf-icon-box style-row">
+              <div class="icon bg_white">
+                <i class="icon-shipping"></i>
+              </div>
+              <div class="content">
+                <div class="title fw-4">{{ section.settings.heading_1 }}</div>
+                <p>{{ section.settings.description_1 }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="tf-icon-box style-row">
+              <div class="icon bg_white">
+                <i class="icon-payment fs-22"></i>
+              </div>
+              <div class="content">
+                <div class="title fw-4">{{ section.settings.heading_2 }}</div>
+                <p>{{ section.settings.description_2 }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="tf-icon-box style-row">
+              <div class="icon bg_white">
+                <i class="icon-return fs-20"></i>
+              </div>
+              <div class="content">
+                <div class="title fw-4">{{ section.settings.heading_3 }}</div>
+                <p>{{ section.settings.description_3 }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="tf-icon-box style-row">
+              <div class="icon bg_white">
+                <i class="icon-suport"></i>
+              </div>
+              <div class="content">
+                <div class="title fw-4">{{ section.settings.heading_4 }}</div>
+                <p>{{ section.settings.description_4 }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="sw-dots style-2 sw-pagination-mb justify-content-center"></div>
+    </div>
+  </div>
+</section>
+{% endif %}
+<!-- /Icon box -->

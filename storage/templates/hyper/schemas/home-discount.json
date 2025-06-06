@@ -1,0 +1,73 @@
+{
+  "name": "Discount",
+  "settings": {
+    "show": {
+      "element": "checkbox",
+      "label": "Show section",
+      "default": true
+    },
+    "divider_1": {
+      "element": "divider"
+    },
+    "image": {
+      "element": "image-picker",
+      "label": "Image",
+      "default": "https://sellioly.s3.eu-west-3.amazonaws.com/shared/images/placeholder-images-image_large.webp"
+    },
+    "subheading": {
+      "element": "text",
+      "label": "Subheading",
+      "default": "ULTIMATE APPLE ACCESSORY"
+    },
+    "heading": {
+      "element": "text",
+      "label": "Heading",
+      "default": "60% Discount"
+    },
+    "description": {
+      "element": "textarea",
+      "label": "Description",
+      "default": "Find the latest and greatest gadgets to enhance your electronic devices. <br/><br/>Hungry up ! Deals end in :"
+    },
+    "end_date": {
+      "element": "date",
+      "label": "End date",
+      "default": "2025-12-12"
+    },
+    "text_color": {
+      "element": "color",
+      "label": "Text color",
+      "default": "#000"
+    },
+    "bg_color": {
+      "element": "color",
+      "label": "Text color",
+      "default": "var(--primary)"
+    },
+    "divider_2": {
+      "element": "header",
+      "content": "Button"
+    },
+    "button_label": {
+      "element": "text",
+      "label": "Text",
+      "default": "Shop now"
+    },
+    "button_link": {
+      "element": "url",
+      "label": "Link",
+      "default": "#"
+    },
+    "btn_bg_color": {
+      "element": "color",
+      "label": "Background color",
+      "default": "#000"
+    },
+    "btn_text_color": {
+      "element": "color",
+      "label": "Text color",
+      "default": "#fff"
+    }
+    
+  }
+}

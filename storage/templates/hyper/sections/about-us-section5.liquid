@@ -1,0 +1,54 @@
+{% if section.settings.show %}
+<section class="flat-spacing-1">
+    <div class="container">
+        <div class="flat-title">
+            <span class="title">
+                {{ section.settings.heading }}
+            </span>
+            <p class="sub-title">{{ section.settings.description }}</p>
+        </div>
+        <div class="wrap-shop-gram">
+            <div dir="ltr" class="swiper tf-sw-shop-gallery swiper-initialized swiper-horizontal swiper-pointer-events swiper-backface-hidden" data-preview="5" data-tablet="3" data-mobile="2" data-space-lg="7" data-space-md="7">
+                <div class="swiper-wrapper" id="swiper-wrapper-e1043e57bc78c547d" aria-live="polite" style="transform: translate3d(0px, 0px, 0px);">
+                    <div class="swiper-slide swiper-slide-active" role="group" aria-label="1 / 5" style="width: 282.4px; margin-right: 7px;">
+                        <div class="gallery-item hover-img">
+                            <div class="img-style">
+                                <img class="img-hover ls-is-cached lazyloaded" data-src="{{ section.settings.image1_url }}" src="{{ section.settings.image1_url }}" alt="image-gallery">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide swiper-slide-next" role="group" aria-label="2 / 5" style="width: 282.4px; margin-right: 7px;">
+                        <div class="gallery-item hover-img">
+                            <div class="img-style">
+                                <img class="img-hover ls-is-cached lazyloaded" data-src="{{ section.settings.image2_url }}" src="{{ section.settings.image2_url }}" alt="image-gallery">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide" role="group" aria-label="3 / 5" style="width: 282.4px; margin-right: 7px;">
+                        <div class="gallery-item hover-img">
+                            <div class="img-style">
+                                <img class="img-hover ls-is-cached lazyloaded" data-src="{{ section.settings.image3_url }}" src="{{ section.settings.image3_url }}" alt="image-gallery">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide" role="group" aria-label="4 / 5" style="width: 282.4px; margin-right: 7px;">
+                        <div class="gallery-item hover-img">
+                            <div class="img-style">
+                                <img class="img-hover ls-is-cached lazyloaded" data-src="{{ section.settings.image4_url }}" src="{{ section.settings.image4_url }}" alt="image-gallery">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="swiper-slide" role="group" aria-label="5 / 5" style="width: 282.4px; margin-right: 7px;">
+                        <div class="gallery-item hover-img">
+                            <div class="img-style">
+                                <img class="img-hover ls-is-cached lazyloaded" data-src="{{ section.settings.image5_url }}" src="{{ section.settings.image5_url }}" alt="image-gallery">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
+            <div class="sw-dots sw-pagination-gallery justify-content-center swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal swiper-pagination-lock"><span class="swiper-pagination-bullet swiper-pagination-bullet-active" tabindex="0" role="button" aria-label="Go to slide 1" aria-current="true"></span></div>
+        </div>
+    </div>
+</section>
+{% endif %}

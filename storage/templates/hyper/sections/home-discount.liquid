@@ -1,0 +1,30 @@
+<!-- Shop Collection -->
+{% if section.settings.show %}
+<section class="flat-spacing-8 pb_0">
+    <div class="container">
+        <div class="tf-grid-layout gap-0 md-col-2 bg_primary tf-img-with-text style-5" style="background-color: {{ section.settings.bg_color }}">
+            <div class="tf-image-wrap wow fadeInUp" data-wow-delay="0s">
+                <img class="lazyload" data-src="{{ section.settings.image }}"
+                    src="{{ section.settings.image }}" alt="collection-img">
+            </div>
+            <div class="tf-content-wrap wow fadeInUp" data-wow-delay="0s">
+                <div class="sub-heading fw-7" style="color: {{ section.settings.text_color }}">{{ section.settings.subheading }}</div>
+                <div class="heading" style="color: {{ section.settings.text_color }}">{{ section.settings.heading }}</div>
+                <p class="description mb-4" style="color: {{ section.settings.text_color }}">
+                    {{ section.settings.description }}
+                </p>
+                <div class="count-down">
+                    <div class="tf-countdown-v2">
+                        
+                        <div class="js-countdown" data-countdown="{{ section.settings.end_date }}" data-labels="Days,Hours,Mins,Secs"></div>
+                    </div>
+                </div>
+                <a href="{{ section.settings.button_link }}" class="tf-btn style-2 btn-fill rounded-full animate-hover-btn" style="color: {{ section.settings.btn_text_color }}; background-color: {{ section.settings.btn_bg_color }}; border-color: {{ section.settings.btn_bg_color }}">
+                    {{ section.settings.button_label }}
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+<!-- /Shop Collection -->

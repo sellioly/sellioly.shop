@@ -1,0 +1,51 @@
+<!-- Collection -->
+{% if section.settings.show %}
+<section class="flat-spacing-8 pb_0">
+    <div class="container">
+        <div class="swiper tf-sw-recent" data-preview="2" data-tablet="2" data-mobile="1.3" data-space-lg="30"
+            data-space-md="15" data-space="15" data-pagination="1" data-pagination-md="1" data-pagination-lg="1">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" lazy="true">
+                    <div class="collection-item-v4 lg hover-img">
+                        <div class="collection-inner">
+                            <a href="{{ section.blocks[0].settings.button_link }}" class="radius-20 collection-image img-style">
+                                <img class="lazyload"
+                                    data-src="{{ section.blocks[0].settings.image }}"
+                                    src="{{ section.blocks[0].settings.image }}"
+                                    alt="collection-img">
+                            </a>
+                            <div class="collection-content wow fadeInUp" data-wow-delay="0s">
+                                <p class="subheading" style="color: {{ section.blocks[0].settings.text_color }}">{{ section.blocks[0].settings.subheading }}</p>
+                                <h5 class="heading fw-6" style="color: {{ section.blocks[0].settings.text_color }}">{{ section.blocks[0].settings.heading }}</h5>
+                                <a href="{{ section.blocks[0].settings.button_link }}"
+                                    style="color: {{ section.blocks[0].settings.btn_text_color }}; background-color: {{ section.blocks[0].settings.btn_bg_color }}"
+                                    class="rounded-full tf-btn btn-primary-main style-3 fw-6 btn-light-icon animate-hover-btn"><span>{{ section.blocks[0].settings.button_label }}</span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide" lazy="true">
+                    <div class="collection-item-v4 lg hover-img">
+                        <div class="collection-inner">
+                            <a href="{{ section.blocks[1].settings.button_link }}" class="radius-20 collection-image img-style">
+                                <img class="lazyload"
+                                    data-src="{{ section.blocks[1].settings.image }}"
+                                    src="{{ section.blocks[1].settings.image }}"
+                                    alt="collection-img">
+                            </a>
+                            <div class="collection-content wow fadeInUp" data-wow-delay="0s">
+                                <p class="subheading" style="color: {{ section.blocks[1].settings.text_color }}">{{ section.blocks[1].settings.subheading }}</p>
+                                <h5 class="heading fw-6" style="color: {{ section.blocks[1].settings.text_color }}">{{ section.blocks[1].settings.heading }}</h5>
+                                <a href="{{ section.blocks[1].settings.button_link }}"
+                                    style="color: {{ section.blocks[1].settings.btn_text_color }}; background-color: {{ section.blocks[1].settings.btn_bg_color }}"
+                                    class="rounded-full tf-btn btn-primary-main style-3 fw-6 btn-light-icon animate-hover-btn"><span>{{ section.blocks[1].settings.button_label }}</span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+<!-- /Collection -->

@@ -1,0 +1,38 @@
+{
+	"sections": {
+		"header-top-bar": {
+			"type": "header-top-bar",
+			"settings": {
+				"show": true,
+				"welcome_1": null,
+				"welcome_2": null,
+				"welcome_3": null,
+				"number": null
+			},
+			"display_position": "top"
+		},
+		"header": {
+			"type": "header",
+			"settings": {
+				"logo_width": null,
+				"menu": "main-menu"
+			},
+			"display_position": "top"
+		},
+		"footer": {
+			"type": "footer",
+			"settings": {
+				"logo": null,
+				"logo_width": null,
+				"store_description": null,
+				"first_menu_heading": null,
+				"first_menu": null,
+				"second_menu_heading": null,
+				"second_menu": null,
+				"store_infos_heading": null,
+				"store_infos": null
+			},
+			"display_position": "bottom"
+		}
+	}
+}

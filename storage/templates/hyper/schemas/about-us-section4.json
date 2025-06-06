@@ -1,0 +1,46 @@
+{
+  "name": "Section 4",
+  "settings": {
+    "show": {
+      "element": "checkbox",
+      "label": "Show section",
+      "default": true
+    }
+  },
+  "blocks": {
+    "client-review": {
+      "name": "Client review",
+      "settings": {
+        "image_url": {
+            "element": "image-picker",
+            "label": "Image",
+            "default": "https://themesflat.co/html/ecomus/images/item/tets3.jpg"
+        },
+        "heading": {
+          "element": "text",
+          "label": "Heading",
+          "default": "Our customer's reviews"
+        },
+        "stars": {
+          "element": "range",
+          "label": "Stars",
+          "min": 0,
+          "max": 5,
+          "step": 1,
+          "unit": " star",
+          "default": 5
+        },
+        "review": {
+          "element": "textarea",
+          "label": "Review",
+          "default": "\"Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.\""
+        },
+        "author": {
+          "element": "text",
+          "label": "Author",
+          "default": "Author name"
+        }
+      }
+    }
+  }
+}

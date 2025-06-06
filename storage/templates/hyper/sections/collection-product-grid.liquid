@@ -1,0 +1,72 @@
+<section class="flat-spacing-2">
+    <div class="container">
+        <div class="tf-shop-control grid-3 align-items-center">
+            <div class="tf-control-filter">
+
+            </div>
+            <ul class="tf-control-layout d-flex justify-content-center">
+                <li class="tf-view-layout-switch sw-layout-2" data-value-grid="grid-2">
+                    <div class="item"><span class="icon icon-grid-2"></span></div>
+                </li>
+                <li class="tf-view-layout-switch sw-layout-3" data-value-grid="grid-3">
+                    <div class="item"><span class="icon icon-grid-3"></span></div>
+                </li>
+                <li class="tf-view-layout-switch sw-layout-4 active" data-value-grid="grid-4">
+                    <div class="item"><span class="icon icon-grid-4"></span></div>
+                </li>
+                <li class="tf-view-layout-switch sw-layout-5" data-value-grid="grid-5">
+                    <div class="item"><span class="icon icon-grid-5"></span></div>
+                </li>
+                <li class="tf-view-layout-switch sw-layout-6" data-value-grid="grid-6">
+                    <div class="item"><span class="icon icon-grid-6"></span></div>
+                </li>
+            </ul>
+            <div class="tf-control-sorting d-flex justify-content-end">
+            </div>
+        </div>
+        <div class="wrapper-control-shop">
+            <div class="meta-filter-shop"></div>
+            {% unless preview %}
+                {% if collection.products.size > 0 %}
+                    <div class="grid-layout wrapper-shop" data-grid="grid-4">
+                        {% for product in collection.products %}
+                            {% component 'product-card', product: product, currency: currency %}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="flex justify-center">
+                        <p class="text-center">No product found</p>
+                    </div>
+                {% endif %}
+            {% endunless %}
+
+            <!-- fake products for collection preview -->
+            {% if preview %}
+            <div class="grid-layout wrapper-shop" data-grid="grid-4">
+                {% for i in (1..12) %}
+                <div class="swiper-slide height-auto" lazy="true">
+                    <div class="card-product style-8">
+                        <div class="card-product-wrapper">
+                        <a href="#" class="product-img">
+                            <img class="img-product ls-is-cached lazyloaded"
+                            src="https://sellioly.s3.eu-west-3.amazonaws.com/shared/images/placeholder-images-image_large.webp"
+                            data-src="https://sellioly.s3.eu-west-3.amazonaws.com/shared/images/placeholder-images-image_large.webp"
+                            alt="image-product">
+                            <img class="img-hover ls-is-cached lazyloaded"
+                                data-src="https://sellioly.s3.eu-west-3.amazonaws.com/shared/images/placeholder-images-image_large.webp"
+                                src="https://sellioly.s3.eu-west-3.amazonaws.com/shared/images/placeholder-images-image_large.webp" alt="image-product">
+                        </a>
+                        </div>
+                        <div class="card-product-info text-center">
+                        <a href="#" class="title link">Example product</a>
+                        <span class="price">299$</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+</section>

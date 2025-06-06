@@ -1,0 +1,66 @@
+{
+  "name": "Customer features",
+  "settings": {
+    "show": {
+      "element": "checkbox",
+      "label": "Show section",
+      "default": true
+    },
+    "divider_1": {
+      "element": "header",
+      "content": "Shipping"
+    },
+    "heading_1": {
+      "element": "text",
+      "label": "Heading",
+      "default": "Free Shipping"
+    },
+    "description_1": {
+      "element": "text",
+      "label": "Description",
+      "default": "Free shipping over order 199 MAD"
+    },
+    "divider_2": {
+      "element": "header",
+      "content": "Payment"
+    },
+    "heading_2": {
+      "element": "text",
+      "label": "Heading",
+      "default": "Cash On Delivery"
+    },
+    "description_2": {
+      "element": "text",
+      "label": "Description",
+      "default": "Shop now, pay later"
+    },
+    "divider_3": {
+      "element": "header",
+      "content": "Returns"
+    },
+    "heading_3": {
+      "element": "text",
+      "label": "Heading",
+      "default": "14 Day Returns"
+    },
+    "description_3": {
+      "element": "text",
+      "label": "Description",
+      "default": "Within 30 days for an exchange"
+    },
+    "divider_4": {
+      "element": "header",
+      "content": "Support"
+    },
+    "heading_4": {
+      "element": "text",
+      "label": "Heading",
+      "default": "Premium Support"
+    },
+    "description_4": {
+      "element": "text",
+      "label": "Description",
+      "default": "Outstanding premium support"
+    }
+  }
+}

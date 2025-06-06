@@ -1,0 +1,33 @@
+{
+  "name": "Top bar",
+  "settings": {
+    "show": {
+      "element": "checkbox",
+      "label": "Show section",
+      "default": true
+    },
+    "divider_1": {
+      "element": "divider"
+    },
+    "number": {
+      "element": "text",
+      "label": "Phone number",
+      "default": "(+333) 123-1688"
+    },
+    "welcome_1": {
+      "element": "text",
+      "label": "Welcome message 1",
+      "default": "Welcome to our store."
+    },
+    "welcome_2": {
+      "element": "text",
+      "label": "Welcome message 2",
+      "default": "Season Sale: Time to refresh your wardrobe."
+    },
+    "welcome_3": {
+      "element": "text",
+      "label": "Welcome message 3",
+      "default": "Discount off 50%."
+    }
+  }
+}

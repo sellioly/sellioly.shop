@@ -1,0 +1,26 @@
+<!-- Banner Collection -->
+{% if section.settings.show %}
+<section class="flat-spacing-8 pb_0">
+    <div class="container">
+        <div class="tf-banner-collection">
+            <img class="lazyload"
+                data-src="{{ section.settings.image }}"
+                src="{{ section.settings.image }}" alt="img-banner"
+                loading="lazy">
+            <div class="box-content">
+                <div class="container wow fadeInUp" data-wow-delay="0s">
+                    <div class="sub fw-7" style="color: {{ section.settings.text_color }}">{{ section.settings.subheading }}</div>
+                    <h2 class="heading fw-6" style="color: {{ section.settings.text_color }}">{{ section.settings.heading }}</h2>
+                    <p class="" style="color: {{ section.settings.text_color }}">{{ section.settings.description }}</p>
+                    <a href="{{ section.settings.button_link }}"
+                        style="color: {{ section.settings.btn_text_color }}; background-color: {{ section.settings.btn_bg_color }}"
+                        class="rounded-full tf-btn btn-primary-main style-3 fw-6 btn-light-icon animate-hover-btn"><span>
+                            {{ section.settings.button_label }}
+                            </span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+<!-- /Banner Collection -->
