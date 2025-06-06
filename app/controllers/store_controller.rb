@@ -75,7 +75,7 @@ class StoreController < ApplicationController
       response_string = response.body.to_s
       redis_set(@store.app_domain, @store.shop_id, "collection:all", response_string)
 
-      return response.parse
+      # return response.parse
     end
 
     # upload local file template  /app/storage/63/28/config/settings_schema.json
