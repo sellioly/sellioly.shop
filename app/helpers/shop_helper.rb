@@ -69,7 +69,7 @@ module ShopHelper
       return JSON.parse(shop)
     else
       # If the shop is not found, get it using API call
-      response = HTTP.get("https://api.sellioly.com/server/store/infos", params: { 'shop_id' => shop_id })
+      response = HTTP.post("https://api.sellioly.com/server/store/infos", form: { 'shop_id' => shop_id })
 
       if response.status.success?
         shop_data = response.parse
