@@ -62,22 +62,21 @@ module ShopHelper
     collections
   end
 
-
-  def get_shop(app_domain)
-    shop = redis_get(app_domain, -1, "shop")
-
-    unless shop == nil
-      return JSON.parse(shop)
-    end
-    nil
-  end
-
-
   def get_shop_id(shop_id)
     shop = redis_get(-1, shop_id, "shop")
 
     unless shop == nil
       return JSON.parse(shop)
+    else
+      # If the shop is not found, get it using API call
+      response = HTTP.get("https://api.sellioly.com/server/store/infos", params: { 'shop_id' => shop_id })
+
+      if response.status.success?
+        shop_data = response.parse
+        redis_set(-1, shop_id, "shop", shop_data.to_json)
+        # Return the shop data after storing it in Redis
+        return shop_data
+      end
     end
     nil
   end
