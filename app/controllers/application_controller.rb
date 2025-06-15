@@ -171,13 +171,13 @@ class ApplicationController < ActionController::Base
           section_schema = JSON.load file
         end
 
-        section_settings = {}
+        @args['section']['settings'] = {}
         if section_schema     
           # get the section settings    
-          section_settings = get_section_settings(section_schema['settings'], section_data['settings'])
+          @args['section']['settings'] = get_section_settings(section_schema['settings'], section_data['settings'])
         end
 
-        section_blocks = []
+        @args['section']['blocks'] = []
         if section_data['block_order'].kind_of?(Array)
           section_data['block_order'].each { |block_id|
             block_data = section_data['blocks'][block_id]
@@ -190,11 +190,9 @@ class ApplicationController < ActionController::Base
               end
             end
 
-            section_blocks.push(block_data)
+            @args['section']['blocks'].push(block_data)
           }
         end
-        @args['section']['settings'] = section_settings
-        @args['section']['blocks'] = section_blocks
 
         puts(request.host + " - " + Liquid::Template.file_system.inspect)
         unless File.file? @path + '/sections/' + section_data['type'] + '.liquid'
