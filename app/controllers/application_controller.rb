@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  rescue_from StandardError, with: :log_and_render_error
   protect_from_forgery with: :null_session
   include ShopHelper
 
@@ -13,12 +14,25 @@ class ApplicationController < ActionController::Base
     true
   end
 
+  def verify_ssl_hook
+    @domain = request.host
+    cert = LetsEncrypt::Certificate.find_by(domain: @domain)
+    # alias  `verify && issue`
+    if cert
+      if cert.expired?
+        if cert.renew
+          LetsEncrypt::RenewCertificatesJob.perform_later
+        end
+      end
+    end
+  end
+
   def check_store
     @domain = request.host
     @cname = Resolv::DNS.new.getresource(@domain, Resolv::DNS::Resource::IN::CNAME) rescue nil
     if @cname
       @cname = @cname.name.to_s
-      @response = HTTP.post("https://api.sellioly.com/server/domain/verify", :form => { 'domain' => @domain, 'app_domain' => @cname })
+      @response = HTTP.post("https://api.sellioly.com/ruby/domain/verify", :form => { 'domain' => @domain, 'app_domain' => @cname })
       unless @response.status.success?
         puts "Verify domain failed! #{@domain} #{@cname}"
         content_not_found
@@ -38,44 +52,6 @@ class ApplicationController < ActionController::Base
     end
 
     true
-  end
-
-  def page_not_found
-    # @path = Rails.root.to_s + @store.template_path.to_s
-    # Liquid::Template.file_system = Liquid::LocalFileSystem.new(@path, '%s.liquid')
-
-    # @response = get_shop_id(@shop_id)
-    # unless @response
-    #   internal_server_error
-    #   return
-    # end
-
-    # @data = @response.parse
-    # @shop_name = @data['shop_name']
-    # @currency = @data['currency']
-    # @shop_description = @data['shop_description']
-    # @logo = (@data['shop_logo_default'])
-    # args = {}
-    # args['logo'] = @logo
-    # args['shop_name'] = @shop_name
-    # args['currency'] = @currency
-    # args['page_title'] = "HOME - #{@shop_name}"
-    # args['shop_description'] = @shop_description
-
-    render_page('404.json')
-  end
-
-  def verify_ssl_hook
-    @domain = request.host
-    cert = LetsEncrypt::Certificate.find_by(domain: @domain)
-    # alias  `verify && issue`
-    if cert
-      if cert.expired?
-        if cert.renew
-          LetsEncrypt::RenewCertificatesJob.perform_later
-        end
-      end
-    end
   end
 
   def initialize_shop
@@ -157,42 +133,8 @@ class ApplicationController < ActionController::Base
         presets[section_id] = section_data # to verify !
 
         if schema_data
-          section_data['settings'].keys.each do |key|
-            value = section_data['settings'][key]
-            if schema_data['settings'][key]
-              # read the default value
-              if value.nil?
-                value = schema_data['settings'][key]['default']
-                section_data['settings'][key] = schema_data['settings'][key]['default']
-              end
-
-              case schema_data['settings'][key]['element']
-              when 'menu'
-                response = get_menu(value, @shop_id, @domain)
-                if response
-                  presets[section_id]['settings'][key] = response
-                end
-
-              when 'product-picker'
-                response = get_product(value, @shop_id, @domain)
-                if response
-                  presets[section_id]['settings'][key] = response
-                end
-              when 'products-picker'
-                presets[section_id]['settings'][key] = get_products(value, @shop_id, @domain)
-              when 'collection-picker'
-                response = get_collection(value, @shop_id, @domain)
-                if response
-                  presets[section_id]['settings'][key] = response
-                end
-              else
-                next
-              end
-            else
-
-            end
-          end
-
+          # get the section settings
+          presets[section_id]['settings'] = get_section_settings(schema_data['settings'], section_data['settings'])
         end
       end
 
@@ -229,47 +171,11 @@ class ApplicationController < ActionController::Base
           section_schema = JSON.load file
         end
 
-        if section_schema
-          section_data['settings'].each do |_data|
-            key = _data[0]
-            value = _data[1]
-
-            if section_schema['settings'][key]
-              # read the default value
-              if value.nil?
-                value = section_schema['settings'][key]['default']
-                section_data['settings'][key] = section_schema['settings'][key]['default']
-              end
-
-              case section_schema['settings'][key]['element']
-              when 'menu'
-                response = get_menu(value, @shop_id, @domain)
-                if response
-                  section_data['settings'][key] = response
-                end
-              when 'product-picker'
-                response = get_product(value, @shop_id, @domain)
-                if response
-                  section_data['settings'][key] = response
-                end
-              when 'products-picker'
-                section_data['settings'][key] = get_products(value, @shop_id, @domain)
-              when 'collection-picker'
-                response = get_collection(value, @shop_id, @domain)
-                if response
-                  section_data['settings'][key] = response
-                end
-              else
-                next
-              end
-            else
-
-            end
-          end
-
+        section_settings = {}
+        if section_schema     
+          # get the section settings    
+          section_settings = get_section_settings(section_schema['settings'], section_data['settings'])
         end
-
-        section_settings = section_data['settings']
 
         section_blocks = []
         if section_data['block_order'].kind_of?(Array)
@@ -278,42 +184,9 @@ class ApplicationController < ActionController::Base
             if section_schema and block_data
               if section_schema['blocks'] && section_schema['blocks'][block_data['type']]
                 block_schema = section_schema['blocks'][block_data['type']]
-                block_data['settings'].each do |_data|
-                  key = _data[0]
-                  value = _data[1]
 
-                  if block_schema['settings'][key]
-                    # read the default value
-                    if value.nil?
-                      value = block_schema['settings'][key]['default']
-                      block_data['settings'][key] = block_schema['settings'][key]['default']
-                    end
-
-                    case block_schema['settings'][key]['element']
-                    when 'menu'
-                      response = get_menu(value, @shop_id, @domain)
-                      if response
-                        block_data['settings'][key] = response
-                      end
-                    when 'product-picker'
-                      response = get_product(value, @shop_id, @domain)
-                      if response
-                        block_data['settings'][key] = response
-                      end
-                    when 'products-picker'
-                      section_data['settings'][key] = get_products(value, @shop_id, @domain)
-                    when 'collection-picker'
-                      response = get_collection(value, @shop_id, @domain)
-                      if response
-                        block_data['settings'][key] = response
-                      end
-                    else
-                      next
-                    end
-                  else
-
-                  end
-                end
+                # get the block settings
+                block_data['settings'] = get_section_settings(block_schema['settings'], block_data['settings'])
               end
             end
 
@@ -346,44 +219,10 @@ class ApplicationController < ActionController::Base
           file = File.read(@path + '/schemas/' + section_data['type'] + '.json')
           schema_data = JSON.load file
         end
+        
         if schema_data
-          section_data['settings'].keys.each do |key|
-            value = section_data['settings'][key]
-            if schema_data['settings'][key]
-              # read the default value
-              if value.nil?
-                value = schema_data['settings'][key]['default']
-                layout_data['sections'][section_id]['settings'][key] = schema_data['settings'][key]['default']
-              end
-
-              case schema_data['settings'][key]['element']
-              when 'menu'
-
-                response = get_menu(value, @shop_id, @domain)
-                if response
-                  layout_data['sections'][section_id]['settings'][key] = response
-                end
-
-              when 'product-picker'
-                response = get_product(value, @shop_id, @domain)
-                if response
-                  layout_data['sections'][section_id]['settings'][key] = response
-                end
-              when 'products-picker'
-                section_data['settings'][key] = get_products(value, @shop_id, @domain)
-              when 'collection-picker'
-                response = get_collection(value, @shop_id, @domain)
-                if response
-                  layout_data['sections'][section_id]['settings'][key] = response
-                end
-              else
-                next
-              end
-            else
-
-            end
-          end
-
+          # get the section settings
+          layout_data['sections'][section_id]['settings'] = get_section_settings(schema_data['settings'], section_data['settings'])
         end
       end
 
@@ -416,6 +255,69 @@ class ApplicationController < ActionController::Base
     temp = template.render(@args)
     render html: temp.html_safe
     nil
+  end
+
+  def get_section_settings(schema_settings, data_settings)
+    if not schema_settings or not data_settings
+      return {}
+    end
+
+    data = {}
+
+    data_settings.keys.each do |key|
+      value = data_settings[key]
+      if schema_settings[key]
+        # read the default value
+        if value.nil?
+          value = schema_settings[key]['default']
+          data[key] = schema_settings[key]['default']
+        end
+
+        case schema_settings[key]['element']
+        when 'menu'
+          response = get_menu(value, @shop_id, @domain)
+          if response
+            data[key] = response
+          end
+        when 'product-picker'
+          response = get_product(value, @shop_id, @domain)
+          if response
+            data[key] = response
+          end
+        when 'products-picker'
+          response = get_products(value, @shop_id, @domain)
+          if response
+            data[key] = response
+          end
+        when 'collection-picker'
+          response = get_collection(value, @shop_id, @domain)
+          if response
+            data[key] = response
+          end
+        else
+          next
+        end
+      end
+    end
+
+    data
+  end
+
+  private
+
+  def log_and_render_error(exception)
+    # Log the error with full context
+    Rails.logger.error({
+      error: exception.message,
+      backtrace: exception.backtrace.take(10), # limit lines for brevity
+      path: request.fullpath,
+      method: request.method,
+      params: request.filtered_parameters, # filters sensitive keys
+      user_id: current_user&.id # if you have authentication
+    }.to_json)
+
+    # Return JSON error response (customize as needed)
+    render json: { error: 'Internal server error' }, status: :internal_server_error
   end
 
 end

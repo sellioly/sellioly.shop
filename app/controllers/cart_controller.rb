@@ -25,7 +25,7 @@ class CartController < ShopController
       return
     end
 
-    response = HTTP.post("https://api.sellioly.com/server/product/variant/get-by-id", :form => { 'variant_id' => variant_id })
+    response = HTTP.post("https://api.sellioly.com/ruby/product/variant/get-by-id", :form => { 'variant_id' => variant_id })
     unless response.status.success?
       render json: { error: 'error on getting the variant!' }, status: :bad_request
       return
@@ -209,7 +209,7 @@ class CartController < ShopController
       return
     end
 
-    response = HTTP.post("https://api.sellioly.com/server/product/variant/get-by-id", :form => { 'variant_id' => variant_id })
+    response = HTTP.post("https://api.sellioly.com/ruby/product/variant/get-by-id", :form => { 'variant_id' => variant_id })
     unless response.status.success?
       render json: { error: 'error on getting the variant!' }, status: :bad_request
       return
@@ -242,7 +242,7 @@ class CartController < ShopController
   #     return
   #   end
 
-  #   response = HTTP.post("https://api.sellioly.com/server/product/variant/get-by-options", 
+  #   response = HTTP.post("https://api.sellioly.com/ruby/product/variant/get-by-options", 
   #     :form => { 'app_domain' => @domain, 'product_handle' => params[:product_handle], 'options' => params[:options] }
   #   )
 

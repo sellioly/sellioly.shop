@@ -2,13 +2,6 @@ class ShopController < ApplicationController
   protect_from_forgery except: :file_assets
   before_action :verify_ssl_hook, :initialize_shop, except: [:preview, :file_assets, :file_font_assets]
 
-  def index
-
-    puts "page Format: " + request.format.to_s + "/" + (request.format.html?).to_s
-
-    render_page('index.json')
-  end
-
   def file_assets
     @path = Rails.root.to_s + '/storage/' + params[:shop_id] + '/' + params[:template_id]
     unless File.directory?(@path)
@@ -162,16 +155,21 @@ class ShopController < ApplicationController
     render_page('index.json')
   end
 
+  def index
+    puts "page Format: " + request.format.to_s + "/" + (request.format.html?).to_s
+    render_page('index.json')
+  end
+
   public def product
     response = get_product(params[:product], @shop_id, @domain)
     if response
       @args['product'] = response
     else
-      page_not_found
+      render_page('404.json')
       return
     end
     
-    response = HTTP.post("https://api.sellioly.com/server/product/get-similar-by-handle", :form => { 'handle' => params[:product], 'user_id' => @shop_id, 'app_domain' => @domain })
+    response = HTTP.post("https://api.sellioly.com/ruby/product/get-similar-by-handle", :form => { 'handle' => params[:product], 'user_id' => @shop_id, 'app_domain' => @domain })
     if response.status.success?
       @args['similar_products'] = response.parse
     end
@@ -185,13 +183,13 @@ class ShopController < ApplicationController
     @args['collection'] = nil
     if response
       @args['collection'] = response
-      response = HTTP.post("https://api.sellioly.com/server/product/get-by-collection", :form => { 'handle' => params[:collection], 'user_id' => @shop_id, 'app_domain' => @domain })
+      response = HTTP.post("https://api.sellioly.com/ruby/product/get-by-collection", :form => { 'handle' => params[:collection], 'user_id' => @shop_id, 'app_domain' => @domain })
       @args['collection']['products'] = nil
       if response.status.success?
         @args['collection']['products'] = response.parse
       end
     else
-      page_not_found
+      render_page('404.json')
       return
     end
 
@@ -201,28 +199,27 @@ class ShopController < ApplicationController
 
   public def cart
     render_page('cart.json')
-    nil
+    return
   end
 
   public def checkout
     render_page('checkout.json')
-    nil
+    return
   end
 
   public def our_store
     render_page('our-store.json')
-    nil
+    return
   end
 
   public def about_us
     render_page('about-us.json')
-    nil
+    return
   end
 
   public def not_found
-    puts "ShopController => not_found"
     render_page('404.json')
-    nil
+    return
   end
 
   # other pages
@@ -281,28 +278,6 @@ class ShopController < ApplicationController
   private
 
   def render_snippet(section_id, current_url)
-    # data = current_url.match(/^\/(product|collection|)?\/?(.*)$/)
-    # layout = "theme"
-    # template = "index"
-    # if data
-    #   if data[0] != ""
-    #     template = data[0]
-    #   end
-    # end
-    #
-    #
-    # file = File.read(@path + '/templates/' + template + ".json")
-    # template_data = JSON.load file
-    # if template_data['layout']
-    #   layout = template_data['layout']
-    # end
-    #
-    # layout_data = {}
-    # if File.exist? @path + "/layout/#{layout}.json"
-    #   layout_json = File.read(@path + "/layout/#{layout}.json")
-    #   layout_data = JSON.load layout_json
-    # end
-
     unless File.file? @path + '/snippets/' + section_id + '.liquid'
       return ''
     end

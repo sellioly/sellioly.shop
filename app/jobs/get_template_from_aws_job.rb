@@ -188,15 +188,15 @@ class GetTemplateFromAwsJob < ApplicationJob
         @theme_author = @data['theme_author']
         @theme_support_url = @data['theme_support_url']
 
-        @response = HTTP.post("https://api.sellioly.com/server/template-uploaded/success",
+        @response = HTTP.post("https://api.sellioly.com/ruby/template-uploaded/success",
                               :form => { 'user_id' => shop_id, 'template_id' => template_id, 'template_path' => @sub_path, 'theme_name' => @theme_name, 'theme_version' => @theme_version, 'theme_author' => @theme_author, 'theme_support_url' => @theme_support_url })
       else
-        @response = HTTP.post("https://api.sellioly.com/server/template-uploaded/failed",
+        @response = HTTP.post("https://api.sellioly.com/ruby/template-uploaded/failed",
                               :form => { 'user_id' => shop_id, 'template_id' => template_id, 'reason' => @error })
       end
     else
       @error = ['Cannot open your zip file!']
-      @response = HTTP.post("https://api.sellioly.com/server/template-uploaded/failed",
+      @response = HTTP.post("https://api.sellioly.com/ruby/template-uploaded/failed",
                             :form => { 'user_id' => shop_id, 'template_id' => template_id, 'reason' => @error })
     end
   end

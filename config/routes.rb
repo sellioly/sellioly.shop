@@ -1,19 +1,22 @@
 Rails.application.routes.draw do
   mount LetsEncrypt::Engine => '/.well-known'
   constraints host: 'shop.sellioly.com' do
-    get 'api/ssl/publish', action: 'generate_ssl', controller: 'store'
-    get 'api/ssl/renew', action: 'renew_ssl', controller: 'store'
-    get 'api/ssl/verify', action: 'verify_ssl', controller: 'store'
+    get 'api/ssl/publish', action: 'generate_ssl', controller: 'ssl'
+    get 'api/ssl/renew', action: 'renew_ssl', controller: 'ssl'
+    get 'api/ssl/verify', action: 'verify_ssl', controller: 'ssl' 
+
     post 'api/store/create', action: 'create', controller: 'store'
-    post 'api/template/import', action: 'import_template', controller: 'store'
-    post 'api/theme/verify', action: 'verify_theme', controller: 'store'
-    post 'api/template/publish', action: 'publish_template', controller: 'store'
-    post 'api/template/:page', action: 'request_template_page', controller: 'store'
-    get 'api/template/download', action: 'request_template', controller: 'store'
-    get 'api/assets', action: 'request_asset_content', controller: 'store'
-    put 'api/assets', action: 'update_asset_content', controller: 'store'
-    post 'api/assets', action: 'request_assets_template', controller: 'store'
     post 'api/process_event', action: 'process_event', controller: 'store'
+
+    post 'api/theme/verify', action: 'verify_theme', controller: 'template'
+    post 'api/template/import', action: 'import_template', controller: 'template'
+    post 'api/template/publish', action: 'publish_template', controller: 'template'
+    post 'api/template/:page', action: 'request_template_page', controller: 'template'
+    get 'api/template/download', action: 'request_template', controller: 'template'
+    get 'api/assets', action: 'request_asset_content', controller: 'template'
+    put 'api/assets', action: 'update_asset_content', controller: 'template'
+    post 'api/assets', action: 'request_assets_template', controller: 'template'
+
     get '/', action: 'not_found', controller: 'shop'
     get '/*path', action: 'not_found', controller: 'shop'
   end

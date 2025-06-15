@@ -26,7 +26,7 @@ class OrderController < ApplicationController
       return
     end
 
-    response = HTTP.post("https://api.sellioly.com/server/order/create", :form => { 
+    response = HTTP.post("https://api.sellioly.com/ruby/order/create", :form => { 
       'app_domain' => @domain,
       'variant_id' => params[:variant_id],
       'full_name' => params[:full_name],
@@ -77,7 +77,7 @@ class OrderController < ApplicationController
       return 
     end
 
-    response = HTTP.post("https://api.sellioly.com/server/order/create", :form => { 
+    response = HTTP.post("https://api.sellioly.com/ruby/order/create", :form => { 
       'app_domain' => @domain,
       'full_name' => params[:full_name],
       'email' => params[:email],
