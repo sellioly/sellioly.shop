@@ -171,13 +171,13 @@ class ApplicationController < ActionController::Base
           section_schema = JSON.load file
         end
 
-        @args['section']['settings'] = {}
+        section_settings = {}
         if section_schema     
           # get the section settings    
-          @args['section']['settings'] = get_section_settings(section_schema['settings'], section_data['settings'])
+          section_settings = get_section_settings(section_schema['settings'], section_data['settings'])
         end
 
-        @args['section']['blocks'] = []
+        section_blocks = []
         if section_data['block_order'].kind_of?(Array)
           section_data['block_order'].each { |block_id|
             block_data = section_data['blocks'][block_id]
@@ -190,9 +190,11 @@ class ApplicationController < ActionController::Base
               end
             end
 
-            @args['section']['blocks'].push(block_data)
+            section_blocks.push(block_data)
           }
         end
+        @args['section']['settings'] = section_settings
+        @args['section']['blocks'] = section_blocks
 
         puts(request.host + " - " + Liquid::Template.file_system.inspect)
         unless File.file? @path + '/sections/' + section_data['type'] + '.liquid'
@@ -260,37 +262,35 @@ class ApplicationController < ActionController::Base
       return {}
     end
 
-    data = {}
-
     data_settings.keys.each do |key|
       value = data_settings[key]
       if schema_settings[key]
         # read the default value
         if value.nil?
           value = schema_settings[key]['default']
-          data[key] = schema_settings[key]['default']
+          data_settings[key] = schema_settings[key]['default']
         end
 
         case schema_settings[key]['element']
         when 'menu'
           response = get_menu(value, @shop_id, @domain)
           if response
-            data[key] = response
+            data_settings[key] = response
           end
         when 'product-picker'
           response = get_product(value, @shop_id, @domain)
           if response
-            data[key] = response
+            data_settings[key] = response
           end
         when 'products-picker'
           response = get_products(value, @shop_id, @domain)
           if response
-            data[key] = response
+            data_settings[key] = response
           end
         when 'collection-picker'
           response = get_collection(value, @shop_id, @domain)
           if response
-            data[key] = response
+            data_settings[key] = response
           end
         else
           next
@@ -298,7 +298,7 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    data
+    data_settings
   end
 
   private
