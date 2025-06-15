@@ -12,9 +12,6 @@ module ShopHelper
   end
 
   def get_menu(handle, shop_id, app_domain)
-    if handle.nil? || handle.empty?
-      return nil
-
     menu = redis_get(app_domain, shop_id, "menu:#{handle}")
 
     unless menu == nil
@@ -31,9 +28,6 @@ module ShopHelper
   end
 
   def get_product(handle, shop_id, app_domain)
-    if handle.nil? || handle.empty?
-      return nil
-
     product = redis_get(app_domain, shop_id, "product:#{handle}")
 
     unless product == nil
@@ -50,9 +44,6 @@ module ShopHelper
   end
 
   def get_products(handles, shop_id, app_domain)
-    if handles.nil? || handles.empty?
-      return []
-
     products = []
     handles.each do |handle|
       product = get_product(handle, shop_id, app_domain)
@@ -75,9 +66,6 @@ module ShopHelper
   end
 
   def get_collection(handle, shop_id, app_domain)
-    if handle.nil? || handle.empty?
-      return nil
-
     collection = redis_get(app_domain, shop_id, "collection:#{handle}")
 
     unless collection == nil
@@ -94,9 +82,6 @@ module ShopHelper
   end
 
   def get_collections(handles, shop_id, app_domain)
-    if handles.nil? || handles.empty?
-      return []
-
     collections = []
     handles.each do |handle|
       collection = get_collection(handle, shop_id, app_domain)
