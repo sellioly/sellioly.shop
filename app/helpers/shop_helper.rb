@@ -3,7 +3,6 @@ module ShopHelper
     Redis.new(url: ENV['REDIS_CABLE_URL'])
   end
 
-
   def redis_set(app_domain, shop_id, key, value)
     redis.set("domain:#{app_domain}-shop:#{shop_id}.#{key}", value)
   end
@@ -17,6 +16,13 @@ module ShopHelper
 
     unless menu == nil
       return JSON.parse(menu)
+    else
+      response = HTTP.post("https://api.sellioly.com/ruby/menu/get-by-handle", form: { 'handle' => handle, 'shop_id' => shop_id, 'app_domain' => app_domain })
+      if response.status.success?
+        menu_data = response.parse
+        redis_set(app_domain, shop_id, "menu:#{handle}", menu_data.to_json)
+        return menu_data
+      end
     end
     nil
   end
@@ -26,17 +32,33 @@ module ShopHelper
 
     unless product == nil
       return JSON.parse(product)
+    else
+      response = HTTP.post("https://api.sellioly.com/ruby/product/get-by-handle", form: { 'handle' => handle, 'shop_id' => shop_id, 'app_domain' => app_domain })
+      if response.status.success?
+        product_data = response.parse
+        redis_set(app_domain, shop_id, "product:#{handle}", product_data.to_json)
+        return product_data
+      end
     end
     nil
   end
-
-
 
   def get_products(handles, shop_id, app_domain)
     products = []
     handles.each do |handle|
       product = get_product(handle, shop_id, app_domain)
-      products << product if product
+      # products << product if product
+
+      if product
+        products << product
+      else
+        response = HTTP.post("https://api.sellioly.com/ruby/product/get-by-handle", form: { 'handle' => handle, 'shop_id' => shop_id, 'app_domain' => app_domain })
+        if response.status.success?
+          product_data = response.parse
+          redis_set(app_domain, shop_id, "product:#{handle}", product_data.to_json)
+          products << product_data
+        end
+      end
     end
 
     # Return the products array at the end of the method.
@@ -48,6 +70,13 @@ module ShopHelper
 
     unless collection == nil
       return JSON.parse(collection)
+    else
+      response = HTTP.post("https://api.sellioly.com/ruby/collection/get-by-handle", form: { 'handle' => handle, 'shop_id' => shop_id, 'app_domain' => app_domain })
+      if response.status.success?
+        collection_data = response.parse
+        redis_set(app_domain, shop_id, "collection:#{handle}", collection_data.to_json)
+        return collection_data
+      end
     end
     nil
   end
@@ -56,7 +85,19 @@ module ShopHelper
     collections = []
     handles.each do |handle|
       collection = get_collection(handle, shop_id, app_domain)
-      collections << collection if collection
+      # collections << collection if collection
+
+      if collection
+        collections << collection
+      else
+        response = HTTP.post("https://api.sellioly.com/ruby/collection/get-by-handle", form: { 'handle' => handle, 'shop_id' => shop_id, 'app_domain' => app_domain })
+        if response.status.success?
+          collection_data = response.parse
+          redis_set(app_domain, shop_id, "collection:#{handle}", collection_data.to_json)
+          collections << collection_data
+        end
+      end
+
     end
     # Return the collections array at the end of the method.
     collections
@@ -86,8 +127,15 @@ module ShopHelper
 
     unless metadata == nil
       return JSON.parse(metadata)
+    else
+      response = HTTP.post("https://api.sellioly.com/ruby/metadata/store/list", form: { 'shop_id' => shop_id, 'app_domain' => app_domain })
+      if response.status.success?
+        metadata_data = response.parse
+        redis_set(app_domain, shop_id, "metadata", metadata_data.to_json)
+        return metadata_data
+      end
+
     end
     nil
   end
-
 end
