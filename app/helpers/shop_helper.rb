@@ -12,6 +12,9 @@ module ShopHelper
   end
 
   def get_menu(handle, shop_id, app_domain)
+    # validate handle
+    return nil if handle.nil? || handle.empty?
+
     menu = redis_get(app_domain, shop_id, "menu:#{handle}")
 
     unless menu == nil
