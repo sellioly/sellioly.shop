@@ -311,7 +311,6 @@ class ApplicationController < ActionController::Base
       path: request.fullpath,
       method: request.method,
       params: request.filtered_parameters, # filters sensitive keys
-      user_id: current_user&.id # if you have authentication
     }.to_json)
 
     # Return JSON error response (customize as needed)
