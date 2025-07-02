@@ -262,6 +262,10 @@ class ApplicationController < ActionController::Base
       return {}
     end
 
+    # ensure data_settings is a Hash or empty Hash
+    data_settings = {} unless data_settings.is_a?(Hash)
+    schema_settings = {} unless schema_settings.is_a?(Hash)
+
     data_settings.keys.each do |key|
       value = data_settings[key]
       if schema_settings[key]
