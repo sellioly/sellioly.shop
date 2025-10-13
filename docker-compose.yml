@@ -61,6 +61,7 @@ services:
     restart: always
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./nginx/certs:/etc/nginx/certs:ro
       # - nginx_conf:/usr/local/nginx/conf
       # - other_nginx_conf:/etc/nginx
       # - nginx_hook:/usr/local/nginx/hook
