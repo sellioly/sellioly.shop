@@ -1,7 +1,7 @@
 require "zip"
 
 class TemplateController < ApplicationController
-  before_action :verify_ssl_hook
+  # before_action :verify_ssl_hook
 
   public def import_template
     # data

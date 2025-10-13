@@ -1,7 +1,7 @@
 class StoreController < ApplicationController
 
   include StoreHelper
-  before_action :verify_ssl_hook
+  # before_action :verify_ssl_hook
 
   public def create
     # code here
