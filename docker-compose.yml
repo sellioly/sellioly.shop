@@ -61,13 +61,15 @@ services:
     restart: always
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./nginx/certs:/etc/nginx/certs:ro
+      - ./nginx/certbot:/var/www/certbot
+      - ./nginx/letsencrypt:/etc/letsencrypt:ro
+
       # - nginx_conf:/usr/local/nginx/conf
       # - other_nginx_conf:/etc/nginx
       # - nginx_hook:/usr/local/nginx/hook
     ports:
       - "80:80"
-      # - "443:443"
+      - "443:443"
     links:
       - redis
       - app:ruby_app
