@@ -18,7 +18,7 @@ services:
   app: &app_base
     build: .
     restart: always
-    command: bash -lc "rm -f tmp/pids/*.pid && bin/rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app1.pid"
+    command: bash -lc "rm -f tmp/pids/*.pid && bundle exec rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app1.pid"
     volumes:
       - ./:/app
     depends_on:
@@ -35,19 +35,19 @@ services:
 
   app2:
     <<: *app_base
-    command: bash -lc "rm -f tmp/pids/*.pid && bin/rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app2.pid"
+    command: bash -lc "rm -f tmp/pids/*.pid && bundle exec rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app2.pid"
 
   app3:
     <<: *app_base
-    command: bash -lc "rm -f tmp/pids/*.pid && bin/rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app3.pid"
+    command: bash -lc "rm -f tmp/pids/*.pid && bundle exec rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app3.pid"
 
   app4:
     <<: *app_base
-    command: bash -lc "rm -f tmp/pids/*.pid && bin/rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app4.pid"
+    command: bash -lc "rm -f tmp/pids/*.pid && bundle exec rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app4.pid"
 
   app5:
     <<: *app_base
-    command: bash -lc "rm -f tmp/pids/*.pid && bin/rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app5.pid"
+    command: bash -lc "rm -f tmp/pids/*.pid && bundle exec rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app5.pid"
 
   worker:
     <<: *app_base
