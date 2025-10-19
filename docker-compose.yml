@@ -20,7 +20,7 @@ services:
   app:
     build: .
     restart: always
-    command: bash -lc "rm -f tmp/pids/*.pid && bundle exec rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app.pid"
+    command: bash -lc "bundle exec rails s -p 3000 -b 0.0.0.0 -P /tmp/server.pid"
     volumes:
       - ./:/app
     depends_on:
@@ -31,9 +31,8 @@ services:
       DB_NAME: sellioly_development
       DB_PASSWORD: sellioly
       DB_HOST: db_mysql
-      REDIS_SIDEKIQ_URL: redis://redis:6379/0
-      REDIS_CABLE_URL: redis://redis:6379/1
-      REDIS_CACHE_URL: redis://redis:6379/2
+      REDIS_URL: redis://redis:6379/0          # ← add (for cache etc. if your app reads REDIS_URL)
+      REDIS_SIDEKIQ_URL: redis://redis:6379/0  # (keep if used elsewhere)
     networks: [proxy]
     labels:
       - traefik.enable=true
@@ -70,7 +69,8 @@ services:
       DB_NAME: sellioly_development
       DB_PASSWORD: sellioly
       DB_HOST: db_mysql
-      REDIS_SIDEKIQ_URL: redis://redis:6379/1
+      REDIS_URL: redis://redis:6379/1          # ← add this (Sidekiq defaults to REDIS_URL if not configured)
+      REDIS_SIDEKIQ_URL: redis://redis:6379/1  # (optional, if your initializer uses this name)
     # worker doesn't need to be on proxy network; it doesn't accept HTTP traffic.
 
 volumes:
