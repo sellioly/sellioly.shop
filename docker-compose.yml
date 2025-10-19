@@ -46,7 +46,9 @@ services:
       REDIS_SIDEKIQ_URL: redis://redis:6379/0
       REDIS_CABLE_URL:   redis://redis:6379/1
       REDIS_CACHE_URL:   redis://redis:6379/2
-    networks: [proxy]
+    networks:
+      - proxy     # Traefik <-> app
+      - default   # app <-> db_mysql & redis
     healthcheck:
       test: ["CMD-SHELL", "curl -fsS --max-time 2 http://localhost:3000/health >/dev/null || exit 1"]
       interval: 10s
@@ -56,17 +58,23 @@ services:
       - traefik.enable=true
       - traefik.docker.network=proxy
 
-      # Router: shop + any subdomain of sellioly.com
-      - traefik.http.routers.shop.rule=Host(`shop.sellioly.com`) || HostRegexp(`{subdomain:[a-z0-9-]+}.sellioly.com`)
+      # Wildcard router
+      - 'traefik.http.routers.shop.rule=Host(`shop.sellioly.com`) || HostRegexp(`{subdomain:.+}.sellioly.com`)'
       - traefik.http.routers.shop.entrypoints=websecure
       - traefik.http.routers.shop.tls=true
       - traefik.http.routers.shop.tls.certresolver=le_cf
       - traefik.http.routers.shop.tls.domains[0].main=sellioly.com
       - traefik.http.routers.shop.tls.domains[0].sans=*.sellioly.com
       - traefik.http.routers.shop.priority=1000
-
-      # Bind router → service explicitly
       - traefik.http.routers.shop.service=shop
+
+      # Explicit katri router (helps testing)
+      - traefik.http.routers.katri.rule=Host(`katri.sellioly.com`)
+      - traefik.http.routers.katri.entrypoints=websecure
+      - traefik.http.routers.katri.tls=true
+      - traefik.http.routers.katri.tls.certresolver=le_cf
+      - traefik.http.routers.katri.priority=1500
+      - traefik.http.routers.katri.service=shop
 
       # Service: internal port
       - traefik.http.services.shop.loadbalancer.server.port=3000
@@ -96,7 +104,8 @@ services:
       REDIS_CACHE_URL:  redis://redis:6379/2
     labels:
       - traefik.enable=false
-    networks: [default]
+    networks:
+      - default
 
 networks:
   proxy:
