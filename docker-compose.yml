@@ -1,3 +1,4 @@
+# docker-compose.yml
 version: "3.9"
 
 services:
@@ -35,6 +36,7 @@ services:
     networks: [proxy]
     labels:
       - traefik.enable=true
+      - traefik.docker.network=proxy
       # Match *.sellioly.com + shop.sellioly.com and give it a high priority
       - traefik.http.routers.shop.rule=Host(`shop.sellioly.com`) || HostRegexp(`{subdomain:[a-z0-9-]+}.sellioly.com`)
       - traefik.http.routers.shop.entrypoints=websecure
@@ -48,30 +50,38 @@ services:
   app2:
     <<: *app_base
     command: bash -lc "rm -f tmp/pids/*.pid && bundle exec rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app2.pid"
-    labels:
-      - traefik.enable=false
     networks: [proxy]
+    labels:
+      - traefik.enable=true                                   # <— enable
+      - traefik.docker.network=proxy                          # <— ensure same network
+      - traefik.http.services.rails.loadbalancer.server.port=3000
 
   app3:
     <<: *app_base
     command: bash -lc "rm -f tmp/pids/*.pid && bundle exec rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app3.pid"
-    labels:
-      - traefik.enable=false
     networks: [proxy]
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=proxy
+      - traefik.http.services.rails.loadbalancer.server.port=3000
 
   app4:
     <<: *app_base
     command: bash -lc "rm -f tmp/pids/*.pid && bundle exec rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app4.pid"
-    labels:
-      - traefik.enable=false
     networks: [proxy]
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=proxy
+      - traefik.http.services.rails.loadbalancer.server.port=3000
 
   app5:
     <<: *app_base
     command: bash -lc "rm -f tmp/pids/*.pid && bundle exec rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app5.pid"
-    labels:
-      - traefik.enable=false
     networks: [proxy]
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=proxy
+      - traefik.http.services.rails.loadbalancer.server.port=3000
 
   worker:
     <<: *app_base
