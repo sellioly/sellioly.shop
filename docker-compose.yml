@@ -69,7 +69,7 @@ services:
       - traefik.http.routers.shop-host.service=shop
 
       # Wildcard (*.sellioly.com)
-      - traefik.http.routers.shop-wild.rule=HostRegexp(`{subdomain:.+}.sellioly.com`)
+      - traefik.http.routers.shop-wild.rule=HostRegexp("{subdomain:[a-z0-9-]+}.sellioly.com")
       - traefik.http.routers.shop-wild.entrypoints=websecure
       - traefik.http.routers.shop-wild.tls=true
       - traefik.http.routers.shop-wild.tls.certresolver=le_cf
