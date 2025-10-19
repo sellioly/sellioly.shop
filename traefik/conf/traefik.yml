@@ -1,6 +1,7 @@
 # traefik/conf/traefik.yml
 api:
   dashboard: true
+  insecure: true
 
 entryPoints:
   web:
