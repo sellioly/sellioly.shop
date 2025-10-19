@@ -60,26 +60,33 @@ services:
       - traefik.enable=true
       - traefik.docker.network=proxy
 
-      # 1) Explicit router for shop.sellioly.com (higher priority)
-      - 'traefik.http.routers.shop-host.rule=Host(`shop.sellioly.com`)'
+      # Explicit host (shop.sellioly.com)
+      - traefik.http.routers.shop-host.rule=Host(`shop.sellioly.com`)
       - traefik.http.routers.shop-host.entrypoints=websecure
       - traefik.http.routers.shop-host.tls=true
       - traefik.http.routers.shop-host.tls.certresolver=le_cf
       - traefik.http.routers.shop-host.priority=1200
       - traefik.http.routers.shop-host.service=shop
 
-      # 2) Wildcard router for ANY subdomain (*.sellioly.com)
-      - 'traefik.http.routers.shop-wild.rule=HostRegexp(`{subdomain:.+}.sellioly.com`)'
+      # Wildcard (*.sellioly.com)
+      - traefik.http.routers.shop-wild.rule=HostRegexp(`{subdomain:.+}.sellioly.com`)
       - traefik.http.routers.shop-wild.entrypoints=websecure
       - traefik.http.routers.shop-wild.tls=true
       - traefik.http.routers.shop-wild.tls.certresolver=le_cf
-      # Put tls.domains on ONE router only (avoid duplicate ACME orders)
       - traefik.http.routers.shop-wild.tls.domains[0].main=sellioly.com
       - traefik.http.routers.shop-wild.tls.domains[0].sans=*.sellioly.com
       - traefik.http.routers.shop-wild.priority=1000
       - traefik.http.routers.shop-wild.service=shop
 
-      # Service -> Rails internal port
+      # (Optional) Apex
+      - traefik.http.routers.shop-apex.rule=Host(`sellioly.com`)
+      - traefik.http.routers.shop-apex.entrypoints=websecure
+      - traefik.http.routers.shop-apex.tls=true
+      - traefik.http.routers.shop-apex.tls.certresolver=le_cf
+      - traefik.http.routers.shop-apex.priority=1100
+      - traefik.http.routers.shop-apex.service=shop
+
+      # Service port
       - traefik.http.services.shop.loadbalancer.server.port=3000
 
   worker:

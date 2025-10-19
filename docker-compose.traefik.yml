@@ -14,7 +14,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik/conf/traefik.yml:/etc/traefik/traefik.yml:ro
-      - ./traefik/conf:/etc/traefik/dynamic:ro
+      - ./traefik/dynamic:/etc/traefik/dynamic:ro
       - ./traefik/letsencrypt:/letsencrypt
     secrets:
       - source: cf_token
