@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   traefik:
     image: traefik:v3.0
@@ -10,21 +8,10 @@ services:
       - "80:80"
       - "443:443"
     environment:
-      - CF_DNS_API_TOKEN_FILE=/run/secrets/cloudflare.ini
+      # Use a PLAIN env var (this is what lego expects)
+      - CF_DNS_API_TOKEN=HjrOOy6CkPAUAd75ns3jdyboeOurM5veJZ306_Dj
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik/conf/traefik.yml:/etc/traefik/traefik.yml:ro
       - ./traefik/conf:/etc/traefik/dynamic:ro
       - ./traefik/letsencrypt:/letsencrypt
-    secrets:
-      - source: cloudflare_ini
-        target: cloudflare.ini
-        mode: 0400
-
-secrets:
-  cloudflare_ini:
-    file: ./traefik/secrets/cloudflare.ini
-
-networks:
-  proxy:
-    external: true
