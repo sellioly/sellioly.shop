@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   db_mysql:
     image: mysql:8.0
@@ -15,10 +17,10 @@ services:
     volumes:
       - redis_data:/data
 
-  app: &app_base
+  app:
     build: .
     restart: always
-    command: bash -lc "rm -f tmp/pids/*.pid && bundle exec rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app1.pid"
+    command: bash -lc "rm -f tmp/pids/*.pid && bundle exec rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app.pid"
     volumes:
       - ./:/app
     depends_on:
@@ -32,68 +34,49 @@ services:
       REDIS_SIDEKIQ_URL: redis://redis:6379/0
       REDIS_CABLE_URL: redis://redis:6379/1
       REDIS_CACHE_URL: redis://redis:6379/2
+    networks: [proxy]
+    labels:
+      - traefik.enable=true
 
-  app2:
-    <<: *app_base
-    command: bash -lc "rm -f tmp/pids/*.pid && bundle exec rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app2.pid"
+      # ---- PLATFORM ROUTER (wildcard *.sellioly.com via DNS-01) ----
+      - traefik.http.routers.platform.rule=HostRegexp(`{subdomain:[a-z0-9-]+}.sellioly.com`) || Host(`sellioly.com`) || Host(`shop.sellioly.com`)
+      - traefik.http.routers.platform.entrypoints=websecure
+      - traefik.http.routers.platform.tls=true
+      - traefik.http.routers.platform.tls.certresolver=le_cf
+      # Ask Traefik to obtain and reuse a wildcard for our zone
+      - traefik.http.routers.platform.tls.domains[0].main=sellioly.com
+      - traefik.http.routers.platform.tls.domains[0].sans=*.sellioly.com
 
-  app3:
-    <<: *app_base
-    command: bash -lc "rm -f tmp/pids/*.pid && bundle exec rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app3.pid"
+      # ---- CUSTOMER ROUTER (any external domain via HTTP-01) ----
+      - traefik.http.routers.customers.rule=HostRegexp(`{any:.+}`)
+      - traefik.http.routers.customers.entrypoints=websecure
+      - traefik.http.routers.customers.tls=true
+      - traefik.http.routers.customers.tls.certresolver=le_http
 
-  app4:
-    <<: *app_base
-    command: bash -lc "rm -f tmp/pids/*.pid && bundle exec rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app4.pid"
-
-  app5:
-    <<: *app_base
-    command: bash -lc "rm -f tmp/pids/*.pid && bundle exec rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app5.pid"
+      # ---- Service port inside the container ----
+      - traefik.http.services.rails.loadbalancer.server.port=3000
 
   worker:
-    <<: *app_base
+    build: .
+    restart: always
     command: bundle exec sidekiq -C config/sidekiq.yml
-    ports: []
+    volumes:
+      - ./:/app
     depends_on:
       - app
-
-  ngx:
-    image: nginx:1.25-alpine
-    restart: always
-    volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d:ro
-      - ./nginx/certbot:/var/www/certbot
-      - ./nginx/letsencrypt:/etc/letsencrypt:ro
-
-      # - nginx_conf:/usr/local/nginx/conf
-      # - other_nginx_conf:/etc/nginx
-      # - nginx_hook:/usr/local/nginx/hook
-    ports:
-      - "80:80"
-      - "443:443"
-    links:
       - redis
-      - app:ruby_app
-      - app2:ruby_app2
-      - app3:ruby_app3
-      - app4:ruby_app4
-      - app5:ruby_app5
     environment:
-      redis: redis
-    depends_on:
-      - worker
+      DB_USER: sellioly
+      DB_NAME: sellioly_development
+      DB_PASSWORD: sellioly
+      DB_HOST: db_mysql
+      REDIS_SIDEKIQ_URL: redis://redis:6379/1
+    # worker doesn't need to be on proxy network; it doesn't accept HTTP traffic.
 
 volumes:
   redis_data:
-    driver: local
-  nginx_conf:
-    driver: local
-  other_nginx_conf:
-    driver: local
-  nginx_hook:
-    driver: local
-  sellioly:
-    driver: local
   mysql_db_data_container:
-    driver: local
-  mysqld_data_container:
-    driver: local
+
+networks:
+  proxy:
+    external: true

@@ -1,0 +1,38 @@
+# traefik/conf/traefik.yml
+api:
+  dashboard: true
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+          permanent: true
+  websecure:
+    address: ":443"
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+  file:
+    directory: "/etc/traefik/dynamic"
+    watch: true
+
+certificatesResolvers:
+  le_http:                         # HTTP-01 for arbitrary/customer domains
+    acme:
+      email: "noureddinehaddad17@gmail.com"
+      storage: "/letsencrypt/acme.json"
+      httpChallenge:
+        entryPoint: web
+  le_cf:                           # DNS-01 for wildcard *.sellioly.com
+    acme:
+      email: "noureddinehaddad17@gmail.com"
+      storage: "/letsencrypt/acme.json"
+      dnsChallenge:
+        provider: cloudflare
+        delayBeforeCheck: 0
