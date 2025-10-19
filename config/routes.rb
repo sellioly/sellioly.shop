@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  # Always-200 lightweight health endpoint for containers/load balancers
+  get "/health", to: proc { [200, { "Content-Type" => "text/plain" }, ["OK"]] }
+  
   mount LetsEncrypt::Engine => '/.well-known'
   constraints host: 'shop.sellioly.com' do
     get 'api/ssl/publish', action: 'generate_ssl', controller: 'ssl'

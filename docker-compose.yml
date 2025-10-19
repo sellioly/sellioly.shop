@@ -48,7 +48,7 @@ services:
       REDIS_CACHE_URL:   redis://redis:6379/2
     networks: [proxy]
     healthcheck:
-      test: ["CMD", "bash", "-lc", "curl -fsS http://localhost:3000/ || exit 1"]
+      test: ["CMD-SHELL", "curl -fsS --max-time 2 http://localhost:3000/health >/dev/null || exit 1"]
       interval: 10s
       timeout: 3s
       retries: 10
