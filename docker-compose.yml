@@ -60,29 +60,27 @@ services:
       - traefik.enable=true
       - traefik.docker.network=proxy
 
-      # Wildcard router (shop + any subdomain)
-      - 'traefik.http.routers.shop.rule=Host(`shop.sellioly.com`) || HostRegexp(`{subdomain:.+}.sellioly.com`)'
-      - traefik.http.routers.shop.entrypoints=websecure
-      - traefik.http.routers.shop.tls=true
-      - traefik.http.routers.shop.tls.certresolver=le_cf
-      - traefik.http.routers.shop.tls.domains[0].main=sellioly.com
-      - traefik.http.routers.shop.tls.domains[0].sans=*.sellioly.com
-      - traefik.http.routers.shop.priority=1000
-      - traefik.http.routers.shop.service=shop
+      # 1) Explicit router for shop.sellioly.com (higher priority)
+      - 'traefik.http.routers.shop-host.rule=Host(`shop.sellioly.com`)'
+      - traefik.http.routers.shop-host.entrypoints=websecure
+      - traefik.http.routers.shop-host.tls=true
+      - traefik.http.routers.shop-host.tls.certresolver=le_cf
+      - traefik.http.routers.shop-host.priority=1200
+      - traefik.http.routers.shop-host.service=shop
 
-      # Explicit katri router (helps testing)
-      - traefik.http.routers.katri.rule=Host(`katri.sellioly.com`)
-      - traefik.http.routers.katri.entrypoints=websecure
-      - traefik.http.routers.katri.tls=true
-      - traefik.http.routers.katri.tls.certresolver=le_cf
-      - traefik.http.routers.katri.priority=1500
-      - traefik.http.routers.katri.service=shop
+      # 2) Wildcard router for ANY subdomain (*.sellioly.com)
+      - 'traefik.http.routers.shop-wild.rule=HostRegexp(`{subdomain:.+}.sellioly.com`)'
+      - traefik.http.routers.shop-wild.entrypoints=websecure
+      - traefik.http.routers.shop-wild.tls=true
+      - traefik.http.routers.shop-wild.tls.certresolver=le_cf
+      # Put tls.domains on ONE router only (avoid duplicate ACME orders)
+      - traefik.http.routers.shop-wild.tls.domains[0].main=sellioly.com
+      - traefik.http.routers.shop-wild.tls.domains[0].sans=*.sellioly.com
+      - traefik.http.routers.shop-wild.priority=1000
+      - traefik.http.routers.shop-wild.service=shop
 
-      # Service → internal port 3000
+      # Service -> Rails internal port
       - traefik.http.services.shop.loadbalancer.server.port=3000
-      # Optional stickiness if you later scale replicas:
-      # - traefik.http.services.shop.loadbalancer.sticky=true
-      # - traefik.http.services.shop.loadbalancer.sticky.cookie=true
 
   worker:
     build: .
