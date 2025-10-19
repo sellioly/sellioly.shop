@@ -20,81 +20,71 @@ services:
   app: &app_base
     build: .
     restart: always
-    # keep your per-service pid files to match old behavior
     command: bash -lc "rm -f tmp/pids/*.pid && bundle exec rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app1.pid"
     volumes:
       - ./:/app
-    depends_on:
-      - db_mysql
-      - redis
+    depends_on: [db_mysql, redis]
     environment:
       DB_USER: sellioly
       DB_NAME: sellioly_development
       DB_PASSWORD: sellioly
       DB_HOST: db_mysql
       REDIS_SIDEKIQ_URL: redis://redis:6379/0
-      REDIS_CABLE_URL:   redis://redis:6379/1
-      REDIS_CACHE_URL:   redis://redis:6379/2
+      REDIS_CABLE_URL: redis://redis:6379/1
+      REDIS_CACHE_URL: redis://redis:6379/2
     networks: [proxy]
     labels:
       - traefik.enable=true
-      - traefik.docker.network=proxy
-
-      # ---- ONLY shop.sellioly.com and *.sellioly.com ----
+      # Match *.sellioly.com + shop.sellioly.com and give it a high priority
       - traefik.http.routers.shop.rule=Host(`shop.sellioly.com`) || HostRegexp(`{subdomain:[a-z0-9-]+}.sellioly.com`)
       - traefik.http.routers.shop.entrypoints=websecure
       - traefik.http.routers.shop.tls=true
       - traefik.http.routers.shop.tls.certresolver=le_cf
       - traefik.http.routers.shop.tls.domains[0].main=sellioly.com
       - traefik.http.routers.shop.tls.domains[0].sans=*.sellioly.com
-
-      # One shared backend service name 'rails' (all app* will add servers to it)
-      - traefik.http.routers.shop.service=rails
+      - traefik.http.routers.shop.priority=1000
       - traefik.http.services.rails.loadbalancer.server.port=3000
 
   app2:
     <<: *app_base
     command: bash -lc "rm -f tmp/pids/*.pid && bundle exec rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app2.pid"
     labels:
-      - traefik.enable=true
-      - traefik.docker.network=proxy
-      # Contribute to the same backend service 'rails'
-      - traefik.http.services.rails.loadbalancer.server.port=3000
+      - traefik.enable=false
+    networks: [proxy]
 
   app3:
     <<: *app_base
     command: bash -lc "rm -f tmp/pids/*.pid && bundle exec rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app3.pid"
     labels:
-      - traefik.enable=true
-      - traefik.docker.network=proxy
-      - traefik.http.services.rails.loadbalancer.server.port=3000
+      - traefik.enable=false
+    networks: [proxy]
 
   app4:
     <<: *app_base
     command: bash -lc "rm -f tmp/pids/*.pid && bundle exec rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app4.pid"
     labels:
-      - traefik.enable=true
-      - traefik.docker.network=proxy
-      - traefik.http.services.rails.loadbalancer.server.port=3000
+      - traefik.enable=false
+    networks: [proxy]
 
   app5:
     <<: *app_base
     command: bash -lc "rm -f tmp/pids/*.pid && bundle exec rails s -p 3000 -b 0.0.0.0 -P tmp/pids/app5.pid"
     labels:
-      - traefik.enable=true
-      - traefik.docker.network=proxy
-      - traefik.http.services.rails.loadbalancer.server.port=3000
+      - traefik.enable=false
+    networks: [proxy]
 
   worker:
     <<: *app_base
     command: bundle exec sidekiq -C config/sidekiq.yml
+    labels:
+      - traefik.enable=false
     volumes:
       - ./:/app
     depends_on:
       - app
       - redis
     # no need to be on proxy network
-    networks: []
+    networks: [default]   # worker doesn't need the proxy network
     environment:
       DB_USER: sellioly
       DB_NAME: sellioly_development
