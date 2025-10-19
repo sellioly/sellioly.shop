@@ -6,7 +6,9 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: sellioly_development
+      # Used only on first initialization of the volume.
+      # Existing data will be kept even if this value changes later.
+      MYSQL_DATABASE: sellioly_production
       MYSQL_USER: sellioly
       MYSQL_PASSWORD: sellioly
     volumes:
@@ -40,7 +42,7 @@ services:
       # If you use Rails credentials for production, also set:
       # RAILS_MASTER_KEY: ${RAILS_MASTER_KEY:?set-in-.env}
       DB_USER: sellioly
-      DB_NAME: sellioly_development
+      DB_NAME: sellioly_production            # <-- point Rails to the new DB
       DB_PASSWORD: sellioly
       DB_HOST: db_mysql
       REDIS_SIDEKIQ_URL: redis://redis:6379/0
@@ -58,7 +60,7 @@ services:
       - traefik.enable=true
       - traefik.docker.network=proxy
 
-      # Wildcard router
+      # Wildcard router (shop + any subdomain)
       - 'traefik.http.routers.shop.rule=Host(`shop.sellioly.com`) || HostRegexp(`{subdomain:.+}.sellioly.com`)'
       - traefik.http.routers.shop.entrypoints=websecure
       - traefik.http.routers.shop.tls=true
@@ -76,7 +78,7 @@ services:
       - traefik.http.routers.katri.priority=1500
       - traefik.http.routers.katri.service=shop
 
-      # Service: internal port
+      # Service → internal port 3000
       - traefik.http.services.shop.loadbalancer.server.port=3000
       # Optional stickiness if you later scale replicas:
       # - traefik.http.services.shop.loadbalancer.sticky=true
@@ -93,15 +95,15 @@ services:
       RAILS_ENV: production
       RACK_ENV: production
       RAILS_LOG_TO_STDOUT: "1"
-      SECRET_KEY_BASE: ${SECRET_KEY_BASE:?set-in-.env}   # <-- add this
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE:?set-in-.env}
       DB_USER: sellioly
-      DB_NAME: sellioly_development
+      DB_NAME: sellioly_production          # <-- use the new DB here too
       DB_PASSWORD: sellioly
       DB_HOST: db_mysql
-      REDIS_URL:        redis://redis:6379/1
+      REDIS_URL:         redis://redis:6379/1
       REDIS_SIDEKIQ_URL: redis://redis:6379/1
-      REDIS_CABLE_URL:  redis://redis:6379/1
-      REDIS_CACHE_URL:  redis://redis:6379/2
+      REDIS_CABLE_URL:   redis://redis:6379/1
+      REDIS_CACHE_URL:   redis://redis:6379/2
     labels:
       - traefik.enable=false
     networks:
