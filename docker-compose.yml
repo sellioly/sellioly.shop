@@ -39,13 +39,13 @@ services:
       - traefik.enable=true
 
       # ---- PLATFORM ROUTER (wildcard *.sellioly.com via DNS-01) ----
-      - traefik.http.routers.platform.rule=HostRegexp(`{subdomain:[a-z0-9-]+}.sellioly.com`) || Host(`sellioly.com`) || Host(`shop.sellioly.com`)
-      - traefik.http.routers.platform.entrypoints=websecure
-      - traefik.http.routers.platform.tls=true
-      - traefik.http.routers.platform.tls.certresolver=le_cf
-      # Ask Traefik to obtain and reuse a wildcard for our zone
-      - traefik.http.routers.platform.tls.domains[0].main=sellioly.com
-      - traefik.http.routers.platform.tls.domains[0].sans=*.sellioly.com
+      - traefik.http.routers.shop.rule=Host(`shop.sellioly.com`) || HostRegexp(`{subdomain:[a-z0-9-]+}.sellioly.com`)
+      - traefik.http.routers.shop.entrypoints=websecure
+      - traefik.http.routers.shop.tls=true
+      - traefik.http.routers.shop.tls.certresolver=le_cf
+      - traefik.http.routers.shop.tls.domains[0].main=sellioly.com
+      - traefik.http.routers.shop.tls.domains[0].sans=*.sellioly.com
+      - traefik.http.routers.shop.service=rails
 
       # ---- CUSTOMER ROUTER (any external domain via HTTP-01) ----
       - traefik.http.routers.customers.rule=HostRegexp(`{any:.+}`)
