@@ -39,7 +39,7 @@ class ApplicationController < ActionController::Base
         return false
       end
       @domain = @cname
-    elsif not (@domain =~ /^[A-za-z0-9-.]+.sellioly.com$/)
+    elsif not (@domain =~ /^[A-Za-z0-9.-]+\.sellioly\.com$/)
       puts "Domain format error! #{@domain}"
       content_not_found
       return false
