@@ -114,6 +114,18 @@ services:
     networks:
       - default
 
+  whoami:
+    image: traefik/whoami
+    networks: [proxy]
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=proxy
+      - traefik.http.routers.who.rule=Host("whoami.sellioly.com")
+      - traefik.http.routers.who.entrypoints=websecure
+      - traefik.http.routers.who.tls=true
+      - traefik.http.routers.who.tls.certresolver=le_cf
+      - traefik.http.services.who.loadbalancer.server.port=80
+
 networks:
   proxy:
     external: true
