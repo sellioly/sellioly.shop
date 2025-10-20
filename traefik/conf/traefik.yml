@@ -39,7 +39,9 @@ certificatesResolvers:
         provider: cloudflare
         delayBeforeCheck: 0
 
+accessLog:
+  format: json
+  fields:
+    defaultMode: keep
 log:
   level: DEBUG
-
-accessLog: {}
