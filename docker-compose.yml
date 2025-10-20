@@ -69,10 +69,13 @@ services:
       - traefik.http.routers.shop-host.service=shop
 
       # Wildcard (*.sellioly.com)
-      - traefik.http.routers.catchall.rule=HostRegexp("{host:.+}")
-      - traefik.http.routers.catchall.entrypoints=websecure
-      - traefik.http.routers.catchall.priority=5000
-      - traefik.http.routers.catchall.tls=true
+      - traefik.http.routers.shop-wild.rule=Host(`{subdomain}.sellioly.com`)
+      - traefik.http.routers.shop-wild.entrypoints=websecure
+      - traefik.http.routers.shop-wild.tls=true
+      - traefik.http.routers.shop-wild.tls.certresolver=le_cf
+      # (optional but good if you want Traefik to also request/serve a wildcard cert)
+      - traefik.http.routers.shop-wild.tls.domains[0].main=sellioly.com
+      - traefik.http.routers.shop-wild.tls.domains[0].sans=*.sellioly.com
       - traefik.http.routers.catchall.service=shop
 
       # (Optional) Apex
