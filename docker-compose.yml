@@ -69,14 +69,11 @@ services:
       - traefik.http.routers.shop-host.service=shop
 
       # Wildcard (*.sellioly.com)
-      - traefik.http.routers.shop-wild.rule=HostRegexp("{subdomain:[^.]+}.sellioly.com")
-      - traefik.http.routers.shop-wild.entrypoints=websecure
-      - traefik.http.routers.shop-wild.tls=true
-      - traefik.http.routers.shop-wild.tls.certresolver=le_cf
-      - traefik.http.routers.shop-wild.tls.domains[0].main=sellioly.com
-      - traefik.http.routers.shop-wild.tls.domains[0].sans=*.sellioly.com
-      - traefik.http.routers.shop-wild.priority=1000
-      - traefik.http.routers.shop-wild.service=shop
+      - traefik.http.routers.catchall.rule=HostRegexp("{host:.+}")
+      - traefik.http.routers.catchall.entrypoints=websecure
+      - traefik.http.routers.catchall.priority=5000
+      - traefik.http.routers.catchall.tls=true
+      - traefik.http.routers.catchall.service=shop
 
       # (Optional) Apex
       - traefik.http.routers.shop-apex.rule=Host(`sellioly.com`)
