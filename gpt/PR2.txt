@@ -1,0 +1,195 @@
+This PR introduces a **read-only CatalogRepository** that wraps `Http::ApiClient` + `Cache::RedisStore` + `Cache::Keyspace` to fetch products, collections, menus, shop info, and metadata with **uniform TTLs and negative caching**. It does **not** modify controllers yet. Your existing helpers may continue to work; optional thin-delegation to this repository is included below as a separate patch.
+
+> Goals
+>
+> * Centralize all catalog reads (product/menu/collection/metadata/shop) with consistent caching rules.
+> * Keep semantics compatible with current `ShopHelper` (`NULL` sentinel on miss, short TTL for negatives).
+> * Prepare for Product Page refactor without behavior changes.
+
+---
+
+## `config/initializers/catalog_repository.rb`
+
+```ruby
+# frozen_string_literal: true
+
+# TTL policy (seconds). Tune per environment if needed.
+CatalogTTL = Struct.new(:product, :collection, :menu, :metadata, :shop_info, :negative, keyword_init: true)
+
+CATALOG_TTL = CatalogTTL.new(
+  product:   (ENV["TTL_PRODUCT"]   || 600).to_i,  # 10m
+  collection:(ENV["TTL_COLLECTION"]|| 600).to_i,  # 10m
+  menu:      (ENV["TTL_MENU"]      || 600).to_i,  # 10m
+  metadata:  (ENV["TTL_METADATA"]  || 1800).to_i, # 30m
+  shop_info: (ENV["TTL_SHOP_INFO"] || 900).to_i,  # 15m
+  negative:  (ENV["TTL_NEGATIVE"]  || 120).to_i   # 2m
+)
+```
+
+---
+
+## `app/repositories/catalog_repository.rb`
+
+```ruby
+# frozen_string_literal: true
+
+require "json"
+
+# Read model that fetches and caches catalog data.
+# - Uses versioned keys via Cache::Keyspace
+# - Negative caches misses for short TTLs
+# - Returns parsed JSON hashes or nil (compatible with current helpers)
+class CatalogRepository
+  def initialize(api: Http::ApiClient.new, cache: Cache::RedisStore.new)
+    @api = api
+    @cache = cache
+  end
+
+  # -------------------- Public API --------------------
+  def get_product(handle:, shop_id:, domain:)
+    return nil if blank?(handle)
+    key = Cache::Keyspace.catalog(shop_id: shop_id, domain: domain, type: :product, id: handle)
+    hit, data = @cache.fetch_json(key: key, ttl: CATALOG_TTL.product, negative_ttl: CATALOG_TTL.negative) do
+      res = @api.product_by_handle(handle: handle, shop_id: shop_id, domain: domain)
+      res.ok? ? res.json : nil
+    end
+    tag(:product, hit, shop_id, domain, handle)
+    data
+  end
+
+  def get_collection(handle:, shop_id:, domain:)
+    return nil if blank?(handle)
+    key = Cache::Keyspace.catalog(shop_id: shop_id, domain: domain, type: :collection, id: handle)
+    hit, data = @cache.fetch_json(key: key, ttl: CATALOG_TTL.collection, negative_ttl: CATALOG_TTL.negative) do
+      res = @api.collection_by_handle(handle: handle, shop_id: shop_id, domain: domain)
+      res.ok? ? res.json : nil
+    end
+    tag(:collection, hit, shop_id, domain, handle)
+    data
+  end
+
+  def get_menu(handle:, shop_id:, domain:)
+    return nil if blank?(handle)
+    key = Cache::Keyspace.catalog(shop_id: shop_id, domain: domain, type: :menu, id: handle)
+    hit, data = @cache.fetch_json(key: key, ttl: CATALOG_TTL.menu, negative_ttl: CATALOG_TTL.negative) do
+      res = @api.menu_by_handle(handle: handle, shop_id: shop_id, domain: domain)
+      res.ok? ? res.json : nil
+    end
+    tag(:menu, hit, shop_id, domain, handle)
+    data
+  end
+
+  def get_metadata(shop_id:, domain:)
+    key = Cache::Keyspace.catalog(shop_id: shop_id, domain: domain, type: :metadata, id: "store")
+    hit, data = @cache.fetch_json(key: key, ttl: CATALOG_TTL.metadata, negative_ttl: CATALOG_TTL.negative) do
+      res = @api.metadata(shop_id: shop_id, domain: domain)
+      res.ok? ? res.json : nil
+    end
+    tag(:metadata, hit, shop_id, domain, "store")
+    data
+  end
+
+  def get_shop_info(shop_id:)
+    # For shop_info we don't have a domain key in your current flow; we scope to shop only.
+    key = "v:#{CatalogVersion.current}:shop:#{shop_id}:info"
+    hit, data = @cache.fetch_json(key: key, ttl: CATALOG_TTL.shop_info, negative_ttl: CATALOG_TTL.negative) do
+      res = @api.shop_info(shop_id: shop_id)
+      res.ok? ? res.json : nil
+    end
+    tag(:shop_info, hit, shop_id, nil, "info")
+    data
+  end
+
+  def get_similar_products(handle:, shop_id:, domain:)
+    return [] if blank?(handle)
+    # Not strictly part of core catalog, but useful for the product page
+    key = Cache::Keyspace.catalog(shop_id: shop_id, domain: domain, type: :similar_products, id: handle)
+    hit, data = @cache.fetch_json(key: key, ttl: CATALOG_TTL.product, negative_ttl: CATALOG_TTL.negative) do
+      res = @api.similar_products_by_handle(handle: handle, shop_id: shop_id, domain: domain)
+      res.ok? ? res.json : nil
+    end
+    tag(:similar_products, hit, shop_id, domain, handle)
+    data || []
+  end
+
+  # -------------------- Internals --------------------
+  private
+
+  def blank?(v)
+    v.nil? || (v.respond_to?(:empty?) && v.empty?)
+  end
+
+  def tag(type, hit, shop_id, domain, id)
+    # Lightweight structured log for observability; safe for now
+    Rails.logger.info({
+      at: "catalog_repo",
+      type: type,
+      hit: hit,
+      shop_id: shop_id,
+      domain: domain,
+      id: id,
+      version: CatalogVersion.current
+    }.to_json)
+  rescue StandardError
+    # no-op
+  end
+end
+```
+
+---
+
+## (Optional) Thin-delegation patch to your helpers
+
+This keeps your public helper API intact while routing through the repository. Apply when you’re ready; behavior remains the same.
+
+```ruby
+# app/helpers/shop_helper.rb (ONLY the methods shown here)
+module ShopHelper
+  def catalog_repo
+    @catalog_repo ||= CatalogRepository.new
+  end
+
+  def get_product(handle, shop_id, app_domain)
+    catalog_repo.get_product(handle: handle, shop_id: shop_id, domain: app_domain)
+  end
+
+  def get_products(handles, shop_id, app_domain)
+    Array(handles).filter_map { |h| get_product(h, shop_id, app_domain) }
+  end
+
+  def get_collection(handle, shop_id, app_domain)
+    catalog_repo.get_collection(handle: handle, shop_id: shop_id, domain: app_domain)
+  end
+
+  def get_collections(handles, shop_id, app_domain)
+    Array(handles).filter_map { |h| get_collection(h, shop_id, app_domain) }
+  end
+
+  def get_menu(handle, shop_id, app_domain)
+    catalog_repo.get_menu(handle: handle, shop_id: shop_id, domain: app_domain)
+  end
+
+  def get_metadata(shop_id, app_domain)
+    catalog_repo.get_metadata(shop_id: shop_id, domain: app_domain)
+  end
+
+  def get_shop_id(shop_id)
+    catalog_repo.get_shop_info(shop_id: shop_id)
+  end
+end
+```
+
+---
+
+## README (snippet for PR description)
+
+```
+PR #2 – CatalogRepository
+
+- Adds CatalogRepository that wraps ApiClient + RedisStore + Keyspace with a unified TTL policy.
+- Methods: get_product, get_collection, get_menu, get_metadata, get_shop_info, get_similar_products.
+- Introduces config/initializers/catalog_repository.rb to define TTLs via env or defaults.
+- No controller changes. Optional helper delegation is provided to migrate call-sites gradually.
+
+Next (PR #3): ShopContext – extract domain→store resolution + base theme args from ApplicationController#initialize_shop.
+```

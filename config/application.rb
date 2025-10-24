@@ -9,10 +9,11 @@ require_relative "../performance/shopify/money_filter"
 require_relative "../performance/shopify/weight_filter"
 require_relative "../performance/shopify/tag_filter"
 require_relative "../performance/shopify/t_filter"
-require_relative "../performance/shopify/section_tag"
-require_relative "../performance/shopify/render_tag"
-require_relative "../performance/shopify/snippet_tag"
-require_relative "../performance/shopify/component_tag"
+
+require_relative "../app/liquid/tags/section_tag"
+require_relative "../app/liquid/tags/render_tag"
+require_relative "../app/liquid/tags/snippet_tag"
+
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -32,10 +33,11 @@ module Sellioly
     Liquid::Template.register_filter(ShopFilter)
     Liquid::Template.register_filter(TagFilter)
     Liquid::Template.register_filter(TFilter)
+
     Liquid::Template.register_tag('section', SectionTag)
-    Liquid::Template.register_tag('render', RenderTag)
-    Liquid::Template.register_tag('component', ComponentTag)
+    Liquid::Template.register_tag('render',  RenderTag)
     Liquid::Template.register_tag('snippet', SnippetTag)
+
 
     # Configuration for the application, engines, and railties goes here.
     #

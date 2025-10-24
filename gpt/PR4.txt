@@ -1,0 +1,278 @@
+This PR introduces a **ThemeStore** (safe file reads + per-file digests) and a **TemplateCompiler** (compiled Liquid cache) with a small **LiquidRenderer** helper that guards the global Liquid file system with a mutex and set/restore. This keeps behavior identical while dramatically reducing file IO and Liquid parsing on every request.
+
+> Key goals
+>
+> * No behavior change; your current JSON-driven theme + custom tags keep working.
+> * Avoid re-reading JSON and re-parsing Liquid per request.
+> * Avoid global Liquid state *as much as Liquid allows*. Ruby Liquid lacks a per-template file system, so we **guard** the global with a per-render set/restore under a mutex (thread-safe, narrow window).
+> * Prepare for PR #6 PageRenderer to fully orchestrate JSON+sections.
+
+> Requirements
+>
+> * Works with your existing custom Liquid tags/filters.
+> * Uses `Rails.cache` if present; otherwise falls back to an in-memory LRU to cache compiled templates.
+
+---
+
+## `app/lib/theme/theme_store.rb`
+
+```ruby
+# frozen_string_literal: true
+
+module Theme
+  # Responsible for safe reads of theme files and computing per-file digests.
+  # Does not mutate global Liquid state.
+  class ThemeStore
+    attr_reader :root
+
+    def initialize(root:)
+      @root = root.to_s
+    end
+
+    # ---- JSON templates/schemas ------------------------------------------------
+    def read_template_json(name)
+      read_json(File.join(@root, "templates", ensure_json(name)))
+    end
+
+    def read_layout_json(name)
+      read_json(File.join(@root, "layout", ensure_json(name)))
+    end
+
+    def read_schema_json(type)
+      read_json(File.join(@root, "schemas", ensure_json(type)))
+    end
+
+    # ---- Liquid sources --------------------------------------------------------
+    def read_liquid(rel_path)
+      # rel_path examples: "sections/header.liquid", "layout/theme.liquid", "snippets/card.liquid"
+      full = File.join(@root, rel_path)
+      return nil unless File.file?(full)
+      File.read(full)
+    end
+
+    def file_digest(rel_path)
+      full = File.join(@root, rel_path)
+      return nil unless File.exist?(full)
+      stat = File.stat(full)
+      "m#{stat.mtime.to_i}s#{stat.size}"
+    rescue StandardError
+      nil
+    end
+
+    def exists?(rel_path)
+      File.file?(File.join(@root, rel_path))
+    end
+
+    # Liquid-compatible LocalFileSystem for include/snippet/section tags
+    def file_system(prefix: "%s.liquid")
+      Liquid::LocalFileSystem.new(@root, prefix)
+    end
+
+    private
+
+    def read_json(path)
+      return nil unless File.file?(path)
+      JSON.parse(File.read(path))
+    rescue JSON::ParserError, Encoding::UndefinedConversionError
+      nil
+    end
+
+    def ensure_json(name)
+      n = name.to_s
+      n.end_with?(".json") ? n : (n + ".json")
+    end
+  end
+end
+```
+
+---
+
+## `app/lib/theme/template_cache.rb`
+
+```ruby
+# frozen_string_literal: true
+
+# Minimal in-memory LRU cache for compiled Liquid templates when Rails.cache is
+# unavailable. Thread-safe via a Mutex.
+module Theme
+  class TemplateCache
+    Entry = Struct.new(:key, :value)
+
+    def initialize(max: (ENV["LIQUID_CACHE_SIZE"] || 512).to_i)
+      @max   = [max, 32].max
+      @store = {}
+      @order = []
+      @lock  = Mutex.new
+    end
+
+    def fetch(key)
+      @lock.synchronize do
+        if @store.key?(key)
+          touch(key)
+          return @store[key]
+        end
+      end
+      val = yield
+      @lock.synchronize { write!(key, val) }
+      val
+    end
+
+    private
+
+    def touch(key)
+      @order.delete(key)
+      @order << key
+    end
+
+    def write!(key, val)
+      @store[key] = val
+      touch(key)
+      evict! if @order.size > @max
+    end
+
+    def evict!
+      k = @order.shift
+      @store.delete(k)
+    end
+  end
+end
+```
+
+---
+
+## `app/lib/theme/template_compiler.rb`
+
+```ruby
+# frozen_string_literal: true
+
+module Theme
+  # Compiles Liquid templates and caches the compiled AST keyed by theme + file digest.
+  class TemplateCompiler
+    def initialize(cache: default_cache)
+      @cache = cache
+    end
+
+    # rel_path e.g. "sections/hero.liquid", "layout/theme.liquid", "snippets/card.liquid"
+    def compile(theme_store:, rel_path:)
+      source = theme_store.read_liquid(rel_path)
+      return nil unless source
+      digest = theme_store.file_digest(rel_path) || "nodigest"
+      key = cache_key(theme_store.root, rel_path, digest)
+
+      if rails_cache?
+        Rails.cache.fetch(key) { Liquid::Template.parse(source) }
+      else
+        @cache.fetch(key) { Liquid::Template.parse(source) }
+      end
+    end
+
+    private
+
+    def cache_key(root, rel_path, digest)
+      ["liquid", root, rel_path, digest].join(":")
+    end
+
+    def rails_cache?
+      defined?(Rails) && Rails.respond_to?(:cache) && Rails.cache
+    end
+
+    def default_cache
+      TemplateCache.new
+    end
+  end
+end
+```
+
+---
+
+## `app/lib/theme/liquid_renderer.rb`
+
+```ruby
+# frozen_string_literal: true
+
+module Theme
+  # Renders templates with a per-request file system, guarding the global
+  # Liquid::Template.file_system by setting and restoring around the render
+  # call under a mutex. This is a pragmatic compromise given Liquid's API.
+  class LiquidRenderer
+    def initialize
+      @mutex = self.class.render_mutex
+    end
+
+    # Render a compiled template with assigns, using the given theme's file system.
+    def render(compiled_template, assigns:, theme_store:)
+      return "" unless compiled_template
+      fs = theme_store.file_system
+
+      @mutex.synchronize do
+        previous = Liquid::Template.file_system
+        begin
+          Liquid::Template.file_system = fs
+          compiled_template.render(assigns)
+        ensure
+          Liquid::Template.file_system = previous
+        end
+      end
+    end
+
+    def self.render_mutex
+      @render_mutex ||= Mutex.new
+    end
+  end
+end
+```
+
+---
+
+## Minimal integration into your current `render_page`
+
+This is a **drop-in adaptation** to benefit from caching now, without introducing the full PageRenderer yet. Replace only the marked lines.
+
+```ruby
+# app/controllers/application_controller.rb (inside render_page)
+
+# Before building content, create these once per request:
+compiler     = Theme::TemplateCompiler.new
+renderer     = Theme::LiquidRenderer.new
+store        = Theme::ThemeStore.new(root: @path)
+
+# ... when rendering each section ...
+rel = File.join('sections', "#{section_data['type']}.liquid")
+unless store.exists?(rel)
+  render plain: "could not found #{rel} file missing!", status: 400 and return
+end
+
+compiled = compiler.compile(theme_store: store, rel_path: rel)
+@section_html = renderer.render(compiled, assigns: @args, theme_store: store)
+@content_for_layout += @section_html
+
+# ... later, when rendering the layout ...
+layout_rel = File.join('layout', "#{layout}.liquid")
+compiled_layout = compiler.compile(theme_store: store, rel_path: layout_rel)
+html = renderer.render(compiled_layout, assigns: @args.merge('content_for_layout' => @content_for_layout), theme_store: store)
+render html: html.html_safe
+```
+
+> Notes
+>
+> * We keep your existing JSON hydration logic (presets, sections, blocks) intact.
+> * We do not mutate `Liquid::Template.file_system` globally outside the narrow render window.
+> * We cache compiled Liquid per theme file, invalidated automatically on file mtime/size change.
+> * If `Rails.cache` is configured, compiled templates survive process restarts (depending on adapter).
+
+---
+
+## README (snippet for PR description)
+
+```
+PR #4 – ThemeStore + TemplateCompiler + guarded Liquid renderer
+
+- Adds Theme::ThemeStore for safe file reads and per-file digests.
+- Adds Theme::TemplateCompiler to cache compiled Liquid templates (Rails.cache or in-memory LRU).
+- Adds Theme::LiquidRenderer which sets/restores Liquid::Template.file_system with a mutex during render (thread-safe window).
+- Minimal integration snippet to speed up current render_page with no behavior change.
+
+Next (PR #5/6):
+- ProductPresenter/SeoPresenter
+- PageRenderer to orchestrate JSON→sections→layout using these building blocks for all pages.
+```

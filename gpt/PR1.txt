@@ -1,0 +1,258 @@
+Below are **additive** files for PR #1. They do not replace your helpers; they introduce reusable plumbing to start migrating the product page flow later. Comments indicate where existing behavior is preserved.
+
+> ENV expected (with safe defaults):
+>
+> * `API_BASE_URL` (default: `https://api.sellioly.com`)
+> * `REDIS_URL` or `REDIS_CABLE_URL` (we prefer `REDIS_URL` if present)
+> * `HTTP_OPEN_TIMEOUT` (default: 2s), `HTTP_READ_TIMEOUT` (default: 3s), `HTTP_RETRIES` (default: 1)
+
+---
+
+## `app/lib/http/api_client.rb`
+
+```ruby
+# frozen_string_literal: true
+
+# Single boundary for all calls to api.sellioly.com
+# - Per-request timeouts and SSL verification (does NOT rely on global HTTP.default_options)
+# - Small, typed result object with status + parsed JSON
+# - Mirrors your current endpoints and form params
+module Http
+  class ApiClient
+    Result = Struct.new(:ok?, :status, :json, :error, keyword_init: true)
+
+    DEFAULT_OPEN_TIMEOUT = (ENV["HTTP_OPEN_TIMEOUT"] || 2).to_f # seconds
+    DEFAULT_READ_TIMEOUT = (ENV["HTTP_READ_TIMEOUT"] || 3).to_f # seconds
+    DEFAULT_RETRIES      = (ENV["HTTP_RETRIES"] || 1).to_i
+
+    def initialize(base_url: ENV.fetch("API_BASE_URL", "https://api.sellioly.com"))
+      @base_url = base_url.chomp("/")
+    end
+
+    # ---- Public API wrappers -------------------------------------------------
+    def product_by_handle(handle:, shop_id:, domain:)
+      post_json("/ruby/product/get-by-handle", handle: handle, shop_id: shop_id, app_domain: domain)
+    end
+
+    def collection_by_handle(handle:, shop_id:, domain:)
+      post_json("/ruby/collection/get-by-handle", handle: handle, shop_id: shop_id, app_domain: domain)
+    end
+
+    def menu_by_handle(handle:, shop_id:, domain:)
+      post_json("/ruby/menu/get-by-handle", handle: handle, shop_id: shop_id, app_domain: domain)
+    end
+
+    def shop_info(shop_id:)
+      post_json("/ruby/store/infos", shop_id: shop_id)
+    end
+
+    def metadata(shop_id:, domain:)
+      post_json("/ruby/metadata/store/list", shop_id: shop_id, app_domain: domain)
+    end
+
+    def similar_products_by_handle(handle:, shop_id:, domain:)
+      post_json("/ruby/product/get-similar-by-handle", handle: handle, user_id: shop_id, app_domain: domain)
+    end
+
+    # ---- Internals -----------------------------------------------------------
+    private
+
+    def post_json(path, **form)
+      tries = 0
+      begin
+        response = http.post(url_for(path), form: form)
+        if response.status.success?
+          return Result.new(ok?: true, status: response.status.to_i, json: safe_parse(response))
+        end
+        Result.new(ok?: false, status: response.status.to_i, error: response.body.to_s)
+      rescue StandardError => e
+        tries += 1
+        retry if tries <= DEFAULT_RETRIES
+        Result.new(ok?: false, status: 599, error: e.message)
+      end
+    end
+
+    def http
+      @http ||= HTTP.use(:auto_inflate)
+                   .timeout(connect: DEFAULT_OPEN_TIMEOUT, read: DEFAULT_READ_TIMEOUT)
+                   .headers("User-Agent" => "Sellioly-RubyShop/1 ApiClient")
+                   .persistent(@base_url)
+    end
+
+    def url_for(path)
+      path.start_with?("/") ? (@base_url + path) : ("#{@base_url}/#{path}")
+    end
+
+    def safe_parse(response)
+      response.parse
+    rescue StandardError
+      JSON.parse(response.body.to_s) rescue { "raw" => response.body.to_s }
+    end
+  end
+end
+```
+
+---
+
+## `app/lib/cache/keyspace.rb`
+
+```ruby
+# frozen_string_literal: true
+
+# Centralized key naming. Keeps compatibility with your current style but
+# adds an explicit version token for fast invalidation.
+module Cache
+  module Keyspace
+    module_function
+
+    # Example: v:12:shop:63:domain:foo.sellioly.com:product:my-handle
+    def catalog(shop_id:, domain:, type:, id:, version: CatalogVersion.current)
+      d = normalize_domain(domain)
+      "v:#{version}:shop:#{shop_id}:domain:#{d}:#{type}:#{id}"
+    end
+
+    def normalize_domain(domain)
+      domain.to_s.downcase
+    end
+  end
+end
+```
+
+---
+
+## `app/lib/cache/redis_store.rb`
+
+```ruby
+# frozen_string_literal: true
+
+require "redis"
+require "json"
+
+# Thin wrapper for JSON fetch/write with negative caching.
+# Uses the existing REDIS_CABLE_URL if REDIS_URL is absent to avoid breaking
+# current deployments.
+module Cache
+  class RedisStore
+    NULL = "NULL".freeze
+
+    def initialize(url: ENV["REDIS_URL"] || ENV["REDIS_CABLE_URL"])
+      @redis = ::Redis.new(url: url)
+    end
+
+    # Fetches JSON by key. On miss, yields to the block to compute value.
+    # - ttl:            seconds for positive items
+    # - negative_ttl:   seconds for misses (NULL sentinel)
+    # Returns [hit_status, parsed_json_or_nil]
+    def fetch_json(key:, ttl:, negative_ttl: 120)
+      raw = @redis.get(key)
+      if raw
+        return [:hit, nil] if raw == NULL
+        return [:hit, parse(raw)]
+      end
+
+      # Miss
+      value = yield if block_given?
+      if value.nil?
+        @redis.setex(key, negative_ttl, NULL)
+        return [:miss, nil]
+      else
+        payload = value.is_a?(String) ? value : value.to_json
+        @redis.setex(key, ttl, payload)
+        return [:miss, parse(payload)]
+      end
+    end
+
+    def write(key:, value:, ttl: nil)
+      payload = value.is_a?(String) ? value : value.to_json
+      ttl ? @redis.setex(key, ttl, payload) : @redis.set(key, payload)
+      true
+    end
+
+    def delete(key)
+      @redis.del(key)
+    end
+
+    private
+
+    def parse(str)
+      JSON.parse(str)
+    rescue JSON::ParserError
+      nil
+    end
+  end
+end
+```
+
+---
+
+## `config/initializers/catalog_version.rb`
+
+```ruby
+# frozen_string_literal: true
+
+# Minimal global version for catalog cache keys. Bump to invalidate quickly
+# without scanning Redis. In PR #7 we will add scoped bumps (per product/menu/collection).
+module CatalogVersion
+  KEY = "catalog_version".freeze
+
+  module_function
+
+  def redis
+    @redis ||= Redis.new(url: ENV["REDIS_URL"] || ENV["REDIS_CABLE_URL"]) # keep compat
+  end
+
+  def current
+    (redis.get(KEY) || "1").to_i
+  end
+
+  def bump!
+    redis.incr(KEY)
+  end
+end
+```
+
+> Note: For now this is a single global version. It is sufficient to start using versioned keys immediately. Later (PR #7) we can add scoped versions per type.
+
+---
+
+## `config/initializers/http.rb`
+
+```ruby
+# frozen_string_literal: true
+
+# Safe per-request timeouts are enforced in Http::ApiClient. This initializer
+# is intentionally conservative to avoid breaking existing global defaults.
+# If you want to enforce global timeouts, uncomment below — but keep ApiClient
+# responsible for SSL verification and timeouts regardless.
+
+# HTTP.default_options = HTTP.default_options.with(
+#   features: { auto_inflate: true },
+#   headers: { "User-Agent" => "Sellioly-RubyShop/1" }
+# )
+```
+
+---
+
+## Optional: `spec/` stubs (if you use RSpec)
+
+```ruby
+# spec/lib/cache/redis_store_spec.rb
+# spec/lib/http/api_client_spec.rb
+# (Left empty here; add simple hit/miss tests when you wire this up.)
+```
+
+---
+
+## README (snippet for PR description)
+
+```
+PR #1 – Core plumbing
+
+- Adds Http::ApiClient with per-request timeouts, retries, SSL verification.
+- Adds Cache::RedisStore and Cache::Keyspace for consistent keys and negative caching.
+- Adds CatalogVersion (global version integer) for instant invalidation.
+- No controller changes, no behavior changes. Existing helpers continue to work.
+- Env: API_BASE_URL (default https://api.sellioly.com), REDIS_URL or REDIS_CABLE_URL.
+
+Next (PR #2): CatalogRepository that wraps ApiClient + RedisStore with uniform TTLs and preserves current semantics from ShopHelper.
+```
