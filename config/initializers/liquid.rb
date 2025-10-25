@@ -1,5 +1,12 @@
 # frozen_string_literal: true
 
+require_relative "../performance/shopify/shop_filter"
+require_relative "../performance/shopify/json_filter"
+require_relative "../performance/shopify/money_filter"
+require_relative "../performance/shopify/weight_filter"
+require_relative "../performance/shopify/tag_filter"
+require_relative "../performance/shopify/t_filter"
+
 # Filters
 Liquid::Template.register_filter(JsonFilter)
 Liquid::Template.register_filter(MoneyFilter)
