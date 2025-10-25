@@ -3,12 +3,20 @@ require_relative "boot"
 require "rails/all"
 require 'http'
 
-# require_relative "../performance/shopify/shop_filter"
-# require_relative "../performance/shopify/json_filter"
-# require_relative "../performance/shopify/money_filter"
-# require_relative "../performance/shopify/weight_filter"
-# require_relative "../performance/shopify/tag_filter"
-# require_relative "../performance/shopify/t_filter"
+require_relative "../performance/shopify/shop_filter"
+require_relative "../performance/shopify/json_filter"
+require_relative "../performance/shopify/money_filter"
+require_relative "../performance/shopify/weight_filter"
+require_relative "../performance/shopify/tag_filter"
+require_relative "../performance/shopify/t_filter"
+
+require_relative "../app/liquid/tags/section_tag"
+require_relative "../app/liquid/tags/render_tag"
+require_relative "../app/liquid/tags/snippet_tag"
+
+require_relative "../app/liquid/tags/cache_tag"
+require_relative "../app/liquid/tags/paginate_tag"
+
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -22,19 +30,19 @@ module Sellioly
     HTTP.default_options = { ssl: { verify_mode: OpenSSL::SSL::VERIFY_NONE } }
 
 
-    # Liquid::Template.register_filter(JsonFilter)
-    # Liquid::Template.register_filter(MoneyFilter)
-    # Liquid::Template.register_filter(WeightFilter)
-    # Liquid::Template.register_filter(ShopFilter)
-    # Liquid::Template.register_filter(TagFilter)
-    # Liquid::Template.register_filter(TFilter)
+    Liquid::Template.register_filter(JsonFilter)
+    Liquid::Template.register_filter(MoneyFilter)
+    Liquid::Template.register_filter(WeightFilter)
+    Liquid::Template.register_filter(ShopFilter)
+    Liquid::Template.register_filter(TagFilter)
+    Liquid::Template.register_filter(TFilter)
 
-    # Liquid::Template.register_tag('section',  ::Liquid::Tags::SectionTag)
-    # Liquid::Template.register_tag('render',   ::Liquid::Tags::RenderTag)
-    # Liquid::Template.register_tag('snippet',  ::Liquid::Tags::SnippetTag)
+    Liquid::Template.register_tag('section', SectionTag)
+    Liquid::Template.register_tag('render',  RenderTag)
+    Liquid::Template.register_tag('snippet', SnippetTag)
 
-    # Liquid::Template.register_tag('cache',    ::Liquid::Tags::CacheTag)
-    # Liquid::Template.register_tag('paginate', ::Liquid::Tags::PaginateTag)
+    Liquid::Template.register_tag('cache',    CacheTag)
+    Liquid::Template.register_tag('paginate', PaginateTag)
 
 
     # Configuration for the application, engines, and railties goes here.
