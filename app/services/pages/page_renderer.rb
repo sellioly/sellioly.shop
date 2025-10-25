@@ -55,7 +55,7 @@ module Pages
 
         # Render the section via the compiled template
         compiled = compiler.compile(theme_store: store, rel_path: section_liquid)
-        content_for_layout << renderer.render(compiled, assigns: section_assigns, theme_store: store)
+        content_for_layout << renderer.render(compiled, assigns: section_assigns, theme_store: store, registers: registers)
       end
 
       # 3) Merge layout_data from layout JSON (optional)
@@ -72,7 +72,7 @@ module Pages
       assigns = assigns.merge('content_for_layout' => content_for_layout)
       compiled_layout = compiler.compile(theme_store: store, rel_path: layout_rel)
 
-      html = renderer.render(compiled_layout, assigns: assigns, theme_store: store)
+      html = renderer.render(compiled_layout, assigns: assigns, theme_store: store, registers: registers)
 
       # 5) Optional headers (weak ETag based on template + layout file digests)
       etag = weak_etag_for(store, template_name: template_name, layout_rel: layout_rel)

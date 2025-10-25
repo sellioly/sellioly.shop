@@ -10,15 +10,16 @@ module Theme
     end
 
     # Render a compiled template with assigns, using the given theme's file system.
-    def render(compiled_template, assigns:, theme_store:)
+    def render(compiled_template, assigns:, theme_store: nil, registers: {})
       return "" unless compiled_template
-      fs = theme_store.file_system
+      
+      fs = theme_store&.file_system || Liquid::Template.file_system
 
       @mutex.synchronize do
         previous = Liquid::Template.file_system
         begin
           Liquid::Template.file_system = fs
-          compiled_template.render(assigns)
+          compiled_template.render(assigns, registers: registers)
         ensure
           Liquid::Template.file_system = previous
         end
