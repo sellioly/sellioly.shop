@@ -1,0 +1,325 @@
+This PR adds two high‑impact Liquid block tags built for performance and theme UX:
+
+* `{% cache %}…{% endcache %}` — fragment caching with Redis (fallback to in‑memory), namespaced by shop and theme, optional `ttl:` and explicit `vary:` keys.
+* `{% paginate %}…{% endpaginate %}` — simple, deterministic pagination helper that exposes a `paginate` object with `items`, `current_page`, `page_size`, `pages`, `total`, `next_url`, `previous_url`.
+
+Both tags are **best‑practice only** and depend on the per‑request registers you already set up.
+
+> Prereqs: PR #4 (ThemeStore/Compiler/Renderer) is in place. Make sure controllers pass `shop_id`, `template_id`, `currency`, and (ideally) `request` with `params` and `current_url` into Liquid assigns.
+
+---
+
+## `app/liquid/support/fragment_cache_store.rb`
+
+```ruby
+# frozen_string_literal: true
+
+# Fragment cache store used by the {% cache %} tag.
+# - Tries Redis (REDIS_URL or REDIS_CABLE_URL) first
+# - Falls back to in-memory LRU for safety
+class FragmentCacheStore
+  def initialize
+    @redis = begin
+      require 'redis'
+      url = ENV['REDIS_URL'] || ENV['REDIS_CABLE_URL']
+      Redis.new(url: url) if url
+    rescue StandardError
+      nil
+    end
+    @mem = MemLRU.new
+  end
+
+  def fetch(key, ttl: nil)
+    if @redis
+      val = @redis.get(key)
+      return val unless val.nil?
+      val = yield
+      set(key, val, ttl: ttl)
+      val
+    else
+      @mem.fetch(key, ttl: ttl) { yield }
+    end
+  end
+
+  def set(key, val, ttl: nil)
+    if @redis
+      ttl.to_i > 0 ? @redis.setex(key, ttl.to_i, val) : @redis.set(key, val)
+    else
+      @mem.write(key, val, ttl: ttl)
+    end
+  end
+
+  # minimal in-memory LRU with TTL
+  class MemLRU
+    def initialize(max: (ENV['FRAGMENT_CACHE_SIZE'] || 256).to_i)
+      @max = [max, 64].max
+      @hash = {}
+      @order = []
+      @lock = Mutex.new
+    end
+    def fetch(key, ttl: nil)
+      @lock.synchronize do
+        if (e = @hash[key]) && !expired?(e)
+          touch(key)
+          return e[:val]
+        end
+      end
+      val = yield
+      write(key, val, ttl: ttl)
+      val
+    end
+    def write(key, val, ttl: nil)
+      @lock.synchronize do
+        @hash[key] = { val: val, exp: ttl ? (Time.now.to_i + ttl.to_i) : nil }
+        touch(key)
+        evict! if @order.size > @max
+      end
+    end
+    private
+    def touch(key)
+      @order.delete(key)
+      @order << key
+    end
+    def expired?(e)
+      e[:exp] && e[:exp] <= Time.now.to_i
+    end
+    def evict!
+      k = @order.shift
+      @hash.delete(k)
+    end
+  end
+end
+```
+
+---
+
+## `app/liquid/tags/cache_tag.rb`
+
+```ruby
+# frozen_string_literal: true
+require 'liquid'
+
+# Usage:
+# {% cache key: "header", vary: locale, ttl: 600 %}
+#   ... expensive markup ...
+# {% endcache %}
+#
+# Key parts:
+# - Namespaced by shop_id + theme digest (if available) to avoid cross-tenant bleed
+# - Vary list resolves values from the Liquid assigns (e.g., locale, currency)
+# - TTL optional; default 300s (env FRAGMENT_CACHE_TTL)
+class CacheTag < Liquid::Block
+  Syntax = /(\s*key:\s*(?<key>[^,]+))?(\s*,\s*vary:\s*(?<vary>[^,]+))?(\s*,\s*ttl:\s*(?<ttl>\d+))?/o
+
+  def initialize(tag_name, markup, options)
+    super
+    m = Syntax.match(markup.to_s)
+    @key_expr  = m && m[:key]
+    @vary_expr = m && m[:vary]
+    @ttl       = (m && m[:ttl] ? m[:ttl].to_i : (ENV['FRAGMENT_CACHE_TTL'] || 300).to_i)
+  end
+
+  def render(context)
+    registers = context.registers
+    assigns   = context.environments.first || {}
+
+    store   = (registers['fragment_cache'] ||= FragmentCacheStore.new)
+    theme   = registers['theme_store']
+    shop_id = assigns['shop_id']
+
+    key_str  = evaluate_expr(context, @key_expr) || 'fragment'
+    vary_vals = resolve_vary(context, @vary_expr)
+
+    theme_digest = theme&.file_digest('layout/theme.liquid') || 'no-theme'
+    ns_key  = ["fc:v1", "shop:#{shop_id}", "theme:#{theme_digest}", "key:#{key_str}", "vary:#{vary_vals.join('|')}"]
+    cache_key = ns_key.join(':')
+
+    store.fetch(cache_key, ttl: @ttl) do
+      super # render block
+    end
+  end
+
+  private
+
+  def evaluate_expr(context, expr)
+    return nil unless expr
+    Liquid::Expression.parse(expr).to_liquid(context)
+  rescue StandardError
+    nil
+  end
+
+  def resolve_vary(context, expr)
+    return [] unless expr
+    # split by spaces or pipe/comma
+    names = expr.to_s.split(/\s*[|,\s]\s*/).reject(&:empty?)
+    env = context.environments.first || {}
+    names.map { |n| dig_value(env, n) || n }
+  end
+
+  def dig_value(env, path)
+    # supports dotted paths like "request.locale" or "currency"
+    cur = env
+    path.to_s.split('.')
+      .reduce(cur) { |acc, k| acc.is_a?(Hash) ? acc[k] : nil }
+  end
+end
+```
+
+---
+
+## `app/liquid/tags/paginate_tag.rb`
+
+```ruby
+# frozen_string_literal: true
+require 'liquid'
+require 'uri'
+
+# Usage:
+# {% paginate items: collection.products, by: 24, param: 'page' %}
+#   {% for item in paginate.items %}
+#     ...
+#   {% endfor %}
+#   {% render 'pager', paginate: paginate %}
+# {% endpaginate %}
+#
+# - Reads current page from request params (assigns['request']['params'][param]) when present, otherwise 1.
+# - Exposes `paginate` drop with keys: items, current_page, page_size, pages, total, next_url, previous_url.
+# - Builds URLs using assigns['current_url'] if available; falls back to query string with param only.
+class PaginateTag < Liquid::Block
+  Syntax = /(\s*items:\s*(?<items>[^,]+))?(\s*,\s*by:\s*(?<by>\d+))?(\s*,\s*param:\s*(?<param>[^,]+))?/o
+
+  def initialize(tag_name, markup, options)
+    super
+    m = Syntax.match(markup.to_s)
+    @items_expr = m && m[:items]
+    @by        = (m && m[:by] ? m[:by].to_i : 24)
+    @param     = (m && m[:param] ? m[:param].strip.delete("'\"") : 'page')
+  end
+
+  def render(context)
+    assigns = context.environments.first || {}
+
+    items = evaluate_expr(context, @items_expr)
+    items = Array(items)
+
+    page = current_page_from(assigns, @param)
+    total = items.length
+
+    page_size = [@by, 1].max
+    pages = (total.to_f / page_size).ceil
+    page = [[page, 1].max, [pages, 1].max].min
+
+    offset = (page - 1) * page_size
+    slice = items.slice(offset, page_size) || []
+
+    base_url = assigns['current_url']
+
+    paginate_hash = {
+      'items' => slice,
+      'current_page' => page,
+      'page_size' => page_size,
+      'pages' => pages,
+      'total' => total,
+      'next_url' => (page < pages ? build_url(base_url, @param, page + 1) : nil),
+      'previous_url' => (page > 1 ? build_url(base_url, @param, page - 1) : nil)
+    }
+
+    context.stack do
+      context['paginate'] = paginate_hash
+      super
+    end
+  end
+
+  private
+
+  def evaluate_expr(context, expr)
+    return [] unless expr
+    Liquid::Expression.parse(expr).to_liquid(context)
+  rescue StandardError
+    []
+  end
+
+  def current_page_from(assigns, param)
+    req = assigns['request']
+    return 1 unless req.is_a?(Hash) && req['params'].is_a?(Hash)
+    p = req['params'][param] || req['params'][param.to_s]
+    (p.to_i <= 0) ? 1 : p.to_i
+  end
+
+  def build_url(base, param, value)
+    if base && !base.empty?
+      uri = URI.parse(base) rescue nil
+      if uri
+        q = URI.decode_www_form(String(uri.query)) rescue []
+        q.reject! { |k, _| k == param }
+        q << [param, value]
+        uri.query = URI.encode_www_form(q)
+        return uri.to_s
+      end
+    end
+    # Fallback: relative with only the page param
+    "?#{param}=#{value}"
+  end
+end
+```
+
+---
+
+## Initializer wiring
+
+Register the tags (alongside your other tags):
+
+```ruby
+Liquid::Template.register_tag('cache',    CacheTag)
+Liquid::Template.register_tag('paginate', PaginateTag)
+```
+
+> Optional: also add a per-request `fragment_cache` store so all fragments share the same instance during a render. In your render orchestration:
+
+```ruby
+registers = {
+  'theme_store'   => Theme::ThemeStore.new(root: @path),
+  'compiler'      => Theme::TemplateCompiler.new,
+  'renderer'      => Theme::LiquidRenderer.new,
+  'fragment_cache'=> FragmentCacheStore.new,
+  'preview'       => preview
+}
+```
+
+---
+
+## Controller guidance (params + current_url)
+
+To enable best URLs in `paginate`, pass minimal request context in assigns:
+
+```ruby
+@args['request'] = { 'params' => request.query_parameters }
+@args['current_url'] = request.original_url
+```
+
+---
+
+## Author docs (copy/paste)
+
+```liquid
+{%- cache key: 'main-nav', vary: locale | append: '|' | append: currency, ttl: 600 -%}
+  {%- render 'nav', menu: settings.main_menu -%}
+{%- endcache -%}
+
+{%- paginate items: collection.products, by: 24, param: 'page' -%}
+  <div class="grid">
+    {%- for product in paginate.items -%}
+      {%- render 'product-card', product: product -%}
+    {%- endfor -%}
+  </div>
+  {%- render 'pager', paginate: paginate -%}
+{%- endpaginate -%}
+```
+
+---
+
+## Notes & guarantees
+
+* `{% cache %}`: key collisions are prevented by namespacing with `shop_id` and theme digest; specify explicit `vary:` to keep keys deterministic.
+* `{% paginate %}`: simple and deterministic; does not mutate the original collection, and exposes a clear `paginate` object for templates to consume.
+* Both tags are thread-safe and avoid global state.

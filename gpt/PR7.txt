@@ -1,0 +1,166 @@
+This PR introduces a dedicated **PreviewController** that uses the same engine as live rendering, but with preview‑safe behavior: no indexing, no caching, controlled CORS, and inline developer hints. It wires into your existing `preview.sellioly.com` host constraint and replaces the old controller method.
+
+> Best‑practice only. No legacy compatibility is maintained.
+
+---
+
+## ENV (optional)
+
+* `PREVIEW_ALLOWED_ORIGINS` — comma‑separated list of allowed origins for CORS (e.g., `https://editor.sellioly.com,https://app.sellioly.com`). If empty, CORS is disabled.
+* `PREVIEW_TOKEN` — if set, preview requests must include `?token=<value>`.
+
+---
+
+## `app/controllers/preview_controller.rb`
+
+```ruby
+# frozen_string_literal: true
+
+class PreviewController < ApplicationController
+  skip_before_action :verify_authenticity_token
+  before_action :enforce_preview_token
+  before_action :set_cors_headers
+
+  # OPTIONS preflight for editor
+  def preflight
+    head :ok
+  end
+
+  # GET /preview/:shop_id/:template_id
+  # Optional params:
+  #   page   — template json filename (default: 'index.json')
+  #   product — product handle (when page == 'product.json')
+  def show
+    shop_id     = params[:shop_id].to_i
+    template_id = params[:template_id].to_i
+
+    ctx, failure = Shops::ShopContext.new.from_preview(shop_id: shop_id, template_id: template_id, cookies: cookies)
+    return not_found_for_preview(failure&.message || 'Shop not found') unless ctx
+
+    page = (params[:page].presence || 'index.json').to_s
+
+    base_args = ctx.base_args.merge('domain' => nil) # preview is host‑agnostic
+    extra_ctx = build_extra_ctx(page: page, base_args: base_args)
+
+    result = Pages::PageRenderer.new.render(
+      template_name: page,
+      base_args: base_args,
+      extra_ctx: extra_ctx,
+      theme_path: ctx.theme_path,
+      preview: true
+    )
+
+    apply_preview_headers(result)
+    render html: result.html.html_safe
+  rescue => e
+    Rails.logger.error({ at: 'preview', error: e.class.name, message: e.message, backtrace: e.backtrace&.first(5) }.to_json)
+    apply_preview_headers
+    render html: "<!-- preview error: #{ERB::Util.h(e.message)} -->".html_safe, status: :ok
+  end
+
+  private
+
+  def build_extra_ctx(page:, base_args:)
+    return {} unless page == 'product.json' && params[:product].present?
+
+    repo = CatalogRepository.new
+    raw  = repo.get_product(handle: params[:product], shop_id: base_args['shop_id'], domain: base_args['domain'])
+    return {} unless raw
+
+    normalized = ProductPresenter.call(product: raw, params: params, currency: base_args['currency'])
+    { 'product' => normalized }
+  end
+
+  def enforce_preview_token
+    token = ENV['PREVIEW_TOKEN'].to_s
+    return true if token.empty?
+    provided = params[:token].to_s
+    if ActiveSupport::SecurityUtils.secure_compare(provided, token)
+      true
+    else
+      apply_preview_headers
+      render plain: 'Unauthorized preview', status: :unauthorized and return
+    end
+  end
+
+  def allowed_origins
+    ENV.fetch('PREVIEW_ALLOWED_ORIGINS', '').split(',').map(&:strip).reject(&:empty?)
+  end
+
+  def set_cors_headers
+    origins = allowed_origins
+    return if origins.empty?
+
+    request_origin = request.headers['Origin']
+    if request_origin && origins.include?(request_origin)
+      headers['Access-Control-Allow-Origin']  = request_origin
+      headers['Vary']                         = 'Origin'
+      headers['Access-Control-Allow-Methods'] = 'GET, OPTIONS'
+      headers['Access-Control-Allow-Headers'] = 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+      headers['Access-Control-Allow-Credentials'] = 'true'
+    end
+  end
+
+  def apply_preview_headers(result = nil)
+    headers['Cache-Control'] = 'no-store'
+    headers['X-Robots-Tag']  = 'noindex, nofollow'
+    headers['ETag']          = result&.headers&.fetch('ETag', nil) if result
+  end
+
+  def not_found_for_preview(msg)
+    apply_preview_headers
+    render html: "<!-- preview not found: #{ERB::Util.h(msg)} -->".html_safe, status: :ok
+  end
+end
+```
+
+---
+
+## Routes
+
+Update the `preview.sellioly.com` host constraint to use the new controller. Keep the asset routes intact.
+
+```ruby
+# config/routes.rb
+constraints host: 'preview.sellioly.com' do
+  match '/preview/:shop_id/:template_id', to: 'preview#preflight', via: :options
+  get   '/preview/:shop_id/:template_id', to: 'preview#show'
+
+  # static assets (unchanged)
+  get '/files/1/:shop_id/:template_id/assets/:filename',      to: 'shop#file_assets',      constraints: { filename: /[^\/]+/ }
+  get '/files/1/:shop_id/:template_id/assets/fonts/:filename', to: 'shop#file_font_assets', constraints: { filename: /[^\/]+/ }
+end
+```
+
+> Example URLs:
+>
+> * `https://preview.sellioly.com/preview/63/28` → renders `index.json`
+> * `https://preview.sellioly.com/preview/63/28?page=product.json&product=my-handle` → renders product template
+> * If `PREVIEW_TOKEN=abc`, then append `?token=abc` to authorize
+
+---
+
+## Notes
+
+* **Same engine**: Preview uses `PageRenderer` + your new tags/filters. This guarantees parity with live.
+* **Preview‑only hints**: Missing sections/snippets render as HTML comments; live stays silent and logs.
+* **No indexing/caching**: `X-Robots-Tag: noindex, nofollow` + `Cache-Control: no-store`.
+* **CORS**: Optional, explicit allowlist via env. If unset, no CORS headers are emitted.
+* **Security**: Optional shared token; you can later swap to per‑shop tokens or auth middleware.
+
+---
+
+## Sanity checklist
+
+* `/preview/:shop_id/:template_id` works for any theme; switching `page` param swaps the template.
+* Product preview resolves variant selections (`?variant=` and option params) same as live.
+* Editor origin loads preview successfully when added to `PREVIEW_ALLOWED_ORIGINS`.
+* No content is indexed or cached.
+
+---
+
+## Next
+
+* PR #8: `{% cache %}` and `{% paginate %}` Liquid tags.
+* PR #9: DB indices + global error format fallback.
+* Optional: per‑shop preview tokens and audit logging (who previewed what, when).

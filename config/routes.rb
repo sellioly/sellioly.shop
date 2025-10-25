@@ -25,9 +25,25 @@ Rails.application.routes.draw do
   end
 
   constraints host: 'preview.sellioly.com' do
-    get '/preview/:shop_id/:template_id', action: 'preview', controller: 'shop'
-    get '/files/1/:shop_id/:template_id/assets/:filename', to: 'shop#file_assets', constraints: { filename: /[^\/]+/ }
-    get '/files/1/:shop_id/:template_id/assets/fonts/:filename', to: 'shop#file_font_assets', constraints: { filename: /[^\/]+/ }
+    # CORS preflight for the editor
+    match '/preview/:shop_id/:template_id',               to: 'preview#preflight', via: :options
+    match '/preview/:shop_id/:template_id/builder',       to: 'preview#preflight', via: :options
+    match '/preview/:shop_id/:template_id/screenshot',    to: 'preview#preflight', via: :options
+
+    # Generic and builder preview
+    get   '/preview/:shop_id/:template_id',               to: 'preview#show'
+    get   '/preview/:shop_id/:template_id/builder',       to: 'preview#builder'
+    get   '/preview/:shop_id/:template_id/screenshot',    to: 'preview#screenshot'
+
+    # Legacy editor aliases (no shop host constraint section)
+    # If you prefer to keep them under non-preview hosts, add them in that block as well.
+    get '/product-preview',   to: 'preview#legacy_builder_product'
+    get '/collection-preview',to: 'preview#legacy_builder_collection'
+    get '/cart-preview',      to: 'preview#legacy_builder_cart'
+    get '/checkout-preview',  to: 'preview#legacy_builder_checkout'
+
+    # Static assets remain as-is (served from ShopController)
+    get '/files/1/:shop_id/:template_id/assets/*filepath', to: 'assets#show'
   end
 
   constraints lambda { |req| req.host != 'shop.sellioly.com' &&  req.host != 'preview.sellioly.com' } do
@@ -50,8 +66,7 @@ Rails.application.routes.draw do
     get '/about-us', action: 'about_us', controller: 'shop'
     get '/404', action: 'not_found', controller: 'shop'
 
-    get '/files/1/:shop_id/:template_id/assets/:filename', to: 'shop#file_assets', constraints: { filename: /[^\/]+/ }
-    get '/files/1/:shop_id/:template_id/assets/fonts/:filename', to: 'shop#file_font_assets', constraints: { filename: /[^\/]+/ }
+    get '/files/1/:shop_id/:template_id/assets/*filepath', to: 'assets#show'
     # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
     # Defines the root path route ("/")

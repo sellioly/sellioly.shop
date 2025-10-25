@@ -14,6 +14,9 @@ require_relative "../app/liquid/tags/section_tag"
 require_relative "../app/liquid/tags/render_tag"
 require_relative "../app/liquid/tags/snippet_tag"
 
+require_relative "../app/liquid/tags/cache_tag"
+require_relative "../app/liquid/tags/paginate_tag"
+
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -37,6 +40,9 @@ module Sellioly
     Liquid::Template.register_tag('section', SectionTag)
     Liquid::Template.register_tag('render',  RenderTag)
     Liquid::Template.register_tag('snippet', SnippetTag)
+
+    Liquid::Template.register_tag('cache',    CacheTag)
+    Liquid::Template.register_tag('paginate', PaginateTag)
 
 
     # Configuration for the application, engines, and railties goes here.

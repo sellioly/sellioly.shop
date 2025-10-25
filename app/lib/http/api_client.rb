@@ -25,6 +25,11 @@ module Http
       post_json("/ruby/collection/get-by-handle", handle: handle, shop_id: shop_id, app_domain: domain)
     end
 
+    def products_by_collection(handle:, shop_id:, domain:, filters: {})
+      payload = { handle: handle, user_id: shop_id, app_domain: domain }.merge(filters || {})
+      post_json("product/get-by-collection", payload)
+    end
+
     def menu_by_handle(handle:, shop_id:, domain:)
       post_json("/ruby/menu/get-by-handle", handle: handle, shop_id: shop_id, app_domain: domain)
     end

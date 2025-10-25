@@ -79,6 +79,27 @@ class CatalogRepository
     data || []
   end
 
+  def get_collection_products(handle:, shop_id:, domain:, filters: {})
+    return [] if blank?(handle)
+
+    normalized = normalize_collection_filters(filters)
+    digest     = Digest::SHA256.hexdigest(normalized.to_json)[0, 12]
+    key        = Cache::Keyspace.catalog(
+      shop_id: shop_id,
+      domain:  domain,
+      type:    :collection_products,
+      id:      "#{handle}:#{digest}"
+    )
+
+    hit, data = @cache.fetch_json(key: key, ttl: CATALOG_TTL.collection, negative_ttl: CATALOG_TTL.negative) do
+      res = @api.products_by_collection(handle: handle, shop_id: shop_id, domain: domain, filters: normalized)
+      res.ok? ? res.json : nil
+    end
+
+    tag(:collection_products, hit, shop_id, domain, handle)
+    data || []
+  end
+
   # -------------------- Internals --------------------
   private
 
@@ -99,5 +120,53 @@ class CatalogRepository
     }.to_json)
   rescue StandardError
     # no-op
+  end
+
+  # Keep lightweight normalization; all prices in integer cents, never floats.
+  def normalize_collection_filters(filters)
+    f = (filters || {}).to_h.transform_keys(&:to_s)
+
+    out = {}
+    out["page"] = to_pos_int(f["page"])
+    out["by"]   = to_pos_int(f["by"])
+
+    # search & sort (whitelist sort)
+    out["q"]    = to_str_or_nil(f["q"])
+    out["sort"] = %w[price-asc price-desc newest best title-asc title-desc].include?(f["sort"]) ? f["sort"] : nil
+
+    # price in cents
+    out["price_min"] = to_cents_or_nil(f["price_min"])
+    out["price_max"] = to_cents_or_nil(f["price_max"])
+
+    # availability
+    out["availability"] = %w[in-stock out-of-stock any].include?(f["availability"]) ? f["availability"] : nil
+
+    # repeatables
+    vendors = Array(f["vendor"] || f["vendors"]).map { |v| to_str_or_nil(v) }.compact
+    tags    = Array(f["tag"]    || f["tags"]).map    { |t| to_str_or_nil(t) }.compact
+    out["vendor"] = vendors if vendors.any?
+    out["tag"]    = tags    if tags.any?
+
+    # options (opt.Color=Blue)
+    f.each { |k, v| out[k] = to_str_or_nil(v) if k.start_with?("opt.") }
+
+    out.compact
+  end
+
+  def to_pos_int(v)
+    i = v.to_i
+    i > 0 ? i : nil
+  end
+
+  def to_cents_or_nil(v)
+    return nil if v.nil? || v == ""
+    (BigDecimal(v.to_s) * 100).to_i
+  rescue ArgumentError
+    nil
+  end
+
+  def to_str_or_nil(v)
+    s = v.to_s.strip
+    s.empty? ? nil : s
   end
 end
