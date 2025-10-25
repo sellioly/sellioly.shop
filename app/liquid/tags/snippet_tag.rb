@@ -3,27 +3,30 @@ require 'liquid'
 require_relative '../support/sellioly_liquid_tag_support'
 
 # Alias behavior of render for author familiarity
-class SnippetTag < Liquid::Tag
-  include SelliolyLiquidTagSupport
 
-  def initialize(tag_name, markup, options)
-    super
-    @name = extract_name(markup)
-    @attributes = parse_attributes(markup)
-  end
+module Tags
+  class SnippetTag < Liquid::Tag
+    include SelliolyLiquidTagSupport
 
-  def render(context)
-    env = env_from(context)
-    new_ctx = context.environments.first.dup
-    new_ctx['params'] = build_params(context, @attributes)
+    def initialize(tag_name, markup, options)
+      super
+      @name = extract_name(markup)
+      @attributes = parse_attributes(markup)
+    end
 
-    rel = File.join('snippets', "#{@name}.liquid")
+    def render(context)
+      env = env_from(context)
+      new_ctx = context.environments.first.dup
+      new_ctx['params'] = build_params(context, @attributes)
 
-    guard_include_depth!(context, env)
-    begin
-      render_liquid_file(context, rel, assigns_extra: new_ctx)
-    ensure
-      unguard_include_depth(context, env)
+      rel = File.join('snippets', "#{@name}.liquid")
+
+      guard_include_depth!(context, env)
+      begin
+        render_liquid_file(context, rel, assigns_extra: new_ctx)
+      ensure
+        unguard_include_depth(context, env)
+      end
     end
   end
 end
