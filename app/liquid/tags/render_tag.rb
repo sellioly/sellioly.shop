@@ -7,7 +7,7 @@ require_relative '../support/sellioly_liquid_tag_support'
 
 module Tags
   class RenderTag < Liquid::Tag
-    include SelliolyLiquidTagSupport
+    include Support::SelliolyLiquidTagSupport
 
     def initialize(tag_name, markup, options)
       super
