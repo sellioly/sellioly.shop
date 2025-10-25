@@ -37,12 +37,12 @@ module Sellioly
     Liquid::Template.register_filter(TagFilter)
     Liquid::Template.register_filter(TFilter)
 
-    Liquid::Template.register_tag('section', SectionTag)
-    Liquid::Template.register_tag('render',  RenderTag)
-    Liquid::Template.register_tag('snippet', SnippetTag)
+    Liquid::Template.register_tag('section', Tags::SectionTag)
+    Liquid::Template.register_tag('render',  Tags::RenderTag)
+    Liquid::Template.register_tag('snippet', Tags::SnippetTag)
 
-    Liquid::Template.register_tag('cache',    CacheTag)
-    Liquid::Template.register_tag('paginate', PaginateTag)
+    Liquid::Template.register_tag('cache',    Tags::CacheTag)
+    Liquid::Template.register_tag('paginate', Tags::PaginateTag)
 
 
     # Configuration for the application, engines, and railties goes here.
