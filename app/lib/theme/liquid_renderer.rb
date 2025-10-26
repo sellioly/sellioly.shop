@@ -22,7 +22,7 @@ module Theme
 
           # Check if registers were passed; if so, use them
           if registers && !registers.empty?
-            compiled_template.render(assigns, registers: registers)
+            compiled_template.render(assigns)
           else
             compiled_template.render(assigns)
           end
