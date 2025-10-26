@@ -4,6 +4,11 @@
 class AssetsController < ActionController::Base
   # We don’t need initialize_shop here. Assets are static by path.
 
+  # Allow cross-origin GETs for static files (JS/CSS/fonts/images)
+  skip_forgery_protection only: :show  # <-- this removes the 422
+
+  before_action :set_asset_cors_headers
+
   # GET /files/1/:shop_id/:template_id/assets/*filepath
   def show
     shop_id     = params[:shop_id].to_s
@@ -94,5 +99,12 @@ class AssetsController < ActionController::Base
     # fall back
     else Rack::Mime.mime_type(ext, "application/octet-stream")
     end
+  end
+
+  def set_asset_cors_headers
+    # Allow embedding of JS/CSS/fonts from any origin (adjust if you want to restrict)
+    headers["Access-Control-Allow-Origin"] = "*"
+    headers["Vary"] = "Origin"
+    # If you need credentials/cookies for assets (usually not), set ACA-Credentials too.
   end
 end
