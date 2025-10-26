@@ -6,7 +6,7 @@ module Theme
   # call under a mutex. This is a pragmatic compromise given Liquid's API.
   class LiquidRenderer
     def initialize
-      @mutex = self.class.render_mutex
+      @mutex = Monitor.new
     end
 
     # Render a compiled template with assigns, using the given theme's file system.
