@@ -90,6 +90,10 @@ class AssetsController < ActionController::Base
     when ".gif"  then "image/gif"
     when ".webp" then "image/webp"
     when ".avif" then "image/avif"
+
+    # .map files
+    when ".map"  then "application/json"
+
     # fonts
     when ".woff" then "font/woff"
     when ".woff2" then "font/woff2"

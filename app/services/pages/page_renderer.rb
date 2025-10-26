@@ -125,27 +125,67 @@ module Pages
       shop_id = base_assigns['shop_id']
       domain  = base_assigns['domain'] || base_assigns['app_domain']
 
-      hydrated = data_settings.dup
+      # Make sure both are hashes
+      hydrated = (data_settings || {}).dup
+
       schema_settings.each do |key, cfg|
-        value = hydrated[key]
+        next unless cfg.is_a?(Hash)
+
+        # Pull value or assign default if nil or missing
+        value = hydrated.key?(key) ? hydrated[key] : cfg['default']
         value = cfg['default'] if value.nil?
+
+        # Resolve pickers
         case cfg['element']
         when 'menu'
-          item = @catalog.get_menu(handle: value, shop_id: shop_id, domain: domain)
-          hydrated[key] = item if item
+          if value.present?
+            if (menu = @catalog.get_menu(handle: value, shop_id: shop_id, domain: domain))
+              hydrated[key] = menu
+            else
+              hydrated[key] = cfg['default']
+            end
+          else
+            hydrated[key] = cfg['default']
+          end
+
         when 'product-picker'
-          item = @catalog.get_product(handle: value, shop_id: shop_id, domain: domain)
-          hydrated[key] = item if item
+          if value.present?
+            if (prod = @catalog.get_product(handle: value, shop_id: shop_id, domain: domain))
+              hydrated[key] = prod
+            else
+              hydrated[key] = cfg['default']
+            end
+          else
+            hydrated[key] = cfg['default']
+          end
+
         when 'products-picker'
-          handles = Array(value)
-          hydrated[key] = handles.filter_map { |h| @catalog.get_product(handle: h, shop_id: shop_id, domain: domain) }
+          handles = Array(value).compact
+          if handles.any?
+            hydrated[key] = handles.filter_map do |h|
+              @catalog.get_product(handle: h, shop_id: shop_id, domain: domain)
+            end
+          else
+            hydrated[key] = Array(cfg['default']).compact
+          end
+
         when 'collection-picker'
-          item = @catalog.get_collection(handle: value, shop_id: shop_id, domain: domain)
-          hydrated[key] = item if item
+          if value.present?
+            if (coll = @catalog.get_collection(handle: value, shop_id: shop_id, domain: domain))
+              hydrated[key] = coll
+            else
+              hydrated[key] = cfg['default']
+            end
+          else
+            hydrated[key] = cfg['default']
+          end
+
         else
-          # primitive: keep as-is
+          # Default primitive handling
+          hydrated[key] = value.nil? ? cfg['default'] : value
         end
       end
+
       hydrated
     end
 
