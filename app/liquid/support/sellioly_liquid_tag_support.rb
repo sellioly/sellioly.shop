@@ -71,7 +71,7 @@ module Support
       assigns = context.environments.first.dup
       assigns.merge!(assigns_extra) if assigns_extra
 
-      renderer.safe_render(compiled, assigns: assigns, theme_store: store).to_s
+      renderer.safe_render(compiled, assigns: assigns, theme_store: store, registers: context.registers).to_s
     end
 
     def resolve_first_existing(env, candidates)
