@@ -8,11 +8,14 @@ class AssetsController < ActionController::Base
   def show
     shop_id     = params[:shop_id].to_s
     template_id = params[:template_id].to_s
-    filepath    = params[:filepath].to_s # captures subfolders like fonts/…
+    
+    filepath = params[:filepath].to_s
+    if params[:format].present? && !filepath.end_with?(".#{params[:format]}")
+      filepath = "#{filepath}.#{params[:format]}"
+    end
 
     # 1) resolve theme root
     theme_root = Rails.root.join("storage", shop_id, template_id)
-
     return head :not_found unless File.directory?(theme_root)
 
     # 2) sanitize and resolve path (no traversal)

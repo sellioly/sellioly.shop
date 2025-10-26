@@ -43,7 +43,7 @@ Rails.application.routes.draw do
     get '/checkout-preview',  to: 'preview#legacy_builder_checkout'
 
     # Static assets remain as-is (served from ShopController)
-    get '/files/1/:shop_id/:template_id/assets/*filepath', to: 'assets#show'
+    get '/files/1/:shop_id/:template_id/assets/*filepath', to: 'assets#show', format: false
   end
 
   constraints lambda { |req| req.host != 'shop.sellioly.com' &&  req.host != 'preview.sellioly.com' } do
@@ -66,7 +66,7 @@ Rails.application.routes.draw do
     get '/about-us', action: 'about_us', controller: 'shop'
     get '/404', action: 'not_found', controller: 'shop'
 
-    get '/files/1/:shop_id/:template_id/assets/*filepath', to: 'assets#show'
+    get '/files/1/:shop_id/:template_id/assets/*filepath', to: 'assets#show', format: false
     # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
     # Defines the root path route ("/")
