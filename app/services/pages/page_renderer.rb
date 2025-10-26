@@ -22,8 +22,8 @@ module Pages
       assigns   = (base_args || {}).merge(extra_ctx || {})
       registers = {
         'theme_store' => store,
-        # 'compiler'    => compiler,
-        # 'renderer'    => renderer,
+        'compiler'    => compiler,
+        'renderer'    => renderer,
         'preview'     => !!preview,
         'include_depth' => 0,
       }

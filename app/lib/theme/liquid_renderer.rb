@@ -19,7 +19,14 @@ module Theme
         previous = Liquid::Template.file_system
         begin
           Liquid::Template.file_system = fs
-          compiled_template.render(assigns, registers: registers)
+
+          # Check if registers were passed; if so, use them
+          if registers && !registers.empty?
+            compiled_template.render(assigns, registers: registers)
+          else
+            compiled_template.render(assigns)
+          end
+
         ensure
           Liquid::Template.file_system = previous
         end
