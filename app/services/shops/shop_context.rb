@@ -137,24 +137,82 @@ module Shops
     def read_and_hydrate_presets(theme_path, shop_id:, domain:)
       data_path   = File.join(theme_path, 'config', 'settings_data.json')
       schema_path = File.join(theme_path, 'config', 'settings_schema.json')
-      return nil unless File.exist?(data_path) && File.exist?(schema_path)
 
-      begin
-        settings_data   = JSON.parse(File.read(data_path))
-        settings_schema = JSON.parse(File.read(schema_path))
-      rescue JSON::ParserError, Encoding::UndefinedConversionError
-        return nil
-      end
+      return nil unless File.exist?(data_path)
 
-      current = settings_data.dig('presets', settings_data['current'])
-      return nil unless current.is_a?(Hash)
+      settings_data = safe_parse_json(File.read(data_path))
+      # settings_schema is optional & shape-agnostic (Hash or Array or nil)
+      settings_schema = File.exist?(schema_path) ? safe_parse_json(File.read(schema_path)) : nil
+
+      return nil unless settings_data.is_a?(Hash)
+
+      current_key = settings_data['current']
+      presets_hash = settings_data.dig('presets', current_key)
+      return nil unless presets_hash.is_a?(Hash)
 
       presets = {}
-      current.each do |section_id, section_data|
-        schema_data = settings_schema[section_id]
-        presets[section_id] = section_data.dup
-        next unless schema_data
-        presets[section_id]['settings'] = hydrate_section_settings(schema_data['settings'], section_data['settings'], shop_id, domain)
+
+      presets_hash.each do |section_id, section_data|
+        # Ensure section_data is a Hash
+        next unless section_data.is_a?(Hash)
+
+        # Figure out the section type (required to read per-file schema)
+        section_type = section_data['type'].to_s
+        section_schema =
+          begin
+            # Prefer per-section schema file: /schemas/<type>.json
+            section_schema_path = File.join(theme_path, 'schemas', "#{section_type}.json")
+            if File.file?(section_schema_path)
+              safe_parse_json(File.read(section_schema_path)) || {}
+            # Fallback: if settings_schema is a Hash keyed by section_id, use it
+            elsif settings_schema.is_a?(Hash) && settings_schema.key?(section_id)
+              settings_schema[section_id] || {}
+            else
+              {}
+            end
+          rescue StandardError
+            {}
+          end
+
+        # Hydrate settings using the resolved schema
+        hydrated = section_data.dup
+        hydrated_settings = hydrate_section_settings(
+          section_schema['settings'].is_a?(Hash) ? section_schema['settings'] : {},
+          section_data['settings'].is_a?(Hash)   ? section_data['settings']   : {},
+          shop_id, domain
+        )
+        hydrated['settings'] = hydrated_settings
+
+        # Optionally hydrate blocks if schema defines block settings
+        if section_data['blocks'].is_a?(Hash) && section_data['block_order'].is_a?(Array)
+          blocks_out = []
+          section_data['block_order'].each do |bid|
+            bdata = section_data['blocks'][bid]
+            next unless bdata.is_a?(Hash)
+            btype = bdata['type'].to_s
+
+            block_schema =
+              if section_schema['blocks'].is_a?(Hash)
+                section_schema['blocks'][btype]
+              else
+                nil
+              end
+
+            if block_schema.is_a?(Hash)
+              bsettings = hydrate_section_settings(
+                block_schema['settings'].is_a?(Hash) ? block_schema['settings'] : {},
+                bdata['settings'].is_a?(Hash)        ? bdata['settings']        : {},
+                shop_id, domain
+              )
+              blocks_out << bdata.merge('settings' => bsettings)
+            else
+              blocks_out << bdata
+            end
+          end
+          hydrated['blocks'] = blocks_out
+        end
+
+        presets[section_id] = hydrated
       end
 
       presets
@@ -164,33 +222,52 @@ module Shops
       return {} unless schema_settings.is_a?(Hash) && data_settings.is_a?(Hash)
 
       hydrated = data_settings.dup
-      hydrated.each do |key, value|
-        next unless schema_settings[key]
-        value = schema_settings[key]['default'] if value.nil?
 
-        case schema_settings[key]['element']
+      schema_settings.each do |key, cfg|
+        next unless cfg.is_a?(Hash)
+
+        value = hydrated.key?(key) ? hydrated[key] : cfg['default']
+
+        case cfg['element']
         when 'menu'
-          if (menu = @catalog.get_menu(handle: value, shop_id: shop_id, domain: domain))
+          if value && (menu = @catalog.get_menu(handle: value, shop_id: shop_id, domain: domain))
             hydrated[key] = menu
+          else
+            hydrated[key] ||= cfg['default']
           end
         when 'product-picker'
-          if (prod = @catalog.get_product(handle: value, shop_id: shop_id, domain: domain))
+          if value && (prod = @catalog.get_product(handle: value, shop_id: shop_id, domain: domain))
             hydrated[key] = prod
+          else
+            hydrated[key] ||= cfg['default']
           end
         when 'products-picker'
-          handles = Array(value)
-          products = handles.filter_map { |h| @catalog.get_product(handle: h, shop_id: shop_id, domain: domain) }
-          hydrated[key] = products
+          handles = Array(value).compact
+          if handles.any?
+            hydrated[key] = handles.filter_map { |h| @catalog.get_product(handle: h, shop_id: shop_id, domain: domain) }
+          else
+            hydrated[key] ||= []
+          end
         when 'collection-picker'
-          if (coll = @catalog.get_collection(handle: value, shop_id: shop_id, domain: domain))
+          if value && (coll = @catalog.get_collection(handle: value, shop_id: shop_id, domain: domain))
             hydrated[key] = coll
+          else
+            hydrated[key] ||= cfg['default']
           end
         else
-          # passthrough for primitive values
+          # Primitive or unknown element: keep provided value or default
+          hydrated[key] = value
         end
       end
 
       hydrated
+    end
+
+    # Add this tiny helper near the bottom of the class (private):
+    def safe_parse_json(str)
+      JSON.parse(str)
+    rescue JSON::ParserError, Encoding::UndefinedConversionError
+      nil
     end
 
     def build_pixels(metadata)
