@@ -34,7 +34,7 @@ module Theme
     end
 
     def safe_render(compiled_template, assigns:, theme_store: nil, registers: {})
-      render(compiled_template, assigns: assigns, theme_store: theme_store, registers: registers
+      render(compiled_template, assigns: assigns, theme_store: theme_store, registers: registers)
     rescue Liquid::InternalError => e
       cause = e.cause || e
       Rails.logger.error({
