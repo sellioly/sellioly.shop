@@ -221,42 +221,64 @@ module Shops
     def hydrate_section_settings(schema_settings, data_settings, shop_id, domain)
       return {} unless schema_settings.is_a?(Hash) && data_settings.is_a?(Hash)
 
-      hydrated = data_settings.dup
+      # Make sure both are hashes
+      hydrated = (data_settings || {}).dup
 
       schema_settings.each do |key, cfg|
         next unless cfg.is_a?(Hash)
 
+        # Pull value or assign default if nil or missing
         value = hydrated.key?(key) ? hydrated[key] : cfg['default']
+        value = cfg['default'] if value.nil?
 
+        # Resolve pickers
         case cfg['element']
         when 'menu'
-          if value && (menu = @catalog.get_menu(handle: value, shop_id: shop_id, domain: domain))
-            hydrated[key] = menu
+          if value.present?
+            if (menu = @catalog.get_menu(handle: value, shop_id: shop_id, domain: domain))
+              hydrated[key] = menu
+            else
+              hydrated[key] = cfg['default']
+            end
           else
-            hydrated[key] ||= cfg['default']
+            hydrated[key] = cfg['default']
           end
+
         when 'product-picker'
-          if value && (prod = @catalog.get_product(handle: value, shop_id: shop_id, domain: domain))
-            hydrated[key] = prod
+          if value.present?
+            if (prod = @catalog.get_product(handle: value, shop_id: shop_id, domain: domain))
+              hydrated[key] = prod
+            else
+              hydrated[key] = cfg['default']
+            end
           else
-            hydrated[key] ||= cfg['default']
+            hydrated[key] = cfg['default']
           end
+
         when 'products-picker'
           handles = Array(value).compact
           if handles.any?
-            hydrated[key] = handles.filter_map { |h| @catalog.get_product(handle: h, shop_id: shop_id, domain: domain) }
+            hydrated[key] = handles.filter_map do |h|
+              @catalog.get_product(handle: h, shop_id: shop_id, domain: domain)
+            end
           else
-            hydrated[key] ||= []
+            hydrated[key] = Array(cfg['default']).compact
           end
+
         when 'collection-picker'
-          if value && (coll = @catalog.get_collection(handle: value, shop_id: shop_id, domain: domain))
-            hydrated[key] = coll
+          if value.present?
+            if (coll = @catalog.get_collection(handle: value, shop_id: shop_id, domain: domain))
+              hydrated[key] = coll
+            else
+              hydrated[key] = cfg['default']
+            end
           else
-            hydrated[key] ||= cfg['default']
+            hydrated[key] = cfg['default']
           end
+
         else
-          # Primitive or unknown element: keep provided value or default
-          hydrated[key] = value
+          # Default primitive handling
+          hydrated[key] = value.nil? ? cfg['default'] : value
         end
       end
 
