@@ -25,12 +25,12 @@ module Support
     end
 
     def env_from(context)
+      regs = context.registers || {}
       {
-        store:     context.registers['theme_store'],
-        compiler:  context.registers['compiler'],
-        renderer:  context.registers['renderer'],
-        preview:   !!context.registers['preview'],
-        depth_key: 'include_depth'
+        theme_store: regs['theme_store'],
+        preview:     !!regs['preview'],
+        depth_key:   'include_depth',
+        fs_root:     (Liquid::Template.file_system.respond_to?(:root) ? Liquid::Template.file_system.root.to_s : "")
       }
     end
 
@@ -61,17 +61,29 @@ module Support
 
     def render_liquid_file(context, rel_path, assigns_extra: {})
       env = env_from(context)
-      store, compiler, renderer = env.values_at(:store, :compiler, :renderer)
-      return render_missing(env, rel_path, message: 'Theme env missing') unless store && compiler && renderer
-      return render_missing(env, rel_path, message: 'Missing theme file') unless store.exists?(rel_path)
 
+      store = env[:theme_store]
+      unless store
+        # graceful fallback to filesystem root so site still renders
+        return render_missing(env, rel_path, message: 'Theme env missing')
+      end
+
+      unless theme_exists?(env, rel_path)
+        return render_missing(env, rel_path, message: 'Missing theme file')
+      end
+
+      # Read + compile
+      compiler = Theme::TemplateCompiler.new
       compiled = compiler.compile(theme_store: store, rel_path: rel_path)
       return render_missing(env, rel_path, message: 'Compile failed') unless compiled
 
-      assigns = context.environments.first.dup
-      assigns.merge!(assigns_extra) if assigns_extra
+      # Merge assigns without mutating outer env
+      base    = (context.environments.first || {}).dup
+      assigns = assigns_extra ? base.merge(assigns_extra) : base
 
-      renderer.render(compiled, assigns: assigns, theme_store: store).to_s
+      # Render with the SAME registers so nested tags keep the env
+      renderer = Theme::LiquidRenderer.new
+      renderer.render(compiled, assigns: assigns, theme_store: store, registers: context.registers).to_s
     end
 
     def resolve_first_existing(env, candidates)
