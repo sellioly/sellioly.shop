@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'liquid'
+require_relative '../support/sellioly_liquid_tag_support'
 
 # Best-practice: render looks in snippets/ by default.
 

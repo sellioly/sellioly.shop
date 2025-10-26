@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 require 'liquid'
+require_relative '../support/sellioly_liquid_tag_support'
 
 # Alias behavior of render for author familiarity
 
 module Tags
   class SnippetTag < Liquid::Tag
-    include Support::SelliolyLiquidTagSupport
+    include SelliolyLiquidTagSupport
 
     def initialize(tag_name, markup, options)
       super
