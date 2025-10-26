@@ -22,7 +22,7 @@ module Theme
 
           # Check if registers were passed; if so, use them
           if registers && !registers.empty?
-            compiled_template.render(assigns)
+            compiled_template.render(assigns, registers: registers)
           else
             compiled_template.render(assigns)
           end
@@ -31,6 +31,22 @@ module Theme
           Liquid::Template.file_system = previous
         end
       end
+    end
+
+    def safe_render(compiled_template, assigns:, theme_store: nil, registers: {})
+      render(compiled_template, assigns: assigns, theme_store: theme_store, registers: registers
+    rescue Liquid::InternalError => e
+      cause = e.cause || e
+      Rails.logger.error({
+        at:   "liquid_render",
+        err:  cause.class.name,
+        msg:  cause.message,
+        bt:   Array(cause.backtrace).take(10)
+      }.to_json)
+      raise
+    rescue => e
+      Rails.logger.error({ at: "liquid_render", err: e.class.name, msg: e.message, bt: Array(e.backtrace).take(10) }.to_json)
+      raise
     end
 
     def self.render_mutex
