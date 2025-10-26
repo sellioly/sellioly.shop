@@ -89,5 +89,6 @@ module Support
         root = env[:fs_root].to_s
         File.file?(File.join(root, relative_path))
       end
+    end
   end
 end
