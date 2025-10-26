@@ -71,7 +71,12 @@ module Support
       assigns = context.environments.first.dup
       assigns.merge!(assigns_extra) if assigns_extra
 
-      renderer.safe_render(compiled, assigns: assigns, theme_store: store, registers: context.registers).to_s
+      # ✅ convert Liquid::Registers to a plain Hash
+      safe_registers = context.registers.is_a?(Liquid::Registers) ?
+        context.registers.instance_variable_get(:@static).dup.merge(context.registers.instance_variable_get(:@changes)) :
+        context.registers.to_h rescue {}
+
+      renderer.safe_render(compiled, assigns: assigns, theme_store: store, registers: safe_registers).to_s
     end
 
     def resolve_first_existing(env, candidates)

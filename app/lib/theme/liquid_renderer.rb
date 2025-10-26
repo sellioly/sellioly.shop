@@ -20,7 +20,7 @@ module Theme
         begin
           Liquid::Template.file_system = fs
 
-          compiled_template.render(assigns, registers: registers)
+          compiled_template.render(assigns, registers: registers || {})
         ensure
           Liquid::Template.file_system = previous
         end
