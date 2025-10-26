@@ -73,5 +73,21 @@ module Support
 
       renderer.render(compiled, assigns: assigns, theme_store: store).to_s
     end
+
+    def resolve_first_existing(env, candidates)
+      Array(candidates).each do |rel|
+        return rel if theme_exists?(env, rel)
+      end
+      # If nothing exists, return the first; read will raise a helpful error later
+      candidates.first
+    end
+
+    def theme_exists?(env, relative_path)
+      if env[:theme_store]&.respond_to?(:exists?)
+        env[:theme_store].exists?(relative_path)
+      else
+        root = env[:fs_root].to_s
+        File.file?(File.join(root, relative_path))
+      end
   end
 end

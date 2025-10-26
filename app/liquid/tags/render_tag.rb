@@ -20,7 +20,18 @@ module Tags
       new_ctx = context.environments.first.dup
       new_ctx['params'] = build_params(context, @attributes)
 
-      rel = File.join('snippets', "#{@name}.liquid")
+      # --- Resolve path(s) ---
+      rel =
+        if @name.include?('/') # explicit subfolder e.g. "components/product-card"
+          "#{@name}.liquid"
+        else
+          # search order: snippets → components → sections
+          resolve_first_existing(env, [
+            File.join('snippets',   "#{@name}.liquid"),
+            File.join('components', "#{@name}.liquid"),
+            File.join('sections',   "#{@name}.liquid"),
+          ])
+        end
 
       guard_include_depth!(context, env)
       begin
