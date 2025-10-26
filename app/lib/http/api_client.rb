@@ -53,7 +53,13 @@ module Http
     # ---- Internals -----------------------------------------------------------
     private
 
-    def post_json(path, **form)
+    # Accept either:
+    #   post_json("/path", foo: "bar")
+    # or
+    #   post_json("/path", { foo: "bar" })
+    def post_json(path, form = nil, **kw)
+      form = (form || {}).merge(kw) # normalize into a single hash of form params
+      
       tries = 0
       begin
         response = http.post(url_for(path), form: form)
