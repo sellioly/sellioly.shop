@@ -60,8 +60,10 @@ module Support
     end
 
     def render_liquid_file(context, rel_path, assigns_extra: {})
-      env = env_from(context)
-      store, compiler, renderer = env.values_at(:store, :compiler, :renderer)
+      store     = Theme::ThemeStore.new(root: theme_path)
+      compiler  = Theme::TemplateCompiler.new
+      renderer  = Theme::LiquidRenderer.new
+
       return render_missing(env, rel_path, message: 'Theme env missing') unless store && compiler && renderer
       return render_missing(env, rel_path, message: 'Missing theme file') unless store.exists?(rel_path)
 
