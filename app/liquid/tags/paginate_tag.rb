@@ -29,30 +29,49 @@ module Tags
     def render(context)
       assigns = context.environments.first || {}
 
-      items = evaluate_expr(context, @items_expr)
-      items = Array(items)
+      # read collection.products or any array
+      collection = evaluate_expr(context, @items_expr)
+      collection = collection.to_liquid if collection.respond_to?(:to_liquid)
+      items = collection['data'] || collection['items'] || Array(collection)
 
-      page = current_page_from(assigns, @param)
-      total = items.length
+      # check for meta from API
+      meta = collection['meta'] || assigns['meta'] || {}
 
-      page_size = [@by, 1].max
-      pages = (total.to_f / page_size).ceil
-      page = [[page, 1].max, [pages, 1].max].min
+      if meta['total'] && meta['per_page'] # ✅ API pagination mode
+        page_size = meta['per_page'].to_i
+        total     = meta['total'].to_i
+        page      = meta['current_page'].to_i
+        pages     = meta['last_page'].to_i
 
-      offset = (page - 1) * page_size
-      slice = items.slice(offset, page_size) || []
-
-      base_url = assigns['current_url']
-
-      paginate_hash = {
-        'items' => slice,
-        'current_page' => page,
-        'page_size' => page_size,
-        'pages' => pages,
-        'total' => total,
-        'next_url' => (page < pages ? build_url(base_url, @param, page + 1) : nil),
-        'previous_url' => (page > 1 ? build_url(base_url, @param, page - 1) : nil)
-      }
+        base_url = assigns['current_url']
+        paginate_hash = {
+          'items'        => items,
+          'current_page' => page,
+          'page_size'    => page_size,
+          'pages'        => pages,
+          'total'        => total,
+          'next_url'     => (page < pages ? build_url(base_url, @param, page + 1) : nil),
+          'previous_url' => (page > 1 ? build_url(base_url, @param, page - 1) : nil)
+        }
+      else # ⚙️ fallback to in-memory mode
+        page = current_page_from(assigns, @param)
+        total = items.length
+        page_size = [@by, 1].max
+        pages = (total.to_f / page_size).ceil
+        page = [[page, 1].max, [pages, 1].max].min
+        offset = (page - 1) * page_size
+        slice = items.slice(offset, page_size) || []
+        base_url = assigns['current_url']
+        paginate_hash = {
+          'items'        => slice,
+          'current_page' => page,
+          'page_size'    => page_size,
+          'pages'        => pages,
+          'total'        => total,
+          'next_url'     => (page < pages ? build_url(base_url, @param, page + 1) : nil),
+          'previous_url' => (page > 1 ? build_url(base_url, @param, page - 1) : nil)
+        }
+      end
 
       context.stack do
         context['paginate'] = paginate_hash
