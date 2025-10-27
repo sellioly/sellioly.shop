@@ -17,7 +17,7 @@ module Cache
       s = vs.get_shop_catalog(shop_id)
       p = vs.get_product(shop_id, product_handle.to_s)
       "s#{s}-p#{p}"
-    end }
+    end
 
     # For menus
     def for_menu(shop_id:, menu_handle:, vs: Infra::VersionStore.new)
