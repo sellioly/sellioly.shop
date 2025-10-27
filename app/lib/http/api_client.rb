@@ -27,7 +27,7 @@ module Http
 
     def products_by_collection(handle:, shop_id:, domain:, filters: {})
       payload = { handle: handle, user_id: shop_id, app_domain: domain }.merge(filters || {})
-      post_json("product/get-by-collection", payload)
+      post_json("/ruby/product/get-by-collection", payload)
     end
 
     def menu_by_handle(handle:, shop_id:, domain:)
@@ -59,7 +59,7 @@ module Http
     #   post_json("/path", { foo: "bar" })
     def post_json(path, form = nil, **kw)
       form = (form || {}).merge(kw) # normalize into a single hash of form params
-      
+
       tries = 0
       begin
         response = http.post(url_for(path), form: form)
