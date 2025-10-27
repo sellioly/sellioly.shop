@@ -4,7 +4,7 @@ require 'liquid'
 require 'uri'
 
 # الاستخدام:
-# {% paginate items: collection, by: 24, param: 'page' %}
+# {% paginate items: collection, per_page: 24, param: 'page' %}
 #   {% for p in paginate.items %} ... {% endfor %}
 #   {% render 'pagination', paginate: paginate %}
 # {% endpaginate %}
@@ -21,7 +21,7 @@ module Tags
   class PaginateTag < Liquid::Block
     Syntax = /
       (?:\s*items:\s*(?<items>[^,]+))?
-      (?:\s*,\s*by:\s*(?<by>\d+))?
+      (?:\s*,\s*per_page:\s*(?<per_page>\d+))?
       (?:\s*,\s*param:\s*(?<param>[^,]+))?
     /xo
 
@@ -29,7 +29,7 @@ module Tags
       super
       m = Syntax.match(markup.to_s)
       @items_expr = m && m[:items]
-      @by         = (m && m[:by] ? m[:by].to_i : 24)
+      @per_page         = (m && m[:per_page] ? m[:per_page].to_i : 24)
       @param      = (m && m[:param] ? m[:param].strip.delete("'\"") : 'page')
     end
 
@@ -46,10 +46,10 @@ module Tags
           items = coll_hash['data'] || coll_hash['items'] || []
           meta  = coll_hash['meta']
 
-          page      = safe_int(meta['current_page'], 1)
-          page_size = safe_int(meta['per_page'],     @by)
+          page      = safe_int(meta['page'], 1)
+          page_size = safe_int(meta['per_page'],     @per_page)
           total     = safe_int(meta['total'],        items.is_a?(Array) ? items.length : 0)
-          pages     = safe_int(meta['last_page'],    [(total.to_f / page_size).ceil, 1].max)
+          pages     = safe_int(meta['pages'],    [(total.to_f / page_size).ceil, 1].max)
 
           base_url  = current_base_url(assigns)
 
@@ -69,7 +69,7 @@ module Tags
           # ---- Client-side mode ----
           items     = Array(collection)
           page      = current_page_from(assigns, @param)
-          page_size = [@by, 1].max
+          page_size = [@per_page, 1].max
           total     = items.length
           pages     = [(total.to_f / page_size).ceil, 1].max
           page      = [[page, 1].max, pages].min
