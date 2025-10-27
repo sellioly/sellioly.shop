@@ -158,7 +158,7 @@ module Pages
 
     def default_cache_control(preview)
       # preview ? 'no-store' : 'max-age=60, public'
-      'no-cache, public'
+      'no-cache, no-store, must-revalidate'
     end
   end
 end
