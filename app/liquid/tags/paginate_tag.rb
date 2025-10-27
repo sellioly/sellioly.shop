@@ -84,7 +84,8 @@ module Tags
     def evaluate_expr(context, expr)
       return [] unless expr
       Liquid::Expression.parse(expr).to_liquid(context)
-    rescue StandardError
+    rescue Liquid::Error => e
+      Rails.logger.error({ at: 'liquid_paginate_tag', err: e.class.name, msg: e.message }.to_json)
       []
     end
 
