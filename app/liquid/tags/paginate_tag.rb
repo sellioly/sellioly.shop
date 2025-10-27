@@ -84,7 +84,8 @@ module Tags
             'pages'        => pages,
             'total'        => total,
             'next_url'     => (page < pages ? build_url_with_params(base_url, assigns, @param, page + 1) : nil),
-            'previous_url' => (page > 1 ? build_url_with_params(base_url, assigns, @param, page - 1) : nil)
+            'previous_url' => (page > 1 ? build_url_with_params(base_url, assigns, @param, page - 1) : nil),
+            'page'          => build_url_with_params(base_url, assigns, @param, '{{ page }}'),
           }
 
           render_with_paginate(context, paginate_hash)
