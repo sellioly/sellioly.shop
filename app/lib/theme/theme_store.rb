@@ -34,8 +34,7 @@ module Theme
     def file_digest(rel_path)
       full = File.join(@root, rel_path)
       return nil unless File.exist?(full)
-      stat = File.stat(full)
-      "m#{stat.mtime.to_i}s#{stat.size}"
+      Digest::SHA1.file(full).hexdigest
     rescue StandardError
       nil
     end
