@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
     @args        = ctx.base_args
 
     # Minimal request context for tags/filters (paginate, urls, etc.)
-    @args['request']     = { 'params' => request.query_parameters }
+    @args['request']     = { 'params' => request.query_parameters, 'path' => request.path }
     @args['current_url'] = request.original_url
   end
 
