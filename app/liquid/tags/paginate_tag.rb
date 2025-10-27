@@ -115,7 +115,7 @@ module Tags
 
     def evaluate_items(context, expr)
       return [] unless expr
-      Liquid::Expression.parse(expr).to_liquid(context)
+      context.evaluate(Liquid::Expression.parse(expr))
     rescue => e
       raise ArgumentError, "Failed to evaluate items expression: #{e.message}"
     end
