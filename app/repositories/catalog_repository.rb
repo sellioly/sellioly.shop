@@ -15,7 +15,9 @@ class CatalogRepository
   # -------------------- Public API --------------------
   def get_product(handle:, shop_id:, domain:)
     return nil if blank?(handle)
-    key = Cache::Keyspace.catalog(shop_id: shop_id, domain: domain, type: :product, id: handle)
+
+    version = Cache::CatalogVersion.for_product(shop_id: shop_id, product_handle: handle)
+    key = Cache::Keyspace.catalog(shop_id: shop_id, domain: domain, type: :product, id: handle, version: version)
     hit, data = @cache.fetch_json(key: key, ttl: CATALOG_TTL.product, negative_ttl: CATALOG_TTL.negative) do
       res = @api.product_by_handle(handle: handle, shop_id: shop_id, domain: domain)
       res.ok? ? res.json : nil
@@ -26,7 +28,9 @@ class CatalogRepository
 
   def get_collection(handle:, shop_id:, domain:)
     return nil if blank?(handle)
-    key = Cache::Keyspace.catalog(shop_id: shop_id, domain: domain, type: :collection, id: handle)
+
+    version = Cache::CatalogVersion.for_collection(shop_id: shop_id, collection_handle: handle)
+    key = Cache::Keyspace.catalog(shop_id: shop_id, domain: domain, type: :collection, id: handle, version: version)
     hit, data = @cache.fetch_json(key: key, ttl: CATALOG_TTL.collection, negative_ttl: CATALOG_TTL.negative) do
       res = @api.collection_by_handle(handle: handle, shop_id: shop_id, domain: domain)
       res.ok? ? res.json : nil
@@ -37,7 +41,9 @@ class CatalogRepository
 
   def get_menu(handle:, shop_id:, domain:)
     return nil if blank?(handle)
-    key = Cache::Keyspace.catalog(shop_id: shop_id, domain: domain, type: :menu, id: handle)
+
+    version = Cache::CatalogVersion.for_menu(shop_id: shop_id, menu_handle: handle)
+    key = Cache::Keyspace.catalog(shop_id: shop_id, domain: domain, type: :menu, id: handle, version: version)
     hit, data = @cache.fetch_json(key: key, ttl: CATALOG_TTL.menu, negative_ttl: CATALOG_TTL.negative) do
       res = @api.menu_by_handle(handle: handle, shop_id: shop_id, domain: domain)
       res.ok? ? res.json : nil
@@ -47,7 +53,9 @@ class CatalogRepository
   end
 
   def get_metadata(shop_id:, domain:)
-    key = Cache::Keyspace.catalog(shop_id: shop_id, domain: domain, type: :metadata, id: "store")
+
+    version = Cache::CatalogVersion.for_metadata(shop_id: shop_id)
+    key = Cache::Keyspace.catalog(shop_id: shop_id, domain: domain, type: :metadata, id: "store", version: version)
     hit, data = @cache.fetch_json(key: key, ttl: CATALOG_TTL.metadata, negative_ttl: CATALOG_TTL.negative) do
       res = @api.metadata(shop_id: shop_id, domain: domain)
       res.ok? ? res.json : nil
@@ -70,7 +78,9 @@ class CatalogRepository
   def get_similar_products(handle:, shop_id:, domain:)
     return [] if blank?(handle)
     # Not strictly part of core catalog, but useful for the product page
-    key = Cache::Keyspace.catalog(shop_id: shop_id, domain: domain, type: :similar_products, id: handle)
+
+    version = Cache::CatalogVersion.for_product(shop_id: shop_id, product_handle: handle)
+    key = Cache::Keyspace.catalog(shop_id: shop_id, domain: domain, type: :similar_products, id: handle, version: version)
     hit, data = @cache.fetch_json(key: key, ttl: CATALOG_TTL.product, negative_ttl: CATALOG_TTL.negative) do
       res = @api.similar_products_by_handle(handle: handle, shop_id: shop_id, domain: domain)
       res.ok? ? res.json : nil
@@ -84,11 +94,14 @@ class CatalogRepository
 
     normalized = normalize_collection_filters(filters)
     digest     = Digest::SHA256.hexdigest(normalized.to_json)[0, 12]
+
+    version    = Cache::CatalogVersion.for_collection(shop_id: shop_id, collection_handle: handle)
     key        = Cache::Keyspace.catalog(
       shop_id: shop_id,
       domain:  domain,
       type:    :collection_products,
-      id:      "#{handle}:#{digest}"
+      id:      "#{handle}:#{digest}",
+      version: version
     )
 
     hit, data = @cache.fetch_json(key: key, ttl: CATALOG_TTL.collection, negative_ttl: CATALOG_TTL.negative) do
