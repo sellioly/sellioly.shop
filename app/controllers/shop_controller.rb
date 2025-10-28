@@ -35,12 +35,21 @@ class ShopController < ApplicationController
     raw  = repo.get_product(handle: params[:product], shop_id: @shop_id, domain: @domain)
     return render_with_renderer('404.json', status: :not_found) unless raw
 
-    product = ProductPresenter.call(product: raw, params: params, currency: @args['currency'])
+    product_vm = ProductPresenter.call(
+      product:  product_raw,
+      params:   params,
+      currency: @args['currency'] # من ShopContext
+    )
 
     # Optional: similar products (keep if you want it)
     similar = repo.get_similar_products(handle: params[:product], shop_id: @shop_id, domain: @domain)
 
-    extra_ctx = { 'product' => product }
+    extra_ctx['product']          = product_vm['product']
+    extra_ctx['selected_variant'] = product_vm['selected_variant']
+    extra_ctx['variant_index']    = product_vm['variant_index']
+    extra_ctx['variant_image_map']= product_vm['variant_image_map']
+    extra_ctx['urls']             = product_vm['urls']
+
     extra_ctx['similar_products'] = similar if similar.present?
 
     render_with_renderer('product.json', extra_ctx: extra_ctx)

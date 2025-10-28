@@ -1,175 +1,254 @@
 # frozen_string_literal: true
 
-# Normalizes product data for themes without changing existing payloads.
-# - Keeps raw API product in @args['product'] (unchanged)
-# - Adds normalized context in @args['product_presented']
-# - All money values exposed in integer cents (avoid float issues)
-# - Selected variant resolved via ?variant=ID or option params (?size=M&color=Blue)
-# - Description sanitized to a safe HTML subset
-# - Image info prepared for filters (image_url)
 class ProductPresenter
-  # Public: Build a normalized product context for Liquid themes.
-  # params: request params (variant or option selections)
-  # currency: shop currency, e.g., "USD"
+  # Public API
+  # - product:  raw Laravel hash (كما هو في المثال)
+  # - params:   request query params (لـ variant_id)
+  # - currency: e.g. "MAD"
+  #
+  # Returns a normalized hash جاهز للـ Liquid:
+  # {
+  #   "product" => {...},
+  #   "selected_variant" => {...},
+  #   "variant_index" => { "by_id" => {...}, "by_options" => {...} },
+  #   "variant_image_map" => {...},
+  #   "urls" => { "canonical" => "...", "variant_url" => "...?variant_id={{ variant_id }}" }
+  # }
   def self.call(product:, params:, currency:)
-    return nil unless product.is_a?(Hash)
-
     new(product, params, currency).present
   end
 
   def initialize(product, params, currency)
-    @product  = product
+    @raw      = deep_stringify(product || {})
     @params   = params || {}
-    @currency = currency
+    @currency = currency.to_s
   end
 
   def present
-    selected_variant = resolve_selected_variant
+    base = normalize_product(@raw)
+
+    variants = base["variants"]
+    selected = resolve_selected_variant(variants)
+
+    # خرائط مساعدة
+    by_id, by_opts = build_variant_indices(variants, base["options"])
+    img_map        = build_variant_image_map(variants)
+
+    # مدى الأسعار
+    price_range = compute_price_range_cents(variants)
+
+    # أعلام مساعدة
+    available = selected ? selected["available"] : true
+    on_sale   = selected && sale?(selected["price_cents"], selected["compare_at_cents"])
 
     {
-      'id' => @product['id'] || @product['product_id'],
-      'handle' => @product['handle'],
-      'title' => @product['title'] || @product['name'],
-      'vendor' => @product['vendor'],
-      'type' => @product['type'],
-      'sku' => selected_variant && (selected_variant['sku'] || selected_variant['variant_sku']),
-      'description_html' => sanitize_html(@product['description_html'] || @product['description']),
-      'options' => normalize_options(@product['options']),
-      'selected_variant' => normalize_variant(selected_variant),
-      'variants' => Array(@product['variants']).map { |v| normalize_variant(v) },
-      'available' => !!(selected_variant ? variant_available?(selected_variant) : @product['available']),
-      'price' => cents(selected_variant && (selected_variant['price'] || selected_variant['variant_price']) || @product['price']),
-      'compare_at_price' => cents(selected_variant && (selected_variant['compare_at_price'] || selected_variant['variant_compare_at_price']) || @product['compare_at_price']),
-      'price_range' => compute_price_range(@product['variants']),
-      'images' => normalize_images(@product['images'] || @product['media']),
-      'currency' => @currency,
-      'url' => "/products/#{@product['handle']}",
-    }.tap do |h|
-      # helpful flags
-      h['on_sale'] = on_sale?(h['price'], h['compare_at_price'])
-      h['low_stock'] = low_stock?(selected_variant || @product)
-    end
+      "product" => {
+        "id"               => base["id"],
+        "handle"           => base["handle"],
+        "title"            => base["title"],
+        "description_html" => base["description_html"],
+        "vendor"           => base["vendor"],
+        "options"          => base["options"],
+        "variants"         => variants,
+        "media"            => base["media"],
+        "price_range"      => price_range,
+        "available"        => !!available,
+        "on_sale"          => !!on_sale,
+        "currency"         => @currency
+      },
+      "selected_variant"  => selected,
+      "variant_index"     => { "by_id" => by_id, "by_options" => by_opts },
+      "variant_image_map" => img_map,
+      "urls"              => {
+        "canonical"   => "/products/#{base["handle"]}",
+        "variant_url" => "/products/#{base["handle"]}?variant_id={{ variant_id }}"
+      }
+    }
   end
 
   private
 
-  def resolve_selected_variant
-    variants = Array(@product['variants'])
-    return nil if variants.empty?
+  # ---------- Normalization ----------
 
-    # Priority 1: ?variant=ID
-    if (vid = @params[:variant] || @params['variant'])
-      found = variants.find { |v| v['id'].to_s == vid.to_s || v['variant_id'].to_s == vid.to_s }
-      return found if found
-    end
-
-    # Priority 2: option params (?size=M&color=Blue)
-    if (opts = normalize_options(@product['options'])).any?
-      selection = {}
-      opts.each do |opt|
-        key = (opt['name'] || '').to_s.downcase
-        selection[key] = (@params[opt['name']] || @params[key])&.to_s
-      end
-      if selection.values.any?(&:present?)
-        found = variants.find { |v| option_match?(v, selection) }
-        return found if found
-      end
-    end
-
-    # Default: first available, else first
-    variants.find { |v| variant_available?(v) } || variants.first
-  end
-
-  def option_match?(variant, selection)
-    variant_values = Array(variant['option_values'] || [variant['option1'], variant['option2'], variant['option3']]).compact.map(&:to_s)
-    # selection order follows product.options order; compare case-insensitively
-    desired = selection.values.compact.map { |s| s.to_s.downcase }
-    return false if desired.empty?
-    variant_values.map { |s| s.to_s.downcase }[0, desired.length] == desired
-  end
-
-  def normalize_options(options)
-    Array(options).map do |o|
-      if o.is_a?(Hash)
-        { 'id' => o['id'], 'name' => o['name'] || o['option_name'], 'values' => Array(o['values'] || o['option_values']) }
-      else
-        { 'name' => o.to_s, 'values' => [] }
-      end
-    end
-  end
-
-  def normalize_variant(v)
-    return nil unless v
+  def normalize_product(p)
     {
-      'id' => v['id'] || v['variant_id'],
-      'title' => v['title'] || v['variant_title'],
-      'sku' => v['sku'] || v['variant_sku'],
-      'available' => variant_available?(v),
-      'price' => cents(v['price'] || v['variant_price']),
-      'compare_at_price' => cents(v['compare_at_price'] || v['variant_compare_at_price']),
-      'option_values' => Array(v['option_values'] || [v['option1'], v['option2'], v['option3']]).compact,
-      'url' => variant_url(v)
+      "id"               => p["id"],
+      "handle"           => p["handle"],
+      "title"            => p["title"],
+      "vendor"           => p["vendor"],
+      "description_html" => p["body_html"].to_s, # نخلي التنقية (sanitize) لطبقة العرض إن لزم
+
+      "options"  => normalize_options(p),
+      "variants" => normalize_variants(p),
+      "media"    => normalize_media(p)
     }
   end
 
-  def variant_available?(v)
-    available = v['available']
-    return available unless available.nil?
-    inv = v['inventory_quantity'] || v['inventory']
-    inv.nil? ? true : inv.to_i > 0
-  end
+  def normalize_options(p)
+    # Laravel الآن يرسل options[] بالاسم "options"
+    list = Array(p["options"])
+    return [] if list.empty?
 
-  def normalize_images(images)
-    Array(images).map do |img|
-      if img.is_a?(Hash)
-        { 'src' => img['src'] || img['url'], 'alt' => img['alt'] || '' }
-      else
-        { 'src' => img.to_s, 'alt' => '' }
-      end
+    list.map do |o|
+      {
+        "id"     => o["id"],
+        "name"   => normalize_option_name(o["name"]),
+        "values" => Array(o["values"]).map { |v| v.to_s }
+      }
     end
   end
 
-  def compute_price_range(variants)
-    vs = Array(variants)
-    cents_list = vs.map { |v| cents(v['price'] || v['variant_price']) }.compact
-    return nil if cents_list.empty?
-    { 'min' => cents_list.min, 'max' => cents_list.max }
+  def normalize_variants(p)
+    Array(p["variants"]).map do |v|
+      opts = extract_variant_options(v)
+      {
+        "id"               => v["id"],
+        "title"            => v["title"],
+        "sku"              => v["sku"],
+        "available"        => infer_available(v),
+        "price_cents"      => to_cents(v["price"]),
+        "compare_at_cents" => to_cents(v["compare_at_price"]),
+        "options"          => opts,                 # {"Color"=>"black", ...}
+        "image_id"         => v["image_id"]
+      }
+    end
   end
 
-  def on_sale?(price, compare)
-    p = price.to_i
-    c = compare.to_i
-    c > p && p > 0
+  def normalize_media(p)
+    images = Array(p["images"])
+    # تأكد أن default_image موجود ضمن القائمة (لو ناقص)
+    if p["default_image"].is_a?(Hash) && !images.any? { |img| img["id"].to_s == p["default_image"]["id"].to_s }
+      images = [p["default_image"], *images]
+    end
+
+    images.map do |img|
+      {
+        "id"          => img["id"],
+        "src"         => img["src"],
+        "alt"         => p["title"].to_s,
+        "width"       => img["width"],
+        "height"      => img["height"],
+        "variant_ids" => [] # سنربط لاحقًا عبر build_variant_image_map
+      }
+    end
   end
 
-  def low_stock?(entity)
-    qty = entity['inventory_quantity'] || entity['inventory']
-    qty && qty.to_i > 0 && qty.to_i <= (ENV['LOW_STOCK_THRESHOLD'] || 5).to_i
+  # يستخرج خيارات الفاريانت من هيكل Laravel الحالي:
+  # v["option"]["option1"] => {"name"=>"color","value"=>"black"}
+  def extract_variant_options(v)
+    result = {}
+    opt    = v["option"] || {}
+    %w[option1 option2 option3].each do |slot|
+      item = opt[slot]
+      next unless item.is_a?(Hash)
+      name  = normalize_option_name(item["name"])
+      value = item["value"].to_s
+      result[name] = value
+    end
+    result
   end
 
-  def variant_url(v)
-    vid = v['id'] || v['variant_id']
-    h = @product['handle']
-    vid ? "/products/#{h}?variant=#{vid}" : "/products/#{h}"
+  def normalize_option_name(name)
+    # نثبت تنسيق الاسم (Capitalized أول حرف فقط)، مثلاً "color" => "Color"
+    s = name.to_s.strip
+    s.empty? ? s : s[0].upcase + s[1..]
   end
 
-  def cents(value)
-    return nil if value.nil?
-    # Accept integer cents, decimal strings, or floats
-    if value.is_a?(Integer)
-      value
-    elsif value.is_a?(Float)
-      (value * 100).round
+  # ---------- Selection / Indices ----------
+
+  def resolve_selected_variant(variants)
+    return nil if variants.empty?
+
+    # 1) ?variant_id=<id>
+    if (vid = (@params[:variant_id] || @params["variant_id"])).to_s.strip
+      found = variants.find { |v| v["id"].to_s == vid.to_s }
+      return found if found
+    end
+
+    # 2) أول متاح، وإلا الأول
+    variants.find { |v| v["available"] } || variants.first
+  end
+
+  def build_variant_indices(variants, product_options)
+    by_id   = {}
+    by_opts = {}
+
+    option_names = Array(product_options).map { |o| o["name"] }
+
+    variants.each do |v|
+      by_id[v["id"].to_s] = v
+
+      # ابنِ مفتاح by_options وفق ترتيب أسماء خيارات المنتج
+      key = options_key(v["options"], option_names)
+      by_opts[key] = v["id"].to_s unless key.empty?
+    end
+
+    [by_id, by_opts]
+  end
+
+  def build_variant_image_map(variants)
+    map = {}
+    variants.each do |v|
+      img_id = v["image_id"]
+      map[v["id"].to_s] = img_id if img_id
+    end
+    map
+  end
+
+  def options_key(options_hash, option_names)
+    return "" unless options_hash.is_a?(Hash) && option_names.any?
+    parts = option_names.map do |name|
+      val = options_hash[name]
+      val ? "#{name}:#{val}" : nil
+    end.compact
+    parts.join("|")
+  end
+
+  # ---------- Helpers ----------
+
+  def to_cents(val)
+    return nil if val.nil?
+    if val.is_a?(Integer)
+      # نفترض أنه مبلغ بالعملة (MAD) وليس بالسنت، فنضرب × 100
+      (val * 100)
+    elsif val.is_a?(Float)
+      (val * 100).round
     else
-      str = value.to_s
-      return nil if str.empty?
-      (BigDecimal(str) * 100).to_i
+      s = val.to_s.strip
+      return nil if s.empty?
+      (BigDecimal(s) * 100).round
     end
   rescue ArgumentError
     nil
   end
 
-  def sanitize_html(html)
-    ActionController::Base.helpers.sanitize(html.to_s, tags: %w[p br b i strong em ul ol li a img h1 h2 h3 h4 h5 h6 span], attributes: %w[href src alt title])
+  def infer_available(v)
+    # Laravel response لا يحتوي دايمًا على مخزون؛ كبداية اعتبره متاح إن ماكانش في معلومة ضد
+    inv = v["inventory_quantity"] || v["inventory"]
+    return inv.to_i > 0 if inv
+    true
+  end
+
+  def sale?(price_cents, compare_cents)
+    p = price_cents.to_i
+    c = compare_cents.to_i
+    c > p && p > 0
+  end
+
+  def compute_price_range_cents(variants)
+    cents_list = variants.map { |v| v["price_cents"] }.compact
+    return nil if cents_list.empty?
+    { "min" => cents_list.min, "max" => cents_list.max }
+  end
+
+  def deep_stringify(obj)
+    case obj
+    when Hash
+      obj.transform_keys(&:to_s).transform_values { |v| deep_stringify(v) }
+    when Array
+      obj.map { |v| deep_stringify(v) }
+    else
+      obj
+    end
   end
 end
