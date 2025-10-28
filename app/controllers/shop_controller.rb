@@ -44,6 +44,7 @@ class ShopController < ApplicationController
     # Optional: similar products (keep if you want it)
     similar = repo.get_similar_products(handle: params[:product], shop_id: @shop_id, domain: @domain)
 
+    extra_ctx = {}
     extra_ctx['product']          = product_vm['product']
     extra_ctx['selected_variant'] = product_vm['selected_variant']
     extra_ctx['variant_index']    = product_vm['variant_index']
