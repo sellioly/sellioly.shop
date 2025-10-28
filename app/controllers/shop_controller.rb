@@ -36,7 +36,7 @@ class ShopController < ApplicationController
     return render_with_renderer('404.json', status: :not_found) unless raw
 
     product_vm = ProductPresenter.call(
-      product:  product_raw,
+      product:  raw,
       params:   params,
       currency: @args['currency'] # من ShopContext
     )
