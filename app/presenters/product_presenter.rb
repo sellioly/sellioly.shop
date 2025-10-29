@@ -1,19 +1,49 @@
 # frozen_string_literal: true
 
+# Normalizes a raw Laravel product payload into a clean, theme-friendly shape.
+# Key points:
+# - All money in integer cents (avoid floats).
+# - Each variant includes:
+#     - image:   its main image (if any)
+#     - images:  [main image, ...general images not tied to other variants]
+# - Selected variant resolved via ?variant_id=<id> (fallback: first available, else first).
+# - Builds simple indices for fast lookups on the front (by id and by options).
+# - Leaves sanitization of HTML (if needed) to the view layer.
+#
+# Returned shape:
+# {
+#   "product" => {
+#     "id","handle","title","vendor","description_html",
+#     "options"  => [{ "id","name","values":[...] }, ...],
+#     "variants" => [
+#       {
+#         "id","title","sku","available",
+#         "price_cents","compare_at_cents",
+#         "options"   => { "Color"=>"blue", ... },
+#         "image"     => { "id","src","alt","width","height" } | nil,
+#         "images"    => [ { ... }, ... ],
+#         "image_id"  => "...", # kept for reference
+#       }, ...
+#     ],
+#     "media"       => [ { "id","src","alt","width","height" }, ... ],
+#     "price_range" => { "min"=>..., "max"=>... } | nil,
+#     "available"   => true/false,
+#     "on_sale"     => true/false,
+#     "currency"    => "MAD"
+#   },
+#   "selected_variant"  => { ...same shape as in variants... } | nil,
+#   "variant_index"     => {
+#     "by_id"     => { "<id>" => {variant}, ... },
+#     "by_options"=> { "Color:Blue|Size:M" => "<variant_id>", ... }
+#   },
+#   "urls" => {
+#     "canonical"   => "/products/<handle>",
+#     "variant_url" => "/products/<handle>?variant_id={{ variant_id }}"
+#   }
+# }
+#
 class ProductPresenter
   # Public API
-  # - product:  raw Laravel hash (كما هو في المثال)
-  # - params:   request query params (لـ variant_id)
-  # - currency: e.g. "MAD"
-  #
-  # Returns a normalized hash جاهز للـ Liquid:
-  # {
-  #   "product" => {...},
-  #   "selected_variant" => {...},
-  #   "variant_index" => { "by_id" => {...}, "by_options" => {...} },
-  #   "variant_image_map" => {...},
-  #   "urls" => { "canonical" => "...", "variant_url" => "...?variant_id={{ variant_id }}" }
-  # }
   def self.call(product:, params:, currency:)
     new(product, params, currency).present
   end
@@ -30,14 +60,10 @@ class ProductPresenter
     variants = base["variants"]
     selected = resolve_selected_variant(variants)
 
-    # خرائط مساعدة
     by_id, by_opts = build_variant_indices(variants, base["options"])
     img_map        = build_variant_image_map(variants)
+    price_range     = compute_price_range_cents(variants)
 
-    # مدى الأسعار
-    price_range = compute_price_range_cents(variants)
-
-    # أعلام مساعدة
     available = selected ? selected["available"] : true
     on_sale   = selected && sale?(selected["price_cents"], selected["compare_at_cents"])
 
@@ -61,6 +87,7 @@ class ProductPresenter
       "variant_image_map" => img_map,
       "urls"              => {
         "canonical"   => "/products/#{base["handle"]}",
+        # Note: a template string so Liquid/JS can safely inject a concrete id
         "variant_url" => "/products/#{base["handle"]}?variant_id={{ variant_id }}"
       }
     }
@@ -71,21 +98,22 @@ class ProductPresenter
   # ---------- Normalization ----------
 
   def normalize_product(p)
+    media = normalize_media(p)
+
     {
       "id"               => p["id"],
       "handle"           => p["handle"],
       "title"            => p["title"],
       "vendor"           => p["vendor"],
-      "description_html" => p["body_html"].to_s, # نخلي التنقية (sanitize) لطبقة العرض إن لزم
-
-      "options"  => normalize_options(p),
-      "variants" => normalize_variants(p),
-      "media"    => normalize_media(p)
+      "description_html" => p["body_html"].to_s,
+      "options"          => normalize_options(p),
+      # variants depend on media (for image composition)
+      "variants"         => normalize_variants(p, media),
+      "media"            => media
     }
   end
 
   def normalize_options(p)
-    # Laravel الآن يرسل options[] بالاسم "options"
     list = Array(p["options"])
     return [] if list.empty?
 
@@ -98,9 +126,19 @@ class ProductPresenter
     end
   end
 
-  def normalize_variants(p)
-    Array(p["variants"]).map do |v|
-      opts = extract_variant_options(v)
+  def normalize_variants(p, all_media)
+    raw_variants = Array(p["variants"])
+
+    # Collect image ids used by variants
+    used_image_ids = raw_variants.map { |v| v["image_id"].to_s }.reject(&:empty?).to_set
+    # General images = media not tied to any variant id
+    general_images = all_media.reject { |img| used_image_ids.include?(img["id"].to_s) }
+
+    raw_variants.map do |v|
+      opts      = extract_variant_options(v)
+      main_img  = all_media.find { |img| img["id"].to_s == v["image_id"].to_s }
+      images    = [main_img, *general_images].compact.uniq { |img| img["id"] }
+
       {
         "id"               => v["id"],
         "title"            => v["title"],
@@ -109,32 +147,33 @@ class ProductPresenter
         "price_cents"      => to_cents(v["price"]),
         "compare_at_cents" => to_cents(v["compare_at_price"]),
         "options"          => opts,                 # {"Color"=>"black", ...}
-        "image_id"         => v["image_id"]
+        "image_id"         => v["image_id"],
+        "image"            => main_img,            # can be nil
+        "images"           => images               # [main + general]
       }
     end
   end
 
   def normalize_media(p)
     images = Array(p["images"])
-    # تأكد أن default_image موجود ضمن القائمة (لو ناقص)
+    # Ensure default_image is present in media if missing
     if p["default_image"].is_a?(Hash) && !images.any? { |img| img["id"].to_s == p["default_image"]["id"].to_s }
       images = [p["default_image"], *images]
     end
 
     images.map do |img|
       {
-        "id"          => img["id"],
-        "src"         => img["src"],
-        "alt"         => p["title"].to_s,
-        "width"       => img["width"],
-        "height"      => img["height"],
-        "variant_ids" => [] # سنربط لاحقًا عبر build_variant_image_map
+        "id"     => img["id"],
+        "src"    => img["src"],
+        "alt"    => p["title"].to_s,
+        "width"  => img["width"],
+        "height" => img["height"]
       }
     end
   end
 
-  # يستخرج خيارات الفاريانت من هيكل Laravel الحالي:
-  # v["option"]["option1"] => {"name"=>"color","value"=>"black"}
+  # Laravel variant options come in v["option"]["option1".."option3"]
+  # e.g. { "option1"=>{"name"=>"color","value"=>"black"}, "option2"=>nil, ... }
   def extract_variant_options(v)
     result = {}
     opt    = v["option"] || {}
@@ -149,7 +188,6 @@ class ProductPresenter
   end
 
   def normalize_option_name(name)
-    # نثبت تنسيق الاسم (Capitalized أول حرف فقط)، مثلاً "color" => "Color"
     s = name.to_s.strip
     s.empty? ? s : s[0].upcase + s[1..]
   end
@@ -160,12 +198,12 @@ class ProductPresenter
     return nil if variants.empty?
 
     # 1) ?variant_id=<id>
-    if (vid = (@params[:variant_id] || @params["variant_id"])).to_s.strip
-      found = variants.find { |v| v["id"].to_s == vid.to_s }
+    if (vid = (@params[:variant_id] || @params["variant_id"]).to_s).present?
+      found = variants.find { |v| v["id"].to_s == vid }
       return found if found
     end
 
-    # 2) أول متاح، وإلا الأول
+    # 2) First available, else first
     variants.find { |v| v["available"] } || variants.first
   end
 
@@ -177,8 +215,6 @@ class ProductPresenter
 
     variants.each do |v|
       by_id[v["id"].to_s] = v
-
-      # ابنِ مفتاح by_options وفق ترتيب أسماء خيارات المنتج
       key = options_key(v["options"], option_names)
       by_opts[key] = v["id"].to_s unless key.empty?
     end
@@ -209,7 +245,7 @@ class ProductPresenter
   def to_cents(val)
     return nil if val.nil?
     if val.is_a?(Integer)
-      # نفترض أنه مبلغ بالعملة (MAD) وليس بالسنت، فنضرب × 100
+      # Laravel prices look like numbers in currency units; convert to cents
       (val * 100)
     elsif val.is_a?(Float)
       (val * 100).round
@@ -223,7 +259,6 @@ class ProductPresenter
   end
 
   def infer_available(v)
-    # Laravel response لا يحتوي دايمًا على مخزون؛ كبداية اعتبره متاح إن ماكانش في معلومة ضد
     inv = v["inventory_quantity"] || v["inventory"]
     return inv.to_i > 0 if inv
     true
@@ -243,12 +278,9 @@ class ProductPresenter
 
   def deep_stringify(obj)
     case obj
-    when Hash
-      obj.transform_keys(&:to_s).transform_values { |v| deep_stringify(v) }
-    when Array
-      obj.map { |v| deep_stringify(v) }
-    else
-      obj
+    when Hash  then obj.transform_keys(&:to_s).transform_values { |v| deep_stringify(v) }
+    when Array then obj.map { |v| deep_stringify(v) }
+    else            obj
     end
   end
 end
