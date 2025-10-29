@@ -52,7 +52,14 @@ Rails.application.routes.draw do
     post '/api/cart/remove', action: 'remove', controller: 'cart'
     post '/api/cart/update-quantity', action: 'updateQuantity', controller: 'cart'
     post '/api/cart/buynow', action: 'buynow', controller: 'cart'
-    # post 'api/product/select-option', action: 'selectOption', controller: 'cart'
+    
+    scope :cart do
+      get    '/'                => 'carts#show'
+      post   '/lines'           => 'carts#add_line'
+      patch  '/lines/:id'       => 'carts#update_line'
+      delete '/lines/:id'       => 'carts#remove_line'
+    end
+
     post '/api/order/add', action: 'add', controller: 'order'
     post '/api/order/order-now', action: 'orderNow', controller: 'order'
     get '/collections/:collection', action: 'collection', controller: 'shop'

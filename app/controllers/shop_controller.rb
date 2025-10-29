@@ -3,6 +3,7 @@
 
 class ShopController < ApplicationController
   before_action :initialize_shop, except: [:file_assets, :file_font_assets]
+  before_action :ensure_cart!    # guarantees @args['cart'] is present (SSR)
 
   # ---------------- Static assets served from the theme storage ----------------
   # (Kept here; preview routes point to these too.)
@@ -50,7 +51,6 @@ class ShopController < ApplicationController
     extra_ctx['variant_index']    = product_vm['variant_index']
     extra_ctx['variant_image_map']= product_vm['variant_image_map']
     extra_ctx['urls']             = product_vm['urls']
-
     extra_ctx['similar_products'] = similar if similar.present?
 
     render_with_renderer('product.json', extra_ctx: extra_ctx)
@@ -114,6 +114,35 @@ class ShopController < ApplicationController
   end
 
   private
+
+  # Ensure we have a cart_id cookie and preload @args['cart'] from Laravel (via proxy)
+  def ensure_cart!
+    cart_repo = CartRepository.new
+
+    # Ensure cookie cart_id
+    cookies[:cart_id] ||= SecureRandom.uuid
+    cart_id = cookies[:cart_id]
+
+    # GET cart snapshot (idempotent, cheap)
+    cart = cart_repo.get_cart(cart_id: cart_id)
+
+    # Always inject cart into args for SSR (header badge, mini-cart, etc.)
+    @args['cart'] = cart || default_empty_cart(cart_id)
+  rescue => e
+    Rails.logger.warn({ at: 'ensure_cart', err: e.class.name, msg: e.message }.to_json)
+    @args['cart'] ||= default_empty_cart(cookies[:cart_id])
+  end
+
+  def default_empty_cart(cart_id)
+    {
+      'id'         => cart_id,
+      'currency'   => @args['currency'],
+      'lines'      => [],
+      'subtotal'   => 0,
+      'total'      => 0,
+      'updated_at' => Time.now.utc.iso8601
+    }
+  end
 
   # One place to call the PageRenderer with our base args + optional extras
   def render_with_renderer(template_json, extra_ctx: {}, status: :ok)

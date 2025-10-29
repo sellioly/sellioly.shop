@@ -1,0 +1,187 @@
+[
+  {
+    "id": "101117907701858348",
+    "handle": "case-with-magsafe",
+    "title": "Case with MagSafe",
+    "description_html": "",
+    "vendor": null,
+    "options": [
+      {
+        "id": "101593619487522849",
+        "name": "Color",
+        "values": ["black", "blue", "green", "orange"]
+      }
+    ],
+    "variants": [
+      {
+        "id": "101593619487522850",
+        "title": "black",
+        "sku": null,
+        "available": true,
+        "price_cents": 9000,
+        "compare_at_cents": null,
+        "options": {
+          "Color": "black"
+        },
+        "image_id": "101117907701858344"
+      },
+      {
+        "id": "101593619487522851",
+        "title": "green",
+        "sku": null,
+        "available": true,
+        "price_cents": 11000,
+        "compare_at_cents": null,
+        "options": {
+          "Color": "green"
+        },
+        "image_id": "101117907701858346"
+      },
+      {
+        "id": "101593619487522852",
+        "title": "orange",
+        "sku": null,
+        "available": true,
+        "price_cents": 12000,
+        "compare_at_cents": null,
+        "options": {
+          "Color": "orange"
+        },
+        "image_id": "101117907701858347"
+      },
+      {
+        "id": "101593619487522853",
+        "title": "blue",
+        "sku": null,
+        "available": true,
+        "price_cents": 10000,
+        "compare_at_cents": null,
+        "options": {
+          "Color": "blue"
+        },
+        "image_id": "101117907701858345"
+      }
+    ],
+    "media": [
+      {
+        "id": "101117907701858344",
+        "src": "https://sellioly.s3.eu-west-3.amazonaws.com/users/100376622183481452/stores/100376622183481460/products/8MT2VB4RH8Wbwitt0axnakZNIwRIeLgI0Q9K9gRT.jpg",
+        "alt": "Case with MagSafe",
+        "width": null,
+        "height": null,
+        "variant_ids": []
+      },
+      {
+        "id": "101117907701858345",
+        "src": "https://sellioly.s3.eu-west-3.amazonaws.com/users/100376622183481452/stores/100376622183481460/products/9Xc1E4MBIAARi3OmFG9A2ZS2LguexCZMFqaqIgVz.jpg",
+        "alt": "Case with MagSafe",
+        "width": null,
+        "height": null,
+        "variant_ids": []
+      },
+      {
+        "id": "101117907701858346",
+        "src": "https://sellioly.s3.eu-west-3.amazonaws.com/users/100376622183481452/stores/100376622183481460/products/FtL5gFBZ8ZyEWKSVkfrbuMl6FZXFpr2TzYdQMT5N.jpg",
+        "alt": "Case with MagSafe",
+        "width": null,
+        "height": null,
+        "variant_ids": []
+      },
+      {
+        "id": "101117907701858347",
+        "src": "https://sellioly.s3.eu-west-3.amazonaws.com/users/100376622183481452/stores/100376622183481460/products/BercGqOZwkAlVdVynnAwmIQvtLXenF2wQdMNyvft.jpg",
+        "alt": "Case with MagSafe",
+        "width": null,
+        "height": null,
+        "variant_ids": []
+      }
+    ],
+    "price_range": {
+      "min": 9000,
+      "max": 12000
+    },
+    "available": true,
+    "on_sale": false,
+    "currency": "MAD"
+  },
+  {
+    "id": "101593619487522850",
+    "title": "black",
+    "sku": null,
+    "available": true,
+    "price_cents": 9000,
+    "compare_at_cents": null,
+    "options": {
+      "Color": "black"
+    },
+    "image_id": "101117907701858344"
+  },
+  {
+    "by_id": {
+      "101593619487522850": {
+        "id": "101593619487522850",
+        "title": "black",
+        "sku": null,
+        "available": true,
+        "price_cents": 9000,
+        "compare_at_cents": null,
+        "options": {
+          "Color": "black"
+        },
+        "image_id": "101117907701858344"
+      },
+      "101593619487522851": {
+        "id": "101593619487522851",
+        "title": "green",
+        "sku": null,
+        "available": true,
+        "price_cents": 11000,
+        "compare_at_cents": null,
+        "options": {
+          "Color": "green"
+        },
+        "image_id": "101117907701858346"
+      },
+      "101593619487522852": {
+        "id": "101593619487522852",
+        "title": "orange",
+        "sku": null,
+        "available": true,
+        "price_cents": 12000,
+        "compare_at_cents": null,
+        "options": {
+          "Color": "orange"
+        },
+        "image_id": "101117907701858347"
+      },
+      "101593619487522853": {
+        "id": "101593619487522853",
+        "title": "blue",
+        "sku": null,
+        "available": true,
+        "price_cents": 10000,
+        "compare_at_cents": null,
+        "options": {
+          "Color": "blue"
+        },
+        "image_id": "101117907701858345"
+      }
+    },
+    "by_options": {
+      "Color:black": "101593619487522850",
+      "Color:green": "101593619487522851",
+      "Color:orange": "101593619487522852",
+      "Color:blue": "101593619487522853"
+    }
+  },
+  {
+    "101593619487522850": "101117907701858344",
+    "101593619487522851": "101117907701858346",
+    "101593619487522852": "101117907701858347",
+    "101593619487522853": "101117907701858345"
+  },
+  {
+    "canonical": "/products/case-with-magsafe",
+    "variant_url": "/products/case-with-magsafe?variant_id={{ variant_id }}"
+  }
+]
