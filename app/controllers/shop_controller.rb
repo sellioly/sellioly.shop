@@ -119,12 +119,17 @@ class ShopController < ApplicationController
   def ensure_cart!
     cart_repo = CartRepository.new
 
-    # Ensure cookie cart_id
-    cookies[:cart_id] ||= SecureRandom.uuid
+    # Get cart_id from cookie (could be nil)
     cart_id = cookies[:cart_id]
 
-    # GET cart snapshot (idempotent, cheap)
+    # GET cart snapshot (if cart_id is nil, API should create one)
     cart = cart_repo.show(cart_id: cart_id)
+
+    # If cart was created by API and we got a new cart_id, store it in cookie
+    if cart && cart['id'] && cart_id != cart['id']
+      cookies[:cart_id] = cart['id']
+      cart_id = cart['id']
+    end
 
     # Always inject cart into args for SSR (header badge, mini-cart, etc.)
     @args['cart'] = cart || default_empty_cart(cart_id)
