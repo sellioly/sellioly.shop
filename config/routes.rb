@@ -48,17 +48,15 @@ Rails.application.routes.draw do
   end
 
   constraints lambda { |req| req.host != 'shop.sellioly.com' &&  req.host != 'preview.sellioly.com' } do
-    post '/api/cart/add', action: 'add', controller: 'cart'
-    post '/api/cart/remove', action: 'remove', controller: 'cart'
-    post '/api/cart/update-quantity', action: 'updateQuantity', controller: 'cart'
-    post '/api/cart/buynow', action: 'buynow', controller: 'cart'
+    # post '/api/cart/add', action: 'add', controller: 'cart'
+    # post '/api/cart/remove', action: 'remove', controller: 'cart'
+    # post '/api/cart/update-quantity', action: 'updateQuantity', controller: 'cart'
+    # post '/api/cart/buynow', action: 'buynow', controller: 'cart'
     
-    scope :cart do
-      get    '/'                => 'carts#show'
-      post   '/lines'           => 'carts#add_line'
-      patch  '/lines/:id'       => 'carts#update_line'
-      delete '/lines/:id'       => 'carts#remove_line'
-    end
+    get    '/api/cart'                => 'carts#show'
+    post   '/api/cart/lines'           => 'carts#add_line'
+    patch  '/api/cart/lines/:id'       => 'carts#update_line'
+    delete '/api/cart/lines/:id'       => 'carts#remove_line'
 
     post '/api/order/add', action: 'add', controller: 'order'
     post '/api/order/order-now', action: 'orderNow', controller: 'order'
