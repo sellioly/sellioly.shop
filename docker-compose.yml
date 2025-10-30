@@ -48,7 +48,6 @@ services:
       REDIS_SIDEKIQ_URL: redis://redis:6379/0
       REDIS_CABLE_URL: redis://redis:6379/1
       REDIS_CACHE_URL: redis://redis:6379/2
-      SIDEKIQ_NAMESPACE: sellioly-shop
     networks:
       - proxy # Traefik <-> app
       - default # app <-> db_mysql & redis
@@ -113,7 +112,6 @@ services:
       REDIS_SIDEKIQ_URL: redis://redis:6379/0 # <-- align with app
       REDIS_CABLE_URL: redis://redis:6379/1
       REDIS_CACHE_URL: redis://redis:6379/2
-      SIDEKIQ_NAMESPACE: sellioly-shop
     labels:
       - traefik.enable=false
     networks:
