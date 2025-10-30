@@ -1,203 +1,184 @@
+# app/jobs/get_template_from_aws_job.rb
+# frozen_string_literal: true
+
 require "zip"
+require "faraday"
+require "json"
+require "openssl"
 
 class GetTemplateFromAwsJob < ApplicationJob
   queue_as :default
 
+  # ---- Config ----
+  CALLBACK_SUCCESS = ENV.fetch("TEMPLATE_CALLBACK_SUCCESS", "https://api.sellioly.com/ruby/template-uploaded/success")
+  CALLBACK_FAILED  = ENV.fetch("TEMPLATE_CALLBACK_FAILED",  "https://api.sellioly.com/ruby/template-uploaded/failed")
+  CALLBACK_SECRET  = ENV.fetch("SELLIOLY_SHARED_SECRET",    nil) # optional HMAC signing
+  STORAGE_ROOT     = ENV.fetch("THEME_STORAGE_ROOT",         Rails.root.join("storage").to_s)
+
+  HTTP_OPEN_TIMEOUT = 10
+  HTTP_TIMEOUT      = 30
+
+  # Required files inside the zip
+  REQUIRED_FILES = %w[
+    config/settings_theme.json
+    config/settings_data.json
+    config/settings_schema.json
+    layout/theme.liquid
+    layout/theme.json
+  ].freeze
+
+  # What to extract (globs)
+  EXTRACT_GLOBS = [
+    "assets/*.css",
+    "assets/*.js",
+    "assets/fonts/*.{eot,ttf,woff,woff2}",
+    "assets/**/*.{png,jpg,jpeg,webp,svg,gif,ico,avif}",
+    "config/*.json",
+    "layout/*.liquid",
+    "layout/*.json",
+    "locales/*.json",
+    "schemas/*.json",
+    "sections/*.liquid",
+    "snippets/*.liquid",
+    "components/*.liquid",
+    "templates/*.json"
+  ].freeze
+
   def perform(shop_id, template_id, url_theme)
-    @response = Faraday.get(url_theme)
+    Rails.logger.info("[ThemeImport] start shop_id=#{shop_id} template_id=#{template_id} url=#{url_theme}")
 
-    @zip_buffer = @response.body
-    zipfile = ::Zip::File.open_buffer(@zip_buffer)
-    if zipfile
-      @error = []
-      settings_templates = zipfile.find_entry("config/settings_templates.json")
+    base_dir = File.join(STORAGE_ROOT, shop_id.to_s, template_id.to_s)
+    FileUtils.mkdir_p(base_dir)
 
-      # settings_assets = zipfile.find_entry("config/settings_assets.json")
-      # unless settings_assets
-      #   @error.push('config/settings_assets.json is missing!')
-      # end\
+    zip_bytes = download_zip(url_theme)
+    errors, settings = validate_and_extract(zip_bytes, base_dir)
 
-
-      settings_theme = zipfile.find_entry("config/settings_theme.json")
-      unless settings_theme
-        @error.push('config/settings_theme.json is missing!')
-      end
-
-
-      settings_data = zipfile.find_entry("config/settings_data.json")
-      unless settings_data
-        @error.push('config/settings_data.json is missing!')
-      end
-
-      settings_schema = zipfile.find_entry("config/settings_schema.json")
-      unless settings_schema
-        @error.push('config/settings_schema.json is missing!')
-      end
-
-      layout_theme = zipfile.find_entry("layout/theme.liquid")
-      unless layout_theme
-        @error.push('layout/theme.liquid is missing!')
-      end
-
-
-      json_theme = zipfile.find_entry("layout/theme.json")
-      unless json_theme
-        @error.push('layout/theme.json is missing!')
-      end
-
-      assets_folder = zipfile.find_entry("assets")
-      unless assets_folder
-        @error.push('assets folder is missing!')
-      end
-
-      locales_folder = zipfile.find_entry("locales")
-      unless locales_folder
-        @error.push('locales folder is missing!')
-      end
-
-      schemas_folder = zipfile.find_entry("schemas")
-      unless schemas_folder
-        @error.push('schemas folder is missing!')
-      end
-
-      section_folder = zipfile.find_entry("sections")
-      unless section_folder
-        @error.push('sections folder is missing!')
-      end
-
-      snippets_folder = zipfile.find_entry("snippets")
-      unless snippets_folder
-        @error.push('snippets folder is missing!')
-      end
-
-      templates_folder = zipfile.find_entry("templates")
-      unless templates_folder
-        @error.push('templates folder is missing!')
-      end
-
-      if @error.length <= 0
-        @sub_path = "/storage/#{shop_id}/#{template_id}"
-        @path = Rails.root.to_s + @sub_path
-
-        unless File.directory?(@path)
-          FileUtils.mkdir_p(@path)
-        end
-
-        unless File.directory?(@path + '/assets')
-          FileUtils.mkdir_p(@path + '/assets')
-
-          zipfile.glob('assets/*.css').each do
-          |entry|
-            entry.extract(@path + '/' + entry.name)
-          end
-
-          zipfile.glob('assets/*.js').each do
-          |entry|
-            entry.extract(@path + '/' + entry.name)
-          end
-        end
-
-        unless File.directory?(@path + '/assets/fonts')
-          FileUtils.mkdir_p(@path + '/assets/fonts')
-          extentions = %w[eot ttf woff woff2]
-
-          extentions.each do |ext|
-            zipfile.glob('assets/fonts/*.' + ext).each do
-            |entry|
-              entry.extract(@path + '/' + entry.name)
-            end
-          end
-        end
-
-        unless File.directory?(@path + '/config')
-          FileUtils.mkdir_p(@path + '/config')
-          zipfile.glob('config/*.json').each do
-          |entry|
-            next unless %w[config/settings_templates.json config/settings_theme.json config/settings_data.json config/settings_schema.json].include? entry.name
-            entry.extract(@path + '/' + entry.name)
-          end
-        end
-
-        unless File.directory?(@path + '/layout')
-          FileUtils.mkdir_p(@path + '/layout')
-          zipfile.glob('layout/*.liquid').each do
-          |entry|
-            entry.extract(@path + '/' + entry.name)
-          end
-
-          zipfile.glob('layout/*.json').each do
-          |entry|
-            entry.extract(@path + '/' + entry.name)
-          end
-        end
-
-        unless File.directory?(@path + '/locales')
-          FileUtils.mkdir_p(@path + '/locales')
-          zipfile.glob('locales/*.json').each do
-          |entry|
-            entry.extract(@path + '/' + entry.name)
-          end
-        end
-
-        unless File.directory?(@path + '/schemas')
-          FileUtils.mkdir_p(@path + '/schemas')
-          zipfile.glob('schemas/*.json').each do
-          |entry|
-            entry.extract(@path + '/' + entry.name)
-          end
-        end
-
-        unless File.directory?(@path + '/sections')
-          FileUtils.mkdir_p(@path + '/sections')
-          zipfile.glob('sections/*.liquid').each do
-          |entry|
-            entry.extract(@path + '/' + entry.name)
-          end
-        end
-
-        unless File.directory?(@path + '/snippets')
-          FileUtils.mkdir_p(@path + '/snippets')
-          zipfile.glob('snippets/*.liquid').each do
-          |entry|
-            entry.extract(@path + '/' + entry.name)
-          end
-        end
-
-
-
-        unless File.directory?(@path + '/components')
-          FileUtils.mkdir_p(@path + '/components')
-          zipfile.glob('components/*.liquid').each do
-          |entry|
-            entry.extract(@path + '/' + entry.name)
-          end
-        end
-
-        unless File.directory?(@path + '/templates')
-          FileUtils.mkdir_p(@path + '/templates')
-          zipfile.glob('templates/*.json').each do
-          |entry|
-            entry.extract(@path + '/' + entry.name)
-          end
-        end
-
-        file = File.read(@path + '/config/settings_theme.json')
-        @data = JSON.load file
-        @theme_name = @data['theme_name']
-        @theme_version = @data['theme_version']
-        @theme_author = @data['theme_author']
-        @theme_support_url = @data['theme_support_url']
-
-        @response = HTTP.post("https://api.sellioly.com/ruby/template-uploaded/success",
-                              :form => { 'user_id' => shop_id, 'template_id' => template_id, 'template_path' => @sub_path, 'theme_name' => @theme_name, 'theme_version' => @theme_version, 'theme_author' => @theme_author, 'theme_support_url' => @theme_support_url })
-      else
-        @response = HTTP.post("https://api.sellioly.com/ruby/template-uploaded/failed",
-                              :form => { 'user_id' => shop_id, 'template_id' => template_id, 'reason' => @error })
-      end
+    if errors.empty?
+      payload = success_payload(shop_id, template_id, base_dir, settings)
+      post_callback(CALLBACK_SUCCESS, payload)
+      Rails.logger.info("[ThemeImport] success shop_id=#{shop_id} template_id=#{template_id} saved_to=#{base_dir} files=#{Dir.glob(File.join(base_dir, '**', '*')).count}")
     else
-      @error = ['Cannot open your zip file!']
-      @response = HTTP.post("https://api.sellioly.com/ruby/template-uploaded/failed",
-                            :form => { 'user_id' => shop_id, 'template_id' => template_id, 'reason' => @error })
+      post_callback(CALLBACK_FAILED, failed_payload(shop_id, template_id, errors))
+      Rails.logger.warn("[ThemeImport] failed shop_id=#{shop_id} template_id=#{template_id} errors=#{errors.join(' | ')}")
+    end
+  rescue => e
+    # Best-effort failure callback; avoid infinite retries spam by not re-raising.
+    Rails.logger.error("[ThemeImport] exception #{e.class}: #{e.message}\n#{e.backtrace&.first(15)&.join("\n")}")
+    post_callback(CALLBACK_FAILED, failed_payload(shop_id, template_id, ["exception: #{e.message}"])) rescue nil
+  end
+
+  private
+
+  # ---- Network ----
+
+  def http_client_json
+    Faraday.new do |f|
+      f.request :json
+      f.response :raise_error # raise on 4xx/5xx
+      f.options.open_timeout = HTTP_OPEN_TIMEOUT
+      f.options.timeout      = HTTP_TIMEOUT
+      f.adapter Faraday.default_adapter
+    end
+  end
+
+  def http_client_raw
+    Faraday.new do |f|
+      f.options.open_timeout = HTTP_OPEN_TIMEOUT
+      f.options.timeout      = HTTP_TIMEOUT
+      f.adapter Faraday.default_adapter
+    end
+  end
+
+  def download_zip(url)
+    resp = http_client_raw.get(url)
+    unless resp.success? && resp.body && resp.body.bytesize.positive?
+      raise "S3 download failed status=#{resp.status}"
+    end
+    resp.body
+  end
+
+  def post_callback(url, payload)
+    headers = { "Accept" => "application/json", "Content-Type" => "application/json" }
+    if CALLBACK_SECRET
+      sig = OpenSSL::HMAC.hexdigest("SHA256", CALLBACK_SECRET, payload.to_json)
+      headers["X-Sellioly-Signature"] = sig
+    end
+    res = http_client_json.post(url, payload, headers)
+    Rails.logger.info("[ThemeImport] callback POST #{url} status=#{res.status}")
+  end
+
+  # ---- Zip handling ----
+
+  def validate_and_extract(zip_bytes, base_dir)
+    errors = []
+    settings = {}
+
+    Zip::File.open_buffer(zip_bytes) do |zip|
+      # Validate required files
+      REQUIRED_FILES.each do |req|
+        errors << "#{req} is missing!" unless zip.find_entry(req)
+      end
+
+      # If critical files missing, skip extraction but still return errors
+      return [errors, settings] unless errors.empty?
+
+      # Extract everything we care about
+      EXTRACT_GLOBS.each { |pattern| extract_glob(zip, pattern, base_dir) }
+
+      # Load settings for callback metadata
+      theme_json_path = File.join(base_dir, "config", "settings_theme.json")
+      settings = JSON.parse(File.read(theme_json_path))
+    end
+
+    [errors, settings]
+  end
+
+  def extract_glob(zip, pattern, root)
+    zip.glob(pattern).each do |entry|
+      # Safety: avoid directory traversal
+      next if entry.name.include?("..")
+
+      target = File.join(root, entry.name)
+      FileUtils.mkdir_p(File.dirname(target))
+
+      # Overwrite duplicates
+      entry.extract(target) { true }
+    rescue Zip::Error => e
+      Rails.logger.warn("[ThemeImport] zip extract warning for #{entry.name}: #{e.message}")
+    end
+  end
+
+  # ---- Payloads ----
+
+  def success_payload(shop_id, template_id, base_dir, settings)
+    {
+      shop_id:        shop_id,
+      template_id:    template_id,
+      template_path:  relative_template_path(base_dir),
+      theme_name:     settings["theme_name"],
+      theme_version:  settings["theme_version"],
+      theme_author:   settings["theme_author"],
+      theme_support_url: settings["theme_support_url"]
+    }
+  end
+
+  def failed_payload(shop_id, template_id, reasons)
+    {
+      shop_id:     shop_id,
+      template_id: template_id,
+      reason:      Array(reasons).map(&:to_s)
+    }
+  end
+
+  def relative_template_path(abs_path)
+    # Return a path like "/storage/<shop>/<template>" to match your Laravel expectation
+    # If STORAGE_ROOT ends with "/storage", this will work as-is.
+    if STORAGE_ROOT.end_with?("/storage")
+      abs_path.sub(Rails.root.to_s, "")
+    else
+      # Fallback: compute relative from STORAGE_ROOT
+      rel = abs_path.sub(STORAGE_ROOT, "")
+      File.join("/storage", rel) # ensures leading "/storage"
     end
   end
 end
