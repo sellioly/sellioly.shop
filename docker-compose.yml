@@ -42,17 +42,22 @@ services:
       # If you use Rails credentials for production, also set:
       # RAILS_MASTER_KEY: ${RAILS_MASTER_KEY:?set-in-.env}
       DB_USER: sellioly
-      DB_NAME: sellioly_production            # <-- point Rails to the new DB
+      DB_NAME: sellioly_production # <-- point Rails to the new DB
       DB_PASSWORD: sellioly
       DB_HOST: db_mysql
       REDIS_SIDEKIQ_URL: redis://redis:6379/0
-      REDIS_CABLE_URL:   redis://redis:6379/1
-      REDIS_CACHE_URL:   redis://redis:6379/2
+      REDIS_CABLE_URL: redis://redis:6379/1
+      REDIS_CACHE_URL: redis://redis:6379/2
+      SIDEKIQ_NAMESPACE: sellioly-shop
     networks:
-      - proxy     # Traefik <-> app
-      - default   # app <-> db_mysql & redis
+      - proxy # Traefik <-> app
+      - default # app <-> db_mysql & redis
     healthcheck:
-      test: ["CMD-SHELL", "curl -fsS --max-time 2 http://localhost:3000/health >/dev/null || exit 1"]
+      test:
+        [
+          "CMD-SHELL",
+          "curl -fsS --max-time 2 http://localhost:3000/health >/dev/null || exit 1",
+        ]
       interval: 10s
       timeout: 3s
       retries: 10
@@ -101,13 +106,14 @@ services:
       RAILS_LOG_TO_STDOUT: "1"
       SECRET_KEY_BASE: ${SECRET_KEY_BASE:?set-in-.env}
       DB_USER: sellioly
-      DB_NAME: sellioly_production          # <-- use the new DB here too
+      DB_NAME: sellioly_production # <-- use the new DB here too
       DB_PASSWORD: sellioly
       DB_HOST: db_mysql
-      REDIS_URL:         redis://redis:6379/1
-      REDIS_SIDEKIQ_URL: redis://redis:6379/1
-      REDIS_CABLE_URL:   redis://redis:6379/1
-      REDIS_CACHE_URL:   redis://redis:6379/2
+      REDIS_URL: redis://redis:6379/0 # <-- align with app
+      REDIS_SIDEKIQ_URL: redis://redis:6379/0 # <-- align with app
+      REDIS_CABLE_URL: redis://redis:6379/1
+      REDIS_CACHE_URL: redis://redis:6379/2
+      SIDEKIQ_NAMESPACE: sellioly-shop
     labels:
       - traefik.enable=false
     networks:
