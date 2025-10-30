@@ -124,7 +124,7 @@ class ShopController < ApplicationController
     cart_id = cookies[:cart_id]
 
     # GET cart snapshot (idempotent, cheap)
-    cart = cart_repo.get_cart(cart_id: cart_id)
+    cart = cart_repo.show(cart_id: cart_id)
 
     # Always inject cart into args for SSR (header badge, mini-cart, etc.)
     @args['cart'] = cart || default_empty_cart(cart_id)
