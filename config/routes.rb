@@ -38,10 +38,10 @@ Rails.application.routes.draw do
 
     # Legacy editor aliases (no shop host constraint section)
     # If you prefer to keep them under non-preview hosts, add them in that block as well.
-    get '/product-preview',   to: 'preview#legacy_builder_product'
-    get '/collection-preview',to: 'preview#legacy_builder_collection'
-    get '/cart-preview',      to: 'preview#legacy_builder_cart'
-    get '/checkout-preview',  to: 'preview#legacy_builder_checkout'
+    get '/product-preview',    to: 'preview#legacy_builder_product'
+    get '/collection-preview', to: 'preview#legacy_builder_collection'
+    get '/cart-preview',       to: 'preview#legacy_builder_cart'
+    get '/checkout-preview',   to: 'preview#legacy_builder_checkout'
 
     # Static assets remain as-is (served from ShopController)
     get '/files/1/:shop_id/:template_id/assets/*filepath', to: 'assets#show', format: false
@@ -53,13 +53,15 @@ Rails.application.routes.draw do
     # post '/api/cart/update-quantity', action: 'updateQuantity', controller: 'cart'
     # post '/api/cart/buynow', action: 'buynow', controller: 'cart'
     
-    get    '/api/cart'                => 'carts#show'
-    post   '/api/cart/lines'           => 'carts#add_line'
-    patch  '/api/cart/lines/:id'       => 'carts#update_line'
-    delete '/api/cart/lines/:id'       => 'carts#remove_line'
+    get    '/api/cart',           to: 'carts#show'
+    post   '/api/cart/lines',     to: 'carts#add_line'
+    patch  '/api/cart/lines/:id', to: 'carts#update_line'
+    delete '/api/cart/lines/:id', to: 'carts#remove_line'
 
-    post '/api/order/add', action: 'add', controller: 'order'
-    post '/api/order/order-now', action: 'orderNow', controller: 'order'
+    post   '/api/orders',            to: 'orders#create'
+    get    '/api/orders/:id',        to: 'orders#show'
+    post   '/api/orders/:id/cancel', to: 'orders#cancel'
+    
     get '/collections/:collection', action: 'collection', controller: 'shop'
     get '/products/:product', action: 'product', controller: 'shop'
     get '/checkout', action: 'checkout', controller: 'shop'
