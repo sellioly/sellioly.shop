@@ -2,7 +2,6 @@
 class OrdersController < ShopController
   # POST /orders
   def create
-    ensure_store_context
     repo = OrderRepository.new
 
     payload = {
