@@ -98,15 +98,15 @@ module Http
     # Orders (JSON)
     # ----------------------------------------------------------------------
     def create_order(form)
-      request(verb: :post, path: '/v1/orders', body: form || EMPTY_HASH)
+      request(verb: :post, path: '/ruby/orders', body: form || EMPTY_HASH)
     end
 
     def get_order(id)
-      request(verb: :get, path: "/v1/orders/#{id}")
+      request(verb: :get, path: "/ruby/orders/#{id}")
     end
 
     def cancel_order(id)
-      request(verb: :post, path: "/v1/orders/#{id}/cancel")
+      request(verb: :post, path: "/ruby/orders/#{id}/cancel")
     end
 
     # ----------------------------------------------------------------------
