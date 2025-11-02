@@ -101,11 +101,12 @@ class ShopController < ApplicationController
   def order_completed
     repo = OrderRepository.new
 
-    order = repo.show(params[:order_id])
+    order = repo.show(params[:order])
 
     extra_ctx = { 'order' => order }
     render_with_renderer('order-done.json', extra_ctx: extra_ctx)
   end
+
   # Catch-all “page” route: serves a template if present, else 404.
   def page
     template_name = "#{params[:path]}.json"

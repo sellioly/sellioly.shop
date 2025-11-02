@@ -72,7 +72,7 @@ Rails.application.routes.draw do
     get '/checkout-preview', action: 'checkoutPreview', controller: 'shop'
     get '/our-store', action: 'our_store', controller: 'shop'
     get '/about-us', action: 'about_us', controller: 'shop'
-    get '/order-completed', action: 'order_completed', controller: 'shop'
+    get '/order-completed/:order', action: 'order_completed', controller: 'shop'
     get '/404', action: 'not_found', controller: 'shop'
 
     get '/files/1/:shop_id/:template_id/assets/*filepath', to: 'assets#show', format: false
