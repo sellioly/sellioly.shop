@@ -119,30 +119,32 @@ class ShopController < ApplicationController
   def ensure_cart!
     cart_repo = CartRepository.new
 
+    
+    cart_id = request.cookies['cart_id'] || cookies['cart_id'] || cookies[:cart_id] || nil
+    
     # log the cart_id from cookies for debugging
-    Rails.logger.info("Ensuring cart with cart_id: #{cookies[:cart_id]}")
-
-    cart_id = cookies[:cart_id] || nil
+    Rails.logger.info("Ensuring cart with cart_id: #{cart_id}")
 
     # GET cart snapshot (idempotent, cheap)
     cart = cart_repo.show(cart_id: cart_id)
     if cart
       cart_id = cart['id']
-      cookies[:cart_id] = {
+      response.set_cookie(
+        :cart_id,
         value: cart_id,
         domain: request.host,
         path: '/',
         same_site: :lax,
         secure: Rails.env.production?,
         expires: 30.days
-      }
+      )
     end
 
     # Always inject cart into args for SSR (header badge, mini-cart, etc.)
     @args['cart'] = cart || default_empty_cart(cart_id)
   rescue => e
     Rails.logger.warn({ at: 'ensure_cart', err: e.class.name, msg: e.message }.to_json)
-    @args['cart'] ||= default_empty_cart(cookies[:cart_id])
+    @args['cart'] ||= default_empty_cart(cart_id || request.cookies['cart_id'] || cookies['cart_id'] || cookies[:cart_id])
   end
 
 

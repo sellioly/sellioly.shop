@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   # ——— Live storefront bootstrap (domain → store → base args) ———
   # Use this as a before_action in live controllers (not in PreviewController).
   def initialize_shop
-    ctx, failure = Shops::ShopContext.new.resolve!(host: request.host, cookies: cookies)
+    ctx, failure = Shops::ShopContext.new.resolve!(host: request.host, cookies: request.cookies.presence || cookies.to_hash)
     if failure
       return content_not_found if failure.type == :not_found
       return internal_server_error
