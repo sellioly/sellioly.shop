@@ -119,31 +119,38 @@ class ShopController < ApplicationController
   def ensure_cart!
     cart_repo = CartRepository.new
 
-    # log the cart_id from cookies for debugging
-    Rails.logger.info("Ensuring cart with cart_id: #{cookies[:cart_id]}")
+    Rails.logger.info("HTTP_COOKIE: #{request.get_header('HTTP_COOKIE')}")
+    Rails.logger.info("request.cookies: #{request.cookies.inspect}")
+    Rails.logger.info("rails cookies.to_hash(before): #{cookies.to_hash.inspect}")
 
-    cart_id = cookies[:cart_id] || nil
+    # خذها من Rack أولاً (ما كتحتاجش middleware)، ثم من Rails jar
+    cart_id = request.cookies['cart_id'] || cookies['cart_id'] || cookies[:cart_id]
 
-    # GET cart snapshot (idempotent, cheap)
+    Rails.logger.info("Ensuring cart with cart_id: #{cart_id}")
+
     cart = cart_repo.show(cart_id: cart_id)
-    if cart
-      cart_id = cart['id']
+
+    if cart && cart['id'].present?
+      new_id = cart['id']
       cookies[:cart_id] = {
-        value: cart_id,
-        domain: request.host,
+        value: new_id,
+        domain: :all,      # .sellioly.com (باش تتقرا عبر subdomains إلا احتجتي)
         path: '/',
-        same_site: :lax,
+        same_site: :lax,   # هنا نفس-origin، يقد يكفي Lax. لو cross-site دير :none + secure: true
         secure: Rails.env.production?,
+        httponly: false,
         expires: 30.days
       }
+      cart_id = new_id
     end
 
-    # Always inject cart into args for SSR (header badge, mini-cart, etc.)
     @args['cart'] = cart || default_empty_cart(cart_id)
+
   rescue => e
     Rails.logger.warn({ at: 'ensure_cart', err: e.class.name, msg: e.message }.to_json)
-    @args['cart'] ||= default_empty_cart(cookies[:cart_id])
+    @args['cart'] ||= default_empty_cart(cart_id || request.cookies['cart_id'] || cookies['cart_id'] || cookies[:cart_id])
   end
+
 
   def default_empty_cart(cart_id)
     {
