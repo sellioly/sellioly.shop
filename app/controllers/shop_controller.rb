@@ -120,7 +120,7 @@ class ShopController < ApplicationController
     cart_repo = CartRepository.new
 
     # log the cart_id from cookies for debugging
-    Rails.logger.info("Ensuring cart with cart_id: #{cookies}")
+    Rails.logger.info("Ensuring cart with cart_id: #{cookies[:cart_id]}")
 
     cart_id = cookies[:cart_id] || nil
 

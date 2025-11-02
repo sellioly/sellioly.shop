@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
+  include ActionController::Cookies  # يضمن توفر helper حتى لو تغيّر الوراثة
   protect_from_forgery with: :null_session
   rescue_from StandardError, with: :log_and_render_error
 

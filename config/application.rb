@@ -29,6 +29,9 @@ module Sellioly
     config.active_job.queue_adapter = :sidekiq
     HTTP.default_options = { ssl: { verify_mode: OpenSSL::SSL::VERIFY_NONE } }
 
+    # ضروريين باش cookies[...] يخدم:
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Session::CookieStore, key: '_app_session'    
 
     Liquid::Template.register_filter(JsonFilter)
     Liquid::Template.register_filter(MoneyFilter)
