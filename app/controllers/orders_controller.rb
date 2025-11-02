@@ -4,6 +4,9 @@ class OrdersController < ShopController
   def create
     repo = OrderRepository.new
 
+    # log the cart_id from cookies for debugging
+    Rails.logger.info("Creating order with cart_id: #{cookies[:cart_id]}")
+
     payload = {
       cart_id: cookies[:cart_id],
       customer: {
