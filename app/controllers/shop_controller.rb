@@ -129,15 +129,14 @@ class ShopController < ApplicationController
     cart = cart_repo.show(cart_id: cart_id)
     if cart
       cart_id = cart['id']
-      response.set_cookie(
-        :cart_id,
+      cookies[:cart_id] = {
         value: cart_id,
         domain: request.host,
         path: '/',
         same_site: :lax,
         secure: Rails.env.production?,
         expires: 30.days
-      )
+      }
     end
 
     # Always inject cart into args for SSR (header badge, mini-cart, etc.)
