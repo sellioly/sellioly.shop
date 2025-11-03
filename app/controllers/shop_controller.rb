@@ -101,7 +101,8 @@ class ShopController < ApplicationController
   def order_completed
     repo = OrderRepository.new
 
-    order = repo.show(params[:order])
+    order_data = repo.show(params[:order])
+    order = order_data["order"]
 
     extra_ctx = { 'order' => order }
     render_with_renderer('order-done.json', extra_ctx: extra_ctx)
