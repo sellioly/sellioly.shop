@@ -87,15 +87,18 @@ class ShopController < ApplicationController
   end
 
   def checkout
-    session_id = params[:session_id].to_s.presence || nil
+    # /checkout?session_id=xxxx
+    session_id = params[:session_id].to_s.presence
 
-    extra_ctx = {}
+    extra_ctx = {
+      checkout_session: nil
+    }
 
     # Load checkout session data
     if session_id
       repo = CheckoutSessionRepository.new
-      session_data = repo.show(id: session_id).json
-      extra_ctx['checkout_session'] = session_data['checkout_session'] if session_data
+      checkout_session = repo.show(id: session_id).json
+      extra_ctx['checkout_session'] = checkout_session if checkout_session
     end
 
     render_with_renderer('checkout.json', extra_ctx: extra_ctx)
