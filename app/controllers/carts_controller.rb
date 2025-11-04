@@ -1,110 +1,120 @@
 # frozen_string_literal: true
 
-class CartsController < ApplicationController
-  protect_from_forgery with: :null_session
+class CartsController < Api::BaseController
+  before_action :initialize_shop  # يضبط @shop_id, @domain, @path, @args
 
-  before_action :initialize_shop # يضبط @shop_id, @domain, @path, @args
+  def initialize(repo: CartRepository.new)
+    super()
+    @repo = repo
+  end
 
-  # GET /cart
-  # params: cart_id?, currency?
+  # GET /cart?cart_id?&currency?
   def show
-    cart_id  = params[:cart_id] || cookies[:cart_id]
+    cart_id  = params[:cart_id].presence || cookies[:cart_id]
     currency = @args['currency']
 
-    repo  = CartRepository.new
-    cart  = repo.show(cart_id: cart_id, currency: currency)
+    result = @repo.show(cart_id: cart_id, currency: currency)
 
-    # لو مفيش cart_id جالك من العميل والـ API أنشأ جديد، خزِّنه في الكوكيز
-    if cart && cart['id'] && cookies[:cart_id] != cart['id']
-      cookies[:cart_id] = { value: cart['id'], path: '/', httponly: true, same_site: :lax }
-    end
-
-    render json: { cart: cart }.compact
+    ensure_cart_cookie!(result.json) if result.ok?
+    render json: { cart: result.json }, status: map_status(result.status)
   end
 
   # POST /cart/lines
   # body: { variant_id, quantity, properties? , cart_id? }
   # query: sections=mini_cart,cart_badge&current_url=/...
   def add_line
-    cart_id   = params[:cart_id] || cookies[:cart_id]
-    currency  = @args['currency']
-    variant_id = params.require(:variant_id)
-    quantity   = params.require(:quantity).to_i
-    properties = params[:properties].is_a?(ActionController::Parameters) ? params[:properties].to_unsafe_h : (params[:properties] || {})
-    idem_key   = request.headers['X-Idempotency-Key'] || SecureRandom.uuid
+    cart_id    = params[:cart_id].presence || cookies[:cart_id]
+    currency   = @args['currency']
 
-    repo = CartRepository.new
-    payload = repo.add_line(
+    variant_id = params.require(:variant_id).to_s
+    quantity   = params.require(:quantity).to_i
+    properties = extract_properties(params[:properties])
+
+    result = @repo.add_line(
       cart_id: cart_id,
       currency: currency,
       variant_id: variant_id,
       quantity: quantity,
       properties: properties,
-      idempotency_key: idem_key
+      idempotency_key: current_idempotency_key # من الـ concern
     )
 
-    ensure_cart_cookie!(payload)
-
-    render json: { cart: payload, sections: render_sections_if_requested(payload) }
+    if result.ok?
+      ensure_cart_cookie!(result.json)
+      render json: { cart: result.json, sections: render_sections_if_requested(result.json) },
+             status: map_status(result.status)
+    else
+      render json: (result.json || { error: result.error || 'Cart add failed' }),
+             status: map_status(result.status)
+    end
   rescue ActionController::ParameterMissing => e
     render json: { error: e.message }, status: :bad_request
-  rescue => e
-    Rails.logger.error(at: 'cart_add_line', err: e.class.name, msg: e.message)
-    render json: { error: 'Cart add failed' }, status: :bad_gateway
   end
 
   # PATCH /cart/lines/:id
   def update_line
-    cart_id = params[:cart_id] || cookies[:cart_id]
-    line_id = params.require(:id)
+    cart_id = params[:cart_id].presence || cookies[:cart_id]
+    line_id = params.require(:id).to_s
     qty     = params.require(:quantity).to_i
 
-    repo    = CartRepository.new
-    payload = repo.update_line(cart_id: cart_id, line_id: line_id, quantity: qty)
+    result = @repo.update_line(cart_id: cart_id, line_id: line_id, quantity: qty)
 
-    ensure_cart_cookie!(payload)
-
-    render json: { cart: payload, sections: render_sections_if_requested(payload) }
+    if result.ok?
+      ensure_cart_cookie!(result.json)
+      render json: { cart: result.json, sections: render_sections_if_requested(result.json) },
+             status: map_status(result.status)
+    else
+      render json: (result.json || { error: result.error || 'Cart update failed' }),
+             status: map_status(result.status)
+    end
   rescue ActionController::ParameterMissing => e
     render json: { error: e.message }, status: :bad_request
-  rescue => e
-    Rails.logger.error(at: 'cart_update_line', err: e.class.name, msg: e.message)
-    render json: { error: 'Cart update failed' }, status: :bad_gateway
   end
 
   # DELETE /cart/lines/:id
   def remove_line
-    cart_id = params[:cart_id] || cookies[:cart_id]
-    line_id = params.require(:id)
+    cart_id = params[:cart_id].presence || cookies[:cart_id]
+    line_id = params.require(:id).to_s
 
-    repo    = CartRepository.new
-    payload = repo.remove_line(cart_id: cart_id, line_id: line_id)
+    result = @repo.remove_line(cart_id: cart_id, line_id: line_id)
 
-    ensure_cart_cookie!(payload)
-
-    render json: { cart: payload, sections: render_sections_if_requested(payload) }
+    if result.ok?
+      ensure_cart_cookie!(result.json)
+      render json: { cart: result.json, sections: render_sections_if_requested(result.json) },
+             status: map_status(result.status)
+    else
+      render json: (result.json || { error: result.error || 'Cart remove failed' }),
+             status: map_status(result.status)
+    end
   rescue ActionController::ParameterMissing => e
     render json: { error: e.message }, status: :bad_request
-  rescue => e
-    Rails.logger.error(at: 'cart_remove_line', err: e.class.name, msg: e.message)
-    render json: { error: 'Cart remove failed' }, status: :bad_gateway
   end
 
   private
 
-  def ensure_cart_cookie!(payload)
-    return unless payload && payload['id']
-    cookies[:cart_id] = { value: payload['id'], path: '/', httponly: true, same_site: :lax }
-    @args['cart'] = payload # متوفر للـ snippets
+  def extract_properties(props)
+    return {} if props.nil?
+    return props.to_unsafe_h if props.is_a?(ActionController::Parameters)
+    props
+  end
+
+  def ensure_cart_cookie!(cart_payload)
+    return unless cart_payload.is_a?(Hash) && cart_payload['id'].present?
+
+    if cookies[:cart_id] != cart_payload['id']
+      cookies[:cart_id] = { value: cart_payload['id'], path: '/', httponly: true, same_site: :lax }
+    end
+
+    @args['cart'] = cart_payload # متوفر للـ templates/snippets
   end
 
   # sections=mini_cart,cart_badge   current_url=/cart
   def render_sections_if_requested(cart_payload)
     return {} unless params[:sections].present?
+
     section_ids = params[:sections].to_s.split(',').map(&:strip).reject(&:empty?)
     return {} if section_ids.empty?
 
-    # نستخدم PageRenderer بنفس سياق الثيم الحالي
     store     = Theme::ThemeStore.new(root: @path)
     compiler  = Theme::TemplateCompiler.new
     renderer  = Theme::LiquidRenderer.new
@@ -118,13 +128,14 @@ class CartsController < ApplicationController
       'include_depth'  => 0
     }
 
-    # كل اسم قسم/سنيبت بنحاول نلاقِيه في snippets→components→sections
     section_ids.each_with_object({}) do |name, h|
       rel = if name.include?('/')
-        "#{name}.liquid"
-      else
-        %W[snippets/#{name}.liquid components/#{name}.liquid sections/#{name}.liquid].find { |p| store.exists?(p) } || "snippets/#{name}.liquid"
-      end
+              "#{name}.liquid"
+            else
+              %W[snippets/#{name}.liquid components/#{name}.liquid sections/#{name}.liquid]
+                .find { |p| store.exists?(p) } || "snippets/#{name}.liquid"
+            end
+
       if store.exists?(rel)
         tpl  = compiler.compile(theme_store: store, rel_path: rel)
         html = renderer.safe_render(tpl, assigns: assigns, theme_store: store, registers: registers)
