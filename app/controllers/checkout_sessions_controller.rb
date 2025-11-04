@@ -52,32 +52,31 @@ class CheckoutSessionsController < BaseController
 
   def build_cart_payload
     {
-      mode: "cart",
       cart_id: params[:cart_id].to_s,
-      currency: params[:currency].presence || "MAD",
-      locale: params[:locale].presence || I18n.locale.to_s
+      customer: {
+        name: params[:customer_name].presence,
+        email: params[:customer_email].presence,
+        phone: params[:customer_phone].presence
+      }
     }
   end
 
   def build_buy_now_payload
-    line = if params[:lines].present?
-      raw = Array(params[:lines]).first || {}
-      { variant_id: (raw[:variant_id] || raw["variant_id"]).to_s, quantity: (raw[:quantity] || raw["quantity"] || 1).to_i }
-    else
-      { variant_id: params[:variant_id].to_s, quantity: (params[:quantity] || 1).to_i }
-    end
-
     {
-      mode: "buy_now",
-      lines: [line],
-      currency: params[:currency].presence || "MAD",
-      locale: params[:locale].presence || I18n.locale.to_s
+      buy_now: true,
+      variant_id: params.require(:variant_id).to_s,
+      quantity:   params.require(:quantity).to_i,
+      customer: {
+        name: params[:customer_name].presence,
+        email: params[:customer_email].presence,
+        phone: params[:customer_phone].presence
+      }
     }
   end
 
   def update_params
     params.permit(
-      contact: [:email, :phone],
+      customer: [:name, :email, :phone],
       shipping_address: [:name, :phone, :country, :city, :address1, :address2, :postal_code],
       billing_address:  [:name, :phone, :country, :city, :address1, :address2, :postal_code],
       notes: [:text],
