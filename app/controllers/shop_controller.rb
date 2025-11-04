@@ -136,7 +136,13 @@ class ShopController < ApplicationController
     Rails.logger.info("Ensuring cart with cart_id: #{cart_id}")
 
     # GET cart snapshot (idempotent, cheap)
-    cart = cart_repo.show(cart_id: cart_id)
+    result = cart_repo.show(cart_id: cart_id)
+
+    # Log the result for debugging
+    Rails.logger.info("Cart show result: status=#{result.status}, error=#{result.error}")
+
+    cart = result.json
+    
     if cart
       cart_id = cart['id']
       cookies[:cart_id] = {
