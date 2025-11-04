@@ -77,7 +77,9 @@ module Http
 
     def cart_add_line(cart_id:, currency:, variant_id:, quantity:, properties: {}, idempotency_key: nil)
       headers = {}
+      # Keep legacy header while also supporting the bare header name.
       headers['X-Idempotency-Key'] = idempotency_key if idempotency_key
+      headers['Idempotency-Key']   = idempotency_key if idempotency_key
       request(verb: :post, path: '/ruby/cart/lines',
               params: nil,
               body: { cart_id:, currency:, variant_id:, quantity:, properties: properties || {} },
@@ -97,16 +99,43 @@ module Http
     # ----------------------------------------------------------------------
     # Orders (JSON)
     # ----------------------------------------------------------------------
-    def create_order(form)
-      request(verb: :post, path: '/ruby/orders', body: form || EMPTY_HASH)
-    end
-
     def get_order(id)
       request(verb: :get, path: "/ruby/orders/#{id}")
     end
 
     def cancel_order(id)
       request(verb: :post, path: "/ruby/orders/#{id}/cancel")
+    end
+
+    # ----------------------------------------------------------------------
+    # Checkout Sessions (JSON)
+    # ----------------------------------------------------------------------
+    def create_checkout_session(payload:, idempotency_key: nil)
+      headers = {}
+      headers['X-Idempotency-Key'] = idempotency_key if idempotency_key
+      headers['Idempotency-Key']   = idempotency_key if idempotency_key
+      request(verb: :post, path: '/ruby/checkout/sessions', body: payload, headers:)
+    end
+
+    def show_checkout_session(id:)
+      request(verb: :get, path: "/ruby/checkout/sessions/#{id}")
+    end
+
+    def update_checkout_session(id:, payload:)
+      request(verb: :patch, path: "/ruby/checkout/sessions/#{id}", body: payload)
+    end
+
+    def lock_checkout_session(id:)
+      request(verb: :post, path: "/ruby/checkout/sessions/#{id}/lock")
+    end
+
+    def place_checkout_session(id:)
+      request(verb: :post, path: "/ruby/checkout/sessions/#{id}/place")
+    end
+
+    # Read-only Orders API (v1)
+    def show_order(id:)
+      request(verb: :get, path: "/ruby/orders/#{id}")
     end
 
     # ----------------------------------------------------------------------

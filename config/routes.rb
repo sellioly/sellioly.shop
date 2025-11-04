@@ -48,20 +48,25 @@ Rails.application.routes.draw do
   end
 
   constraints lambda { |req| req.host != 'shop.sellioly.com' &&  req.host != 'preview.sellioly.com' } do
-    # post '/api/cart/add', action: 'add', controller: 'cart'
-    # post '/api/cart/remove', action: 'remove', controller: 'cart'
-    # post '/api/cart/update-quantity', action: 'updateQuantity', controller: 'cart'
-    # post '/api/cart/buynow', action: 'buynow', controller: 'cart'
     
+    # ----------------------- Cart 
     get    '/api/cart',           to: 'carts#show'
     post   '/api/cart/lines',     to: 'carts#add_line'
     patch  '/api/cart/lines/:id', to: 'carts#update_line'
     delete '/api/cart/lines/:id', to: 'carts#remove_line'
 
-    post   '/api/orders',            to: 'orders#create'
+    # ----------------------- Orders
     get    '/api/orders/:id',        to: 'orders#show'
-    post   '/api/orders/:id/cancel', to: 'orders#cancel'
+    # post   '/api/orders/:id/cancel', to: 'orders#cancel'
     
+    # ----------------------- Checkout session 
+    post   '/api/checkout_sessions',           to: 'checkout_sessions#create'
+    get    '/api/checkout_sessions/:id',       to: 'checkout_sessions#show'
+    patch  '/api/checkout_sessions/:id',       to: 'checkout_sessions#update'
+    post   '/api/checkout_sessions/:id/lock',  to: 'checkout_sessions#lock'
+    post   '/api/checkout_sessions/:id/place', to: 'checkout_sessions#place'
+
+    # ----------------------- Shop pages
     get '/collections/:collection', action: 'collection', controller: 'shop'
     get '/products/:product', action: 'product', controller: 'shop'
     get '/checkout', action: 'checkout', controller: 'shop'
