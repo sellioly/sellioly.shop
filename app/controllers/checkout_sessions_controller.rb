@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class Api::CheckoutSessionsController < Api::BaseController
+class Api::CheckoutSessionsController < BaseController
   def initialize(repo: CheckoutSessionRepository.new)
     super()
     @repo = repo

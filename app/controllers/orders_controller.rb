@@ -1,7 +1,7 @@
 # app/controllers/orders_controller.rb
 # frozen_string_literal: true
 
-class OrdersController < Api::BaseController
+class OrdersController < BaseController
   def initialize(repo: OrderRepository.new)
     super()
     @repo = repo

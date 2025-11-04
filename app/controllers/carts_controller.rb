@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CartsController < Api::BaseController
+class CartsController < BaseController
   before_action :initialize_shop  # يضبط @shop_id, @domain, @path, @args
 
   def initialize(repo: CartRepository.new)
