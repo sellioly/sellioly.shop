@@ -99,12 +99,15 @@ module Http
     # ----------------------------------------------------------------------
     # Orders (JSON)
     # ----------------------------------------------------------------------
-    def get_order(id)
+    def get_order(id:)
       request(verb: :get, path: "/ruby/orders/#{id}")
     end
 
-    def cancel_order(id)
-      request(verb: :post, path: "/ruby/orders/#{id}/cancel")
+    def cancel_order(id:, idempotency_key: nil)
+      headers = {}
+      headers['X-Idempotency-Key'] = idempotency_key if idempotency_key
+      headers['Idempotency-Key']   = idempotency_key if idempotency_key
+      request(verb: :post, path: "/ruby/orders/#{id}/cancel", body: nil, headers:)
     end
 
     # ----------------------------------------------------------------------
