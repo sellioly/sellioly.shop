@@ -75,7 +75,7 @@ class CheckoutSessionsController < BaseController
       customer: [:name, :email, :phone],
       shipping_address: [:name, :phone, :country, :city, :address1, :address2, :postal_code],
       billing_address:  [:name, :phone, :country, :city, :address1, :address2, :postal_code],
-      notes: :notes,
+      :notes,
       meta: {}
     ).to_h
   end
