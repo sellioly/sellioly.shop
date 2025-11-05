@@ -72,10 +72,10 @@ class CheckoutSessionsController < BaseController
 
   def update_params
     params.permit(
+      :notes,
       customer: [:name, :email, :phone],
       shipping_address: [:name, :phone, :country, :city, :address1, :address2, :postal_code],
       billing_address:  [:name, :phone, :country, :city, :address1, :address2, :postal_code],
-      :notes,
       meta: {}
     ).to_h
   end
