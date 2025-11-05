@@ -3,10 +3,25 @@
 
 class ApplicationController < ActionController::Base
   include ActionController::Cookies  # يضمن توفر helper حتى لو تغيّر الوراثة
+
+  before_action :set_shop_context
+  after_action  :clear_shop_context
+
   protect_from_forgery with: :null_session
   rescue_from StandardError, with: :log_and_render_error
 
   private
+
+  # ——— Set/Clear StoreContext for the request ———
+  def set_shop_context
+    store = Shops::ShopContext.new.check_store(host: request.host)
+    
+    StoreContext.store_id = store&.shop_id
+  end
+
+  def clear_shop_context
+    StoreContext.clear!
+  end
 
   # ——— Live storefront bootstrap (domain → store → base args) ———
   # Use this as a before_action in live controllers (not in PreviewController).

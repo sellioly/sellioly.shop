@@ -19,7 +19,8 @@ module Http
       @base_url = base_url.chomp('/')
       @default_headers = {
         'User-Agent' => 'Sellioly-RubyShop/1 ApiClient',
-        'Accept'     => 'application/json'
+        'Accept'     => 'application/json',
+        "X-Shop-Id"  => StoreContext.store_id.to_s
       }.freeze
     end
 

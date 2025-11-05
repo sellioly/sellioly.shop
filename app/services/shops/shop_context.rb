@@ -38,6 +38,16 @@ module Shops
       build_context_from_store(store: store, domain: domain, cookies: cookies)
     end
 
+    # returns without building context
+    def check_store(host:)
+      domain, failure = resolve_domain(host)
+      return nil if failure
+
+      # 2) Store lookup (cached, short TTL)
+      store = @domain_cache.fetch(domain) { Store.where(app_domain: domain).first }
+      store
+    end
+
     # --- Preview path (param-based) ---
     # Signature provided for future unification with PreviewController.
     # Keeps current behavior intact (no usage yet unless you wire it).
