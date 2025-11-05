@@ -125,12 +125,18 @@ module Http
       request(verb: :patch, path: "/ruby/checkout/sessions/#{id}", body: payload)
     end
 
-    def lock_checkout_session(id:)
-      request(verb: :post, path: "/ruby/checkout/sessions/#{id}/lock")
+    def lock_checkout_session(id:, idempotency_key: nil)
+      headers = {}
+      headers['X-Idempotency-Key'] = idempotency_key if idempotency_key
+      headers['Idempotency-Key']   = idempotency_key if idempotency_key)
+      request(verb: :post, path: "/ruby/checkout/sessions/#{id}/lock", headers:)
     end
 
-    def place_checkout_session(id:)
-      request(verb: :post, path: "/ruby/checkout/sessions/#{id}/place")
+    def place_checkout_session(id:, idempotency_key: nil)
+      headers = {}
+      headers['X-Idempotency-Key'] = idempotency_key if idempotency_key
+      headers['Idempotency-Key']   = idempotency_key if idempotency_key
+      request(verb: :post, path: "/ruby/checkout/sessions/#{id}/place", headers:)
     end
 
     # Read-only Orders API (v1)
