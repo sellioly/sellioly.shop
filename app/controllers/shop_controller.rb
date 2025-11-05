@@ -113,9 +113,12 @@ class ShopController < ApplicationController
   end
 
   def order_completed
+    order_id = params[:order].to_s.presence
+    return render_with_renderer('404.json', status: :not_found) unless order_id
+
     repo = OrderRepository.new
 
-    order_data = repo.show(params[:order])
+    order_data = repo.show(order_id: order_id).json
     order = order_data["order"]
 
     extra_ctx = { 'order' => order }
