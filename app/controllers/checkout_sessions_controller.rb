@@ -17,11 +17,7 @@ class CheckoutSessionsController < BaseController
       end
 
     result = @repo.create(payload: payload, idempotency_key: current_idempotency_key)
-    render_result(
-      result,
-      default_ok: :created,
-      location_for: ->(id) { id ? api_checkout_session_url(id) : nil }
-    )
+    render_result(result)
   end
 
   # GET /api/checkout_sessions/:id
