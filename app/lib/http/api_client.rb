@@ -128,7 +128,7 @@ module Http
     def lock_checkout_session(id:, idempotency_key: nil)
       headers = {}
       headers['X-Idempotency-Key'] = idempotency_key if idempotency_key
-      headers['Idempotency-Key']   = idempotency_key if idempotency_key)
+      headers['Idempotency-Key']   = idempotency_key if idempotency_key
       request(verb: :post, path: "/ruby/checkout/sessions/#{id}/lock", nil, headers:)
     end
 
