@@ -122,7 +122,9 @@ class ShopController < ApplicationController
     repo = OrderRepository.new
 
     order_data = repo.show(order_id: order_id).json
-    order = order_data["order"]
+    order = order_data["order"] if order_data
+
+    return render_with_renderer('404.json', status: :not_found) unless order
 
     extra_ctx = { 'order' => order }
     render_with_renderer('order-done.json', extra_ctx: extra_ctx)
