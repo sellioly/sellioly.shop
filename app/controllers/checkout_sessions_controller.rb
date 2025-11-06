@@ -40,12 +40,6 @@ class CheckoutSessionsController < BaseController
 
   # POST /api/checkout_sessions/:id/place
   def place
-    # Check terms acceptance
-    accept_terms = params[:accept_terms]
-    unless accept_terms == true || accept_terms.to_s.downcase == "true"
-      return render json: { error: "Terms must be accepted" }, status: :unprocessable_entity
-    end
-
     result = @repo.place(id: params[:id], idempotency_key: current_idempotency_key)
     render_result(result)
   end
