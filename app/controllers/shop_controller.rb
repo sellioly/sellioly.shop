@@ -101,6 +101,9 @@ class ShopController < ApplicationController
       extra_ctx['checkout_session'] = checkout_session if checkout_session
     end
 
+    # redirect to cart if no session_id or invalid session
+    return redirect_to('/cart') unless extra_ctx['checkout_session']
+
     render_with_renderer('checkout.json', extra_ctx: extra_ctx)
   end
 
