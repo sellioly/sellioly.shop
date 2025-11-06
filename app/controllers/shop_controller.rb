@@ -83,6 +83,15 @@ class ShopController < ApplicationController
   end
 
   def cart
+    cart = @args['cart'] || {}
+    
+    # check if cart has active checkout session
+    session_id = cart['checkout_session_id'].to_s.presence
+    if session_id
+      # redirect to '/checkout?session_id=xxxx'
+      return redirect_to("/checkout?session_id=#{session_id}")
+    end
+
     render_with_renderer('cart.json')
   end
 
