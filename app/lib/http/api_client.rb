@@ -20,7 +20,7 @@ module Http
       @default_headers = {
         'User-Agent' => 'Sellioly-RubyShop/1 ApiClient',
         'Accept'     => 'application/json',
-        "X-Shop-Id"  => StoreContext.store_id.to_s
+        "X-Store-Id"  => StoreContext.store_id.to_s
       }.freeze
     end
 
