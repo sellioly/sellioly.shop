@@ -157,10 +157,9 @@ module Http
       base = (@http ||= HTTP
         .use(:auto_inflate)
         .timeout(connect: DEFAULT_OPEN_TIMEOUT, read: DEFAULT_READ_TIMEOUT)
-        .headers(@default_headers)
+        .headers(@default_headers.merge(extra_headers))
         .persistent(@base_url))
-      return base if extra_headers.nil? || extra_headers.empty?
-      base.headers(extra_headers)
+      return base
     end
 
     def request(verb:, path:, params: nil, body: nil, content: :json, headers: EMPTY_HASH)
