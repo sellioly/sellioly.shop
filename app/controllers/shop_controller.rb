@@ -113,6 +113,12 @@ class ShopController < ApplicationController
     # redirect to cart if no session_id or invalid session
     return redirect_to('/cart') unless extra_ctx['checkout_session']
 
+    # check if session is already placed
+    if extra_ctx['checkout_session']['status'].to_s == 'completed'
+      order_id = extra_ctx['checkout_session']['order_id'].to_s.presence
+      return redirect_to("/order-completed/#{order_id}") if order_id
+    end
+
     render_with_renderer('checkout.json', extra_ctx: extra_ctx)
   end
 
