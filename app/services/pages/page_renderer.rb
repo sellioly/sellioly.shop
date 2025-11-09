@@ -54,9 +54,6 @@ module Pages
         schema_json = store.read_schema_json(section_type) || {}
         section_assigns = build_section_assigns(assigns, section_data, schema_json)
 
-        # log assigns for debugging
-        Rails.logger.info({ at: 'page_renderer', section: section_id, assigns: section_assigns }.to_json)
-
         # Render the section via the compiled template
         compiled = compiler.compile(theme_store: store, rel_path: section_liquid)
         content_for_layout << renderer.safe_render(compiled, assigns: section_assigns, theme_store: store, registers: registers)

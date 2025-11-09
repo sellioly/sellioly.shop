@@ -15,14 +15,6 @@ class ApplicationController < ActionController::Base
   # ——— Set/Clear StoreContext for the request ———
   def set_shop_context
     store = Shops::ShopContext.new.check_store(host: request.host)
-
-    # log store id
-    Rails.logger.info({
-      at: 'set_shop_context',
-      store_id: store&.shop_id,
-      host: request.host,
-    }.to_json)
-    
     StoreContext.store_id = store&.shop_id
   end
 

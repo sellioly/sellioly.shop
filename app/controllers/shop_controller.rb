@@ -166,17 +166,10 @@ class ShopController < ApplicationController
   def ensure_cart!
     cart_repo = CartRepository.new
 
-    
     cart_id = request.cookies['cart_id'] || cookies['cart_id'] || cookies[:cart_id] || nil
-    
-    # log the cart_id from cookies for debugging
-    Rails.logger.info("Ensuring cart with cart_id: #{cart_id}")
 
     # GET cart snapshot (idempotent, cheap)
     result = cart_repo.show(cart_id: cart_id)
-
-    # Log the result for debugging
-    Rails.logger.info("Cart show result: status=#{result.status}, error=#{result.error}")
 
     cart = result.json
     
