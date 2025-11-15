@@ -1,4 +1,4 @@
-class CreateShopThemes < ActiveRecord::Migration[7.1]
+class CreateShopThemes < ActiveRecord::Migration[7.0]
   def change
     create_table :shop_themes do |t|
       t.references :shop, null: false, foreign_key: true

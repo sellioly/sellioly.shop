@@ -1,4 +1,4 @@
-class DropStoreTable < ActiveRecord::Migration[7.1]
+class DropStoreTable < ActiveRecord::Migration[7.0]
   def change
     # Only drop if it exists; safe in dev
     drop_table :stores, if_exists: true

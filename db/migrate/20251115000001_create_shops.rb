@@ -1,4 +1,4 @@
-class CreateShops < ActiveRecord::Migration[7.1]
+class CreateShops < ActiveRecord::Migration[7.0]
   def change
     create_table :shops do |t|
       t.string  :external_store_id, null: false  # Laravel stores.id (ULID)
