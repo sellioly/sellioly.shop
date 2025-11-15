@@ -6,7 +6,7 @@ class ProvisionShopTemplateJob < ApplicationJob
     shop_theme = ShopTheme.find(shop_theme_id)
     shop       = shop_theme.shop
 
-    storage = TemplateStorage.new
+    storage = Storage::TemplateStorage.new
 
     # Where this specific theme instance will live on disk
     dest_root = Rails.root.join(
