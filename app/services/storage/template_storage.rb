@@ -2,7 +2,8 @@ require "aws-sdk-s3"
 require "zip"
 require "securerandom"
 
-class TemplateStorage
+module Storage
+  class TemplateStorage
   def initialize(
     bucket: ENV.fetch("SELLIOLY_TEMPLATES_BUCKET"),
     region: ENV.fetch("AWS_REGION", "eu-west-3")
