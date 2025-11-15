@@ -99,6 +99,7 @@ services:
     restart: always
     command: bundle exec sidekiq -C config/sidekiq.yml
     volumes:
+      - ./:/app
       - theme_storage:/app/storage
     depends_on:
       - app
