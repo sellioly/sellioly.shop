@@ -1,4 +1,4 @@
-class ProvisionShopThemeJob < ApplicationJob
+class ProvisionShopTemplateJob < ApplicationJob
   queue_as :default
 
   # We provision a single ShopTheme (and update its Shop).
