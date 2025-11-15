@@ -38,7 +38,7 @@ class StoreController < ApplicationController
     end
 
     # Enqueue async provisioning (download zip -> extract -> update DB -> webhook)
-    ProvisionShopThemeJob.perform_later(shop_theme.id)
+    ProvisionShopTemplateJob.perform_later(shop_theme.id)
 
     render json: {
       shop_id:      shop.id,

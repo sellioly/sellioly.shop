@@ -24,7 +24,7 @@ class TemplateController < ApplicationController
     @domain = params[:app_domain].to_s
 
     # traitement
-    @store = Store.where(app_domain: @domain).first
+    @store = Shop.where(app_domain: @domain).first
     @store.template_id = params[:template_id].to_i
     @store.shop_id = params[:shop_id].to_i
     @sub_path = "/storage/" + @store.shop_id.to_s + "/" + @store.template_id.to_s
