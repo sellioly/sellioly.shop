@@ -4,7 +4,7 @@ class StoreController < ApplicationController
   # before_action :verify_ssl_hook
 
   public def create
-    permitted = params.require(:shop).permit(
+    permitted = params.permit(
       :store_id,
       :app_domain,
       :template_id,
