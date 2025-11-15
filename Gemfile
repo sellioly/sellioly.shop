@@ -29,6 +29,8 @@ gem 'rails-letsencrypt'
 
 gem 'request_store'
 
+gem "aws-sdk-s3", "~> 1.150"
+
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem "kredis"
 

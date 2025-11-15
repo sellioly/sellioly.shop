@@ -4,39 +4,51 @@ class StoreController < ApplicationController
   # before_action :verify_ssl_hook
 
   public def create
-    # code here
-    @store = Store.new({})
-    @store.app_domain = params[:app_domain]
-    @store.template_id = params[:template_id].to_i
-    @store.shop_id = params[:shop_id].to_i
+    permitted = params.require(:shop).permit(
+      :store_id,
+      :app_domain,
+      :template_id,
+      :theme_handle,
+      :theme_version,
+      :external_theme_purchase_id
+    )
 
-    @subpath = "/storage/" + @store.shop_id.to_s + "/" + @store.template_id.to_s
-    @path = Rails.root.to_s + @subpath
-    @store.template_path = @subpath
-    @store.save
+    # Idempotent: find or initialize by external_store_id
+    shop = Shop.find_or_initialize_by(external_store_id: permitted[:store_id])
 
-    cert = LetsEncrypt::Certificate.find_by(domain: params[:app_domain])
-    unless cert
-      cert = LetsEncrypt::Certificate.create(domain: params[:app_domain]) rescue nil
-      cert.get if cert
+    shop.app_domain = permitted[:app_domain]
+    shop.status     ||= "provisioning"
+    shop.save!
 
-      LetsEncrypt::RenewCertificatesJob.perform_later
+    # Also idempotent-ish: find existing active theme with same handle/version
+    shop_theme = shop.shop_themes.find_by(
+      theme_handle:  permitted[:theme_handle],
+      theme_version: permitted[:theme_version]
+    )
+
+    unless shop_theme
+      shop_theme = shop.shop_themes.create!(
+        external_template_id:       permitted[:template_id],
+        theme_handle:               permitted[:theme_handle],
+        theme_version:              permitted[:theme_version],
+        root_path:                  "", # will be set by job
+        status:                     :installing,
+        external_theme_purchase_id: permitted[:external_theme_purchase_id]
+      )
     end
 
-    UploadLocalTemplateJob.perform_later @path, @store.app_domain, @subpath
+    # Enqueue async provisioning (download zip -> extract -> update DB -> webhook)
+    ProvisionShopThemeJob.perform_later(shop_theme.id)
 
-    endpoint = "collection/get-by-handle"
-    response = HTTP.post("https://api.sellioly.com/ruby/#{endpoint}", :form => { 'handle' => 'all', 'user_id' => @store.shop_id, 'app_domain' => @store.app_domain })
-    if response.status.success?
-      response_string = response.body.to_s
-      redis_set(@store.app_domain, @store.shop_id, "collection:all", response_string)
-
-      # return response.parse
-    end
-
-    # upload local file template  /app/storage/63/28/config/settings_schema.json
-
-    render json: { msg: 'Template in progress', id: @store.id, template_path: @subpath }
+    render json: {
+      shop_id:      shop.id,
+      shop_theme_id: shop_theme.id,
+      status:       shop.status,
+      theme_status: shop_theme.status
+    }, status: :accepted
+  rescue ActionController::ParameterMissing => e
+    render json: { message: e.message }, status: :bad_request
+  rescue ActiveRecord::RecordInvalid => e
+    render json: { message: e.record.errors.full_messages.join(", ") }, status: :unprocessable_entity
   end
-
 end
