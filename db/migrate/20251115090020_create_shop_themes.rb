@@ -9,7 +9,7 @@ class CreateShopThemes < ActiveRecord::Migration[7.0]
       t.string  :root_path,     null: false     # "/storage/shops/123/themes/hyper-1.0.0"
 
       t.string  :status,        null: false, default: "installing" # installing, active, disabled, failed
-      t.json   :settings,      null: false, default: {}  # theme settings per shop
+      t.json   :settings                     # JSON blob of theme settings
 
       t.datetime :installed_at
       t.datetime :uninstalled_at
