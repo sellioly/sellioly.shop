@@ -32,7 +32,7 @@ module Shops
       return [nil, failure] if failure
 
       # 2) Store lookup (cached, short TTL)
-      store = @domain_cache.fetch(domain) { Store.where(app_domain: domain).first }
+      store = @domain_cache.fetch(domain) { Shop.where(app_domain: domain).first }
       return [nil, Failure.new(type: :not_found, message: "Store not found for #{domain}")] unless store
 
       build_context_from_store(store: store, domain: domain, cookies: cookies)
@@ -44,7 +44,7 @@ module Shops
       return nil if failure
 
       # 2) Store lookup (cached, short TTL)
-      store = @domain_cache.fetch(domain) { Store.where(app_domain: domain).first }
+      store = @domain_cache.fetch(domain) { Shop.where(app_domain: domain).first }
       store
     end
 
@@ -52,7 +52,7 @@ module Shops
     # Signature provided for future unification with PreviewController.
     # Keeps current behavior intact (no usage yet unless you wire it).
     def from_preview(shop_id:, template_id:, cookies: {})
-      store = Store.new(
+      store = Shop.new(
         shop_id: shop_id,
         template_id: template_id,
         template_path: "/storage/#{shop_id}/#{template_id}",
