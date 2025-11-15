@@ -6,5 +6,5 @@ class ShopDomain < ApplicationRecord
     provisioning: "provisioning",
     active:       "active",
     failed:       "failed"
-  }
+  }, _prefix: :ssl_status
 end
