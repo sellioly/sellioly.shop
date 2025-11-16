@@ -89,8 +89,8 @@ module Shops
     end
 
     def build_context_from_store(store:, domain:, cookies: {})
-      shop_id     = store.shop_id
-      template_id = store.template_id
+      shop_id     = store.external_store_id
+      template_id = store.active_external_template_id
       theme_path  = File.join(Rails.root.to_s, store.template_path.to_s)
 
       # 1) Shop info (name, currency, logo, description)
@@ -255,8 +255,8 @@ module Shops
     def normalized_store(store)
       {
         'id'           => store.id,
-        'shop_id'      => store.shop_id,
-        'template_id'  => store.template_id,
+        'shop_id'      => store.external_store_id,
+        'template_id'  => store.active_external_template_id,
         'template_path'=> store.template_path,
         'app_domain'   => store.app_domain
       }

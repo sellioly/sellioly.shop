@@ -23,8 +23,8 @@ module Infra
 
       payload = {
         id: store.id,
-        shop_id: store.shop_id,
-        template_id: store.template_id,
+        shop_id: store.external_store_id,
+        template_id: store.active_external_template_id,
         template_path: store.template_path,
         app_domain: store.app_domain
       }.to_json
