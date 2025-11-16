@@ -33,6 +33,10 @@ module Shops
 
       # 2) Store lookup (cached, short TTL)
       store = @domain_cache.fetch(domain) { Shop.where(app_domain: domain).first }
+
+      # log store info for debugging
+      Rails.logger.debug("ShopContext: resolved domain=#{domain}, store=#{store.inspect}")
+
       return [nil, Failure.new(type: :not_found, message: "Store not found for #{domain}")] unless store
 
       build_context_from_store(store: store, domain: domain, cookies: cookies)
