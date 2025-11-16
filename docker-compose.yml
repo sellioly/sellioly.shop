@@ -40,6 +40,10 @@ services:
       RAILS_LOG_TO_STDOUT: "1"
       RAILS_SERVE_STATIC_FILES: "1"
       SECRET_KEY_BASE: ${SECRET_KEY_BASE:?set-in-.env}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:?set-in-.env}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:?set-in-.env}
+      AWS_REGION: ${AWS_REGION:?set-in-.env}
+      SELLIOLY_TEMPLATES_BUCKET: ${SELLIOLY_TEMPLATES_BUCKET:?set-in-.env}
       # If you use Rails credentials for production, also set:
       # RAILS_MASTER_KEY: ${RAILS_MASTER_KEY:?set-in-.env}
       DB_USER: sellioly
