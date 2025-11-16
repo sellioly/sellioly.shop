@@ -29,13 +29,16 @@ module Shops
     def resolve!(host:, cookies: {})
       # 1) Domain resolution (CNAME + verify) → app_domain
       domain, failure = resolve_domain(host)
+
+      Rails.logger.info("ShopContext: resolved host=#{host} to domain=#{domain}, failure=#{failure.inspect}")
+
       return [nil, failure] if failure
 
       # 2) Store lookup (cached, short TTL)
       store = @domain_cache.fetch(domain) { Shop.where(app_domain: domain).first }
 
       # log store info for debugging
-      Rails.logger.debug("ShopContext: resolved domain=#{domain}, store=#{store.inspect}")
+      Rails.logger.info("ShopContext: resolved domain=#{domain}, store=#{store.inspect}")
 
       return [nil, Failure.new(type: :not_found, message: "Store not found for #{domain}")] unless store
 
