@@ -108,10 +108,14 @@ module Shops
       base_args = {
         'shop_id'          => shop_id,
         'template_id'      => template_id,
-        'page_title'       => "HOME - #{shop['shop_name']}",
-        'shop_name'        => shop['shop_name'],
-        'shop_description' => shop['shop_description'],
+        'page_title'       => "HOME - #{shop['name']}",
+        'shop_name'        => shop['name'],
+        'shop_handle'      => shop['handle'],
+        'shop_description' => shop['description'],
+        'country'          => shop['country'],
         'currency'         => shop['currency'],
+        'locale'           => shop['locale'],
+        'timezone'         => shop['timezone'],
         'logo'             => shop['shop_logo_default']
       }
 
