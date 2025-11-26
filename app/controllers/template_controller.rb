@@ -116,9 +116,9 @@ class TemplateController < ApplicationController
         }
       }
     rescue Errno::ENOENT => e
-      raise Services::TemplateFileService::FileNotFoundError, "Template file not found: #{e.message}"
+      raise Template::TemplateFileService::FileNotFoundError, "Template file not found: #{e.message}"
     rescue JSON::ParserError => e
-      raise Services::TemplateFileService::InvalidFileTypeError, "Invalid JSON: #{e.message}"
+      raise Template::TemplateFileService::InvalidFileTypeError, "Invalid JSON: #{e.message}"
     end
   end
 
@@ -153,8 +153,8 @@ class TemplateController < ApplicationController
     base_path = resolve_template_path
     file_path = sanitize_file_path(base_path, key)
 
-    raise Services::TemplateFileService::FileNotFoundError, "File not found: #{key}" unless File.exist?(file_path)
-    raise Services::TemplateFileService::SecurityError, "Path outside template directory" unless file_path.start_with?(base_path)
+    raise Template::TemplateFileService::FileNotFoundError, "File not found: #{key}" unless File.exist?(file_path)
+    raise Template::TemplateFileService::SecurityError, "Path outside template directory" unless file_path.start_with?(base_path)
 
     ext_type = File.extname(file_path)
     mime_type = ext_type == '.liquid' ? 'application/x-liquid' : Rack::Mime.mime_type(ext_type)
@@ -168,9 +168,9 @@ class TemplateController < ApplicationController
     base_path = resolve_template_path
     file_path = sanitize_file_path(base_path, key)
 
-    raise Services::TemplateFileService::FileNotFoundError, "File not found: #{key}" unless File.exist?(file_path)
-    raise Services::TemplateFileService::SecurityError, "Path outside template directory" unless file_path.start_with?(base_path)
-    raise Services::TemplateFileService::FileTooLargeError, "File too large" if content.bytesize > 10 * 1024 * 1024
+    raise Template::TemplateFileService::FileNotFoundError, "File not found: #{key}" unless File.exist?(file_path)
+    raise Template::TemplateFileService::SecurityError, "Path outside template directory" unless file_path.start_with?(base_path)
+    raise Template::TemplateFileService::FileTooLargeError, "File too large" if content.bytesize > 10 * 1024 * 1024
     validate_file_extension(key)
 
     # Validate JSON syntax for .json files
@@ -186,7 +186,7 @@ class TemplateController < ApplicationController
   def request_template
     base_path = resolve_template_path
 
-    raise Services::TemplateFileService::FileNotFoundError, "Template not found" unless Dir.exist?(base_path)
+    raise Template::TemplateFileService::FileNotFoundError, "Template not found" unless Dir.exist?(base_path)
 
     bundle_filename = Rails.root.join('tmp', "#{@shop_theme.id}-#{Time.now.to_i}.zip").to_s
     FileUtils.mkdir_p(File.dirname(bundle_filename))
@@ -212,8 +212,8 @@ class TemplateController < ApplicationController
     base_path = resolve_template_path
     file_path = sanitize_file_path(base_path, key)
 
-    raise Services::TemplateFileService::SecurityError, "Path outside template directory" unless file_path.start_with?(base_path)
-    raise Services::TemplateFileService::FileTooLargeError, "File too large" if content.bytesize > 10 * 1024 * 1024
+    raise Template::TemplateFileService::SecurityError, "Path outside template directory" unless file_path.start_with?(base_path)
+    raise Template::TemplateFileService::FileTooLargeError, "File too large" if content.bytesize > 10 * 1024 * 1024
     validate_file_extension(key)
 
     # Validate JSON syntax for .json files
@@ -235,8 +235,8 @@ class TemplateController < ApplicationController
     base_path = resolve_template_path
     file_path = sanitize_file_path(base_path, key)
 
-    raise Services::TemplateFileService::FileNotFoundError, "File not found: #{key}" unless File.exist?(file_path)
-    raise Services::TemplateFileService::SecurityError, "Path outside template directory" unless file_path.start_with?(base_path)
+    raise Template::TemplateFileService::FileNotFoundError, "File not found: #{key}" unless File.exist?(file_path)
+    raise Template::TemplateFileService::SecurityError, "Path outside template directory" unless file_path.start_with?(base_path)
 
     File.delete(file_path)
     render json: { success: true, deleted: key }
@@ -248,7 +248,7 @@ class TemplateController < ApplicationController
     base_path = resolve_template_path
     dir_path = sanitize_file_path(base_path, key)
 
-    raise Services::TemplateFileService::SecurityError, "Path outside template directory" unless dir_path.start_with?(base_path)
+    raise Template::TemplateFileService::SecurityError, "Path outside template directory" unless dir_path.start_with?(base_path)
 
     FileUtils.mkdir_p(dir_path)
     render json: { success: true, path: key }, status: :created
@@ -262,8 +262,8 @@ class TemplateController < ApplicationController
     old_path = sanitize_file_path(base_path, old_key)
     new_path = sanitize_file_path(base_path, new_key)
 
-    raise Services::TemplateFileService::FileNotFoundError, "File not found: #{old_key}" unless File.exist?(old_path)
-    raise Services::TemplateFileService::SecurityError, "Path outside template directory" unless old_path.start_with?(base_path) && new_path.start_with?(base_path)
+    raise Template::TemplateFileService::FileNotFoundError, "File not found: #{old_key}" unless File.exist?(old_path)
+    raise Template::TemplateFileService::SecurityError, "Path outside template directory" unless old_path.start_with?(base_path) && new_path.start_with?(base_path)
 
     FileUtils.mkdir_p(File.dirname(new_path))
     FileUtils.mv(old_path, new_path)
@@ -299,8 +299,8 @@ class TemplateController < ApplicationController
       upload_path = sanitize_file_path(base_path, upload_path.sub("#{base_path}/", ""))
     end
 
-    raise Services::TemplateFileService::SecurityError, "Path outside template directory" unless upload_path.start_with?(base_path)
-    raise Services::TemplateFileService::FileTooLargeError, "File too large" if file.size > 10 * 1024 * 1024
+    raise Template::TemplateFileService::SecurityError, "Path outside template directory" unless upload_path.start_with?(base_path)
+    raise Template::TemplateFileService::FileTooLargeError, "File too large" if file.size > 10 * 1024 * 1024
     validate_file_extension(filename)
 
     FileUtils.mkdir_p(File.dirname(upload_path))
@@ -361,7 +361,7 @@ class TemplateController < ApplicationController
         if File.exist?(dir_path)
           real_dir = File.realpath(dir_path)
           unless real_dir.start_with?(real_base)
-            raise Services::TemplateFileService::SecurityError, "Path traversal detected"
+            raise Template::TemplateFileService::SecurityError, "Path traversal detected"
           end
         end
         # For new files, normalize the path
@@ -370,7 +370,7 @@ class TemplateController < ApplicationController
 
       # Final check: ensure resolved path is within base
       unless real_path.start_with?(real_base)
-        raise Services::TemplateFileService::SecurityError, "Path traversal detected"
+        raise Template::TemplateFileService::SecurityError, "Path traversal detected"
       end
 
       real_path
@@ -380,7 +380,7 @@ class TemplateController < ApplicationController
       expanded_path = File.expand_path(full_path)
       
       unless expanded_path.start_with?(expanded_base)
-        raise Services::TemplateFileService::SecurityError, "Path traversal detected"
+        raise Template::TemplateFileService::SecurityError, "Path traversal detected"
       end
       
       full_path
@@ -441,7 +441,7 @@ class TemplateController < ApplicationController
   def validate_file_extension(filename)
     ext = File.extname(filename).downcase
     unless ALLOWED_EXTENSIONS.include?(ext)
-      raise Services::TemplateFileService::InvalidFileTypeError, "File type not allowed: #{ext}. Allowed types: #{ALLOWED_EXTENSIONS.join(', ')}"
+      raise Template::TemplateFileService::InvalidFileTypeError, "File type not allowed: #{ext}. Allowed types: #{ALLOWED_EXTENSIONS.join(', ')}"
     end
   end
 
@@ -451,7 +451,7 @@ class TemplateController < ApplicationController
     begin
       JSON.parse(content)
     rescue JSON::ParserError => e
-      raise Services::TemplateFileService::InvalidFileTypeError, "Invalid JSON syntax in #{filename}: #{e.message}"
+      raise Template::TemplateFileService::InvalidFileTypeError, "Invalid JSON syntax in #{filename}: #{e.message}"
     end
   end
 end
