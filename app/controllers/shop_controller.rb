@@ -84,14 +84,7 @@ class ShopController < ApplicationController
 
   def cart
     cart = @args['cart'] || {}
-    
-    # check if cart has active checkout session
-    session_id = cart['active_checkout_session_id'].to_s.presence
-    if session_id
-      # redirect to '/checkout?session_id=xxxx'
-      return redirect_to("/checkout?session_id=#{session_id}")
-    end
-
+    # active_checkout_session_id removed - checkout flow changed
     render_with_renderer('cart.json')
   end
 
@@ -137,7 +130,8 @@ class ShopController < ApplicationController
     repo = OrderRepository.new
 
     order_data = repo.show(order_id: order_id).json
-    order = order_data["order"] if order_data
+    # New API returns order directly (no wrapper)
+    order = order_data if order_data
 
     return render_with_renderer('404.json', status: :not_found) unless order
 

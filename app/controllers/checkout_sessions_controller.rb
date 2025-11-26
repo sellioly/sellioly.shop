@@ -32,12 +32,6 @@ class CheckoutSessionsController < BaseController
     render_result(result)
   end
 
-  # POST /api/checkout_sessions/:id/lock
-  def lock
-    result = @repo.lock(id: params[:id], idempotency_key: current_idempotency_key)
-    render_result(result)
-  end
-
   # POST /api/checkout_sessions/:id/place
   def place
     result = @repo.place(id: params[:id], idempotency_key: current_idempotency_key)

@@ -58,7 +58,14 @@ class CatalogRepository
     key = Cache::Keyspace.catalog(shop_id: shop_id, domain: domain, type: :metadata, id: "store", version: version)
     hit, data = @cache.fetch_json(key: key, ttl: CATALOG_TTL.metadata, negative_ttl: CATALOG_TTL.negative) do
       res = @api.metadata(shop_id: shop_id, domain: domain)
-      res.ok? ? res.json : nil
+      if res.ok? && res.json.is_a?(Array)
+        # Transform array format to old hash format for backward compatibility
+        # New format: [{namespace, key, value, ...}, ...]
+        # Old format: {namespace => {key => value, ...}, ...}
+        transform_metadata_array(res.json)
+      else
+        nil
+      end
     end
     tag(:metadata, hit, shop_id, domain, "store")
     data
@@ -181,5 +188,26 @@ class CatalogRepository
   def to_str_or_nil(v)
     s = v.to_s.strip
     s.empty? ? nil : s
+  end
+
+  # Transform new metadata array format to old hash format
+  # New: [{namespace: "ns", key: "k", value: "v"}, ...]
+  # Old: {ns: {k: "v", ...}, ...}
+  def transform_metadata_array(metafields)
+    return nil unless metafields.is_a?(Array)
+
+    result = {}
+    metafields.each do |mf|
+      next unless mf.is_a?(Hash)
+      namespace = mf["namespace"] || mf[:namespace]
+      key = mf["key"] || mf[:key]
+      value = mf["value"] || mf[:value]
+
+      next if namespace.nil? || key.nil?
+
+      result[namespace] ||= {}
+      result[namespace][key] = value
+    end
+    result.empty? ? nil : result
   end
 end

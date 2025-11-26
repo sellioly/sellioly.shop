@@ -12,10 +12,6 @@ class CheckoutSessionRepository < BaseRepository
     @api.update_checkout_session(id: id, payload: payload)
   end
 
-  def lock(id:, idempotency_key: nil)
-    @api.lock_checkout_session(id: id, idempotency_key: idempotency_key)
-  end
-
   def place(id:, idempotency_key: nil)
     @api.place_checkout_session(id: id, idempotency_key: idempotency_key)
   end

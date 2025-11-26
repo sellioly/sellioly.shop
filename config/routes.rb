@@ -63,7 +63,7 @@ Rails.application.routes.draw do
     post   '/api/checkout_sessions',           to: 'checkout_sessions#create'
     get    '/api/checkout_sessions/:id',       to: 'checkout_sessions#show'
     patch  '/api/checkout_sessions/:id',       to: 'checkout_sessions#update'
-    post   '/api/checkout_sessions/:id/lock',  to: 'checkout_sessions#lock'
+    # lock endpoint removed - validation happens on place
     post   '/api/checkout_sessions/:id/place', to: 'checkout_sessions#place'
 
     # ----------------------- Shop pages

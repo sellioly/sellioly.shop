@@ -83,8 +83,9 @@ module Shops
 
       if cname
         app_domain = cname.name.to_s
-        res = @api.verify_domain(domain: domain, app_domain: app_domain)
-        return [nil, Failure.new(type: :not_found, message: "Domain verify failed: #{domain} -> #{app_domain}")] unless res.ok?
+        res = @api.verify_domain(domain: domain)
+        verified = res.ok? && res.json&.dig('verified') == true
+        return [nil, Failure.new(type: :not_found, message: "Domain verify failed: #{domain} -> #{app_domain}")] unless verified
         domain = app_domain
       else
         unless domain =~ /^[A-Za-z0-9.-]+\.sellioly\.com$/

@@ -55,61 +55,70 @@ module Http
     # ------------------------------------------------------------------
     def product_by_handle(handle:, shop_id:, domain:)
       request(
-        verb: :post, path: '/ruby/product/get-by-handle',
-        body: { handle: handle, shop_id: shop_id, app_domain: domain },
-        content: :form
+        verb: :get, path: "/storefront/products/#{handle}"
+        # shop_id/domain not needed - X-Store-Id header set automatically
       )
     end
 
     def collection_by_handle(handle:, shop_id:, domain:)
       request(
-        verb: :post, path: '/ruby/collection/get-by-handle',
-        body: { handle: handle, shop_id: shop_id, app_domain: domain },
-        content: :form
+        verb: :get, path: "/storefront/collections/#{handle}"
+        # shop_id/domain not needed - X-Store-Id header set automatically
       )
     end
 
     def products_by_collection(handle:, shop_id:, domain:, filters: {})
-      payload = { handle: handle, user_id: shop_id, app_domain: domain }.merge(filters || {})
+      params = { collection: handle }.merge(filters || {})
       request(
-        verb: :post, path: '/ruby/product/get-by-collection',
-        body: payload, content: :form
+        verb: :get, path: '/storefront/products',
+        params: params
+        # shop_id/domain not needed - X-Store-Id header set automatically
       )
     end
 
     def menu_by_handle(handle:, shop_id:, domain:)
       request(
-        verb: :post, path: '/ruby/menu/get-by-handle',
-        body: { handle: handle, shop_id: shop_id, app_domain: domain },
-        content: :form
+        verb: :get, path: "/storefront/menus/#{handle}"
+        # shop_id/domain not needed - X-Store-Id header set automatically
       )
     end
 
     def shop_info(shop_id:)
       request(
-        verb: :post, path: '/ruby/store/infos',
-        body: { shop_id: shop_id }, content: :form
+        verb: :get, path: '/storefront/store'
+        # shop_id parameter kept for backward compatibility but not used
+        # X-Store-Id header is set automatically via default_headers
       )
     end
 
     def metadata(shop_id:, domain:)
       request(
-        verb: :post, path: '/ruby/metadata/store/list',
-        body: { shop_id: shop_id, app_domain: domain }, content: :form
+        verb: :get, path: "/storefront/metadata/store/#{shop_id}"
+        # domain not needed - X-Store-Id header set automatically
+        # Optional query params: namespace, key (not used in current implementation)
       )
     end
 
     def similar_products_by_handle(handle:, shop_id:, domain:)
       request(
-        verb: :post, path: '/ruby/product/get-similar-by-handle',
-        body: { handle: handle, user_id: shop_id, app_domain: domain }, content: :form
+        verb: :get, path: "/storefront/products/#{handle}/related"
+        # shop_id/domain not needed - X-Store-Id header set automatically
       )
     end
 
-    def verify_domain(domain:, app_domain:)
+    def products_batch(handles:, shop_id:, domain:)
       request(
-        verb: :post, path: '/ruby/domain/verify',
-        body: { domain: domain, app_domain: app_domain }, content: :form
+        verb: :post, path: '/storefront/products/batch',
+        body: { handles: handles }, content: :json
+        # shop_id/domain not needed - X-Store-Id header set automatically
+      )
+    end
+
+    def verify_domain(domain:)
+      request(
+        verb: :get, path: '/storefront/domains/verify',
+        params: { domain: domain }
+        # app_domain not needed - store context from X-Store-Id header
       )
     end
 
@@ -117,15 +126,14 @@ module Http
     # Cart (JSON)
     # ------------------------------------------------------------------
     def cart_show(cart_id:, currency: nil)
-      request(
-        verb: :get, path: '/ruby/cart',
-        params: { cart_id: cart_id, currency: currency }.compact
-      )
+      path = cart_id ? "/storefront/cart/#{cart_id}" : "/storefront/cart"
+      params = currency ? { currency: currency } : {}
+      request(verb: :get, path: path, params: params)
     end
 
     def cart_add_line(cart_id:, currency:, variant_id:, quantity:, properties: {}, idempotency_key: nil)
       request(
-        verb: :post, path: '/ruby/cart/lines',
+        verb: :post, path: '/storefront/cart/lines',
         body: {
           cart_id: cart_id,
           currency: currency,
@@ -139,16 +147,16 @@ module Http
 
     def cart_update_line(cart_id:, line_id:, quantity:)
       request(
-        verb: :patch, path: "/ruby/cart/lines/#{line_id}",
-        params: { cart_id: cart_id },
+        verb: :patch, path: "/storefront/cart/lines/#{line_id}",
         body: { quantity: quantity }
+        # cart_id not needed - handled by service via line_id
       )
     end
 
     def cart_remove_line(cart_id:, line_id:)
       request(
-        verb: :delete, path: "/ruby/cart/lines/#{line_id}",
-        params: { cart_id: cart_id }
+        verb: :delete, path: "/storefront/cart/lines/#{line_id}"
+        # cart_id not needed - handled by service via line_id
       )
     end
 
@@ -156,7 +164,7 @@ module Http
     # Orders (JSON)
     # ------------------------------------------------------------------
     def get_order(order_id:)
-      request(verb: :get, path: "/ruby/orders/#{order_id}")
+      request(verb: :get, path: "/storefront/orders/#{order_id}")
     end
 
     def cancel_order(order_id:, idempotency_key: nil)
@@ -171,37 +179,25 @@ module Http
     # ------------------------------------------------------------------
     def create_checkout_session(payload:, idempotency_key: nil)
       request(
-        verb: :post, path: '/ruby/checkout/sessions',
+        verb: :post, path: '/storefront/checkout/sessions',
         body: payload,
         headers: idempotency_headers(idempotency_key)
       )
     end
 
     def show_checkout_session(id:)
-      request(verb: :get, path: "/ruby/checkout/sessions/#{id}")
+      request(verb: :get, path: "/storefront/checkout/sessions/#{id}")
     end
 
     def update_checkout_session(id:, payload:)
-      request(verb: :patch, path: "/ruby/checkout/sessions/#{id}", body: payload)
-    end
-
-    def lock_checkout_session(id:, idempotency_key: nil)
-      request(
-        verb: :post, path: "/ruby/checkout/sessions/#{id}/lock",
-        headers: idempotency_headers(idempotency_key)
-      )
+      request(verb: :patch, path: "/storefront/checkout/sessions/#{id}", body: payload)
     end
 
     def place_checkout_session(id:, idempotency_key: nil)
       request(
-        verb: :post, path: "/ruby/checkout/sessions/#{id}/place",
+        verb: :post, path: "/storefront/checkout/sessions/#{id}/place",
         headers: idempotency_headers(idempotency_key)
       )
-    end
-
-    # Read-only Orders API (v1)
-    def show_order(id:)
-      request(verb: :get, path: "/ruby/orders/#{id}")
     end
 
     # ------------------------------------------------------------------

@@ -172,19 +172,30 @@ class ProductPresenter
     end
   end
 
-  # Laravel variant options come in v["option"]["option1".."option3"]
-  # e.g. { "option1"=>{"name"=>"color","value"=>"black"}, "option2"=>nil, ... }
+  # New format: v["options"] = [{"name": "Color", "value": "Red"}, ...]
+  # Old format (backward compat): v["option"]["option1".."option3"]
   def extract_variant_options(v)
-    result = {}
-    opt    = v["option"] || {}
-    %w[option1 option2 option3].each do |slot|
-      item = opt[slot]
-      next unless item.is_a?(Hash)
-      name  = normalize_option_name(item["name"])
-      value = item["value"].to_s
-      result[name] = value
+    # New format: structured options array
+    if v["options"].is_a?(Array)
+      v["options"].each_with_object({}) do |opt, result|
+        next unless opt.is_a?(Hash)
+        name = normalize_option_name(opt["name"])
+        value = opt["value"].to_s
+        result[name] = value if name.present? && value.present?
+      end
+    # Old format: nested option object with option1/option2/option3
+    else
+      result = {}
+      opt = v["option"] || {}
+      %w[option1 option2 option3].each do |slot|
+        item = opt[slot]
+        next unless item.is_a?(Hash)
+        name = normalize_option_name(item["name"])
+        value = item["value"].to_s
+        result[name] = value
+      end
+      result
     end
-    result
   end
 
   def normalize_option_name(name)
@@ -244,7 +255,11 @@ class ProductPresenter
 
   def to_cents(val)
     return nil if val.nil?
-    if val.is_a?(Integer)
+    # New format: {"amount": 2999, "currency": "USD", "formatted": "$29.99"}
+    # Amount is already in minor units (cents)
+    if val.is_a?(Hash) && val["amount"]
+      val["amount"].to_i
+    elsif val.is_a?(Integer)
       # Laravel prices look like numbers in currency units; convert to cents
       (val * 100)
     elsif val.is_a?(Float)
@@ -259,6 +274,9 @@ class ProductPresenter
   end
 
   def infer_available(v)
+    # New format has direct "available" boolean
+    return v["available"] if v.key?("available")
+    # Fallback for old format
     inv = v["inventory_quantity"] || v["inventory"]
     return inv.to_i > 0 if inv
     true
