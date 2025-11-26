@@ -5,6 +5,9 @@ class TemplateController < ApplicationController
   include RequestLogging
   include InputValidation
 
+  # Allowed file extensions for template files
+  ALLOWED_EXTENSIONS = %w[.liquid .json .css .js .png .jpg .jpeg .gif .svg .webp .woff .woff2 .ttf .eot .ico .avif].freeze
+
   # before_action :verify_ssl_hook
   skip_before_action :verify_authenticity_token
   before_action :find_shop_theme, only: [
@@ -39,17 +42,19 @@ class TemplateController < ApplicationController
     @domain = params[:app_domain].to_s
 
     shop = Shop.find_by(app_domain: @domain)
-    return render json: { error: { code: 'not_found', message: 'Shop not found' } }, status: :not_found unless shop
+    raise ActiveRecord::RecordNotFound, "Shop not found" unless shop
 
     shop_theme = shop.shop_themes.find_by(external_template_id: @template_id)
-    return render json: { error: { code: 'not_found', message: 'Theme not found' } }, status: :not_found unless shop_theme
+    raise ActiveRecord::RecordNotFound, "Theme not found" unless shop_theme
 
     # Update shop to use this theme
-    shop.update!(
+    unless shop.update(
       template_path: shop_theme.root_path,
       active_shop_theme_id: shop_theme.id,
       active_external_template_id: shop_theme.external_template_id
     )
+      raise ActiveRecord::RecordInvalid, shop
+    end
 
     render json: {
       msg: 'template has been published',
@@ -166,6 +171,10 @@ class TemplateController < ApplicationController
     raise Services::TemplateFileService::FileNotFoundError, "File not found: #{key}" unless File.exist?(file_path)
     raise Services::TemplateFileService::SecurityError, "Path outside template directory" unless file_path.start_with?(base_path)
     raise Services::TemplateFileService::FileTooLargeError, "File too large" if content.bytesize > 10 * 1024 * 1024
+    validate_file_extension(key)
+
+    # Validate JSON syntax for .json files
+    validate_json_content(content, key) if key.end_with?('.json')
 
     File.write(file_path, content)
 
@@ -193,7 +202,7 @@ class TemplateController < ApplicationController
 
     send_file bundle_filename, type: "application/zip", disposition: "attachment"
   ensure
-    File.delete(bundle_filename) if bundle_filename && File.exist?(bundle_filename)
+    FileUtils.rm(bundle_filename, force: true) rescue nil if bundle_filename
   end
 
   # NEW: Create file
@@ -205,6 +214,10 @@ class TemplateController < ApplicationController
 
     raise Services::TemplateFileService::SecurityError, "Path outside template directory" unless file_path.start_with?(base_path)
     raise Services::TemplateFileService::FileTooLargeError, "File too large" if content.bytesize > 10 * 1024 * 1024
+    validate_file_extension(key)
+
+    # Validate JSON syntax for .json files
+    validate_json_content(content, key) if key.end_with?('.json')
 
     # Create directory if needed
     FileUtils.mkdir_p(File.dirname(file_path))
@@ -263,6 +276,8 @@ class TemplateController < ApplicationController
 
   # NEW: Upload binary file
   def upload_asset_file
+    raise ActionController::ParameterMissing, "file parameter is required" unless params[:file].present?
+
     file = params[:file]
     filename = params[:filename] || file.original_filename
     key = params[:key] # Optional: specify custom path
@@ -286,6 +301,7 @@ class TemplateController < ApplicationController
 
     raise Services::TemplateFileService::SecurityError, "Path outside template directory" unless upload_path.start_with?(base_path)
     raise Services::TemplateFileService::FileTooLargeError, "File too large" if file.size > 10 * 1024 * 1024
+    validate_file_extension(filename)
 
     FileUtils.mkdir_p(File.dirname(upload_path))
     File.binwrite(upload_path, file.read)
@@ -305,16 +321,10 @@ class TemplateController < ApplicationController
     template_id = params[:template_id]
 
     shop = Shop.find_by(external_store_id: store_id)
-    unless shop
-      render json: { error: { code: 'not_found', message: 'Shop not found' } }, status: :not_found
-      return
-    end
+    raise ActiveRecord::RecordNotFound, "Shop not found" unless shop
 
     @shop_theme = shop.shop_themes.find_by(external_template_id: template_id)
-    unless @shop_theme
-      render json: { error: { code: 'not_found', message: 'Theme not found' } }, status: :not_found
-      return
-    end
+    raise ActiveRecord::RecordNotFound, "Theme not found" unless @shop_theme
   end
 
   def resolve_template_path
@@ -426,5 +436,22 @@ class TemplateController < ApplicationController
 
   def font_file?(filename)
     %w[.woff .woff2 .eot .ttf].include?(File.extname(filename).downcase)
+  end
+
+  def validate_file_extension(filename)
+    ext = File.extname(filename).downcase
+    unless ALLOWED_EXTENSIONS.include?(ext)
+      raise Services::TemplateFileService::InvalidFileTypeError, "File type not allowed: #{ext}. Allowed types: #{ALLOWED_EXTENSIONS.join(', ')}"
+    end
+  end
+
+  def validate_json_content(content, filename)
+    return unless filename.end_with?('.json')
+
+    begin
+      JSON.parse(content)
+    rescue JSON::ParserError => e
+      raise Services::TemplateFileService::InvalidFileTypeError, "Invalid JSON syntax in #{filename}: #{e.message}"
+    end
   end
 end

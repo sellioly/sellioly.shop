@@ -7,10 +7,11 @@ class HealthController < ApplicationController
     checks = {
       database: database_healthy?,
       storage: storage_healthy?,
+      shop_theme: shop_theme_accessible?,
       timestamp: Time.current.iso8601
     }
 
-    all_healthy = checks[:database] && checks[:storage]
+    all_healthy = checks[:database] && checks[:storage] && checks[:shop_theme]
     status = all_healthy ? :ok : :service_unavailable
 
     render json: {
@@ -34,6 +35,13 @@ class HealthController < ApplicationController
     File.writable?(storage_path) && File.directory?(storage_path)
   rescue StandardError => e
     Rails.logger.error("Health check - Storage failed: #{e.message}")
+    false
+  end
+
+  def shop_theme_accessible?
+    ShopTheme.first.present?
+  rescue StandardError => e
+    Rails.logger.error("Health check - ShopTheme failed: #{e.message}")
     false
   end
 end
