@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  # Always-200 lightweight health endpoint for containers/load balancers
-  get "/health", to: proc { [200, { "Content-Type" => "text/plain" }, ["OK"]] }
+  # Health check endpoint
+  get "/health", to: "health#check"
   
   mount LetsEncrypt::Engine => '/.well-known'
   constraints host: 'shop.sellioly.com' do
@@ -18,6 +18,13 @@ Rails.application.routes.draw do
     get 'api/assets', action: 'request_asset_content', controller: 'template'
     put 'api/assets', action: 'update_asset_content', controller: 'template'
     post 'api/assets', action: 'request_assets_template', controller: 'template'
+    
+    # NEW: File operations
+    post 'api/template/assets/file', action: 'create_asset_file', controller: 'template'
+    delete 'api/template/assets/file', action: 'delete_asset_file', controller: 'template'
+    post 'api/template/assets/directory', action: 'create_asset_directory', controller: 'template'
+    patch 'api/template/assets/file', action: 'move_asset_file', controller: 'template'
+    post 'api/template/assets/upload', action: 'upload_asset_file', controller: 'template'
 
     post 'api/events', to: 'events#create'
 
