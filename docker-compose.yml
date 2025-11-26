@@ -87,7 +87,7 @@ services:
       - traefik.http.routers.shop-apex.service=shop
 
       # 3) Wildcard *.sellioly.com storefronts -> DNS-01 via Cloudflare (MUST use DNS-01 for wildcards)
-      - traefik.http.routers.shop-wildcard.rule=HostRegexp(`^[^.]+\.sellioly\.com$`)
+      - traefik.http.routers.shop-wildcard.rule=HostRegexp(`^.+$`)
       - traefik.http.routers.shop-wildcard.ruleSyntax=v3
       - traefik.http.routers.shop-wildcard.entrypoints=websecure
       - traefik.http.routers.shop-wildcard.tls=true
