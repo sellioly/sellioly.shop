@@ -109,13 +109,21 @@ class CatalogRepository
   end
 
   def get_collection_products(handle:, shop_id:, domain:, filters: {})
-    return [] if blank?(handle)
+    return { 'data' => [], 'meta' => { 'page' => 1, 'per_page' => 20, 'total' => 0, 'pages' => 1 } } if blank?(handle)
 
     normalized = normalize_collection_filters(filters)
-    digest     = Digest::SHA256.hexdigest(normalized.to_json)[0, 12]
+    # Map 'by' to 'per_page' for API call (Laravel expects 'per_page' for offset pagination)
+    api_filters = normalized.dup
+    if api_filters['by']
+      api_filters['per_page'] = api_filters.delete('by')
+    end
+    # Ensure page is set (default to 1 if not provided)
+    api_filters['page'] ||= 1
 
-    version    = Cache::CatalogVersion.for_collection(shop_id: shop_id, collection_handle: handle)
-    key        = Cache::Keyspace.catalog(
+    digest = Digest::SHA256.hexdigest(normalized.to_json)[0, 12]
+
+    version = Cache::CatalogVersion.for_collection(shop_id: shop_id, collection_handle: handle)
+    key = Cache::Keyspace.catalog(
       shop_id: shop_id,
       domain:  domain,
       type:    :collection_products,
@@ -124,14 +132,22 @@ class CatalogRepository
     )
 
     hit, data = @cache.fetch_json(key: key, ttl: CATALOG_TTL.collection, negative_ttl: CATALOG_TTL.negative) do
-      Rails.logger.info("CatalogRepository: Making API call for collection_products handle=#{handle}, shop_id=#{shop_id}, domain=#{domain}, filters=#{normalized.inspect}")
-      res = @api.products_by_collection(handle: handle, shop_id: shop_id, domain: domain, filters: normalized)
+      Rails.logger.info("CatalogRepository: Making API call for collection_products handle=#{handle}, shop_id=#{shop_id}, domain=#{domain}, filters=#{api_filters.inspect}")
+      res = @api.products_by_collection(handle: handle, shop_id: shop_id, domain: domain, filters: api_filters)
       Rails.logger.info("CatalogRepository: CollectionProducts API response ok?=#{res.ok?}, status=#{res.status}, error=#{res.error}")
-      res.ok? ? res.json : nil
+      
+      if res.ok? && res.json.is_a?(Hash)
+        # API returns { "data": [...], "meta": {...} } for offset pagination
+        # This matches what Liquid PaginateTag expects
+        res.json
+      else
+        nil
+      end
     end
 
     tag(:collection_products, hit, shop_id, domain, handle)
-    data || []
+    # Return default structure if no data
+    data || { 'data' => [], 'meta' => { 'page' => 1, 'per_page' => 20, 'total' => 0, 'pages' => 1 } }
   end
 
   # -------------------- Internals --------------------
