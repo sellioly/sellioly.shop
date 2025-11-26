@@ -20,9 +20,9 @@ class AssetsController < ActionController::Base
     end
 
     shop = Shop.find_by(id: shop_id)
-    return head :not_found unless shop&.template_path.present?
+    return head :not_found unless shop&.active_shop_theme&.root_path.present?
 
-    # 1) resolve theme root from the shop record (ProvisionShopTemplateJob sets template_path)
+    # 1) resolve theme root from the active shop theme (ProvisionShopTemplateJob sets root_path on ShopTheme)
     theme_root = resolve_theme_root(shop, template_id)
     return head :not_found unless theme_root
     assets_root = theme_root.join("assets")
@@ -118,7 +118,8 @@ class AssetsController < ActionController::Base
   end
 
   def resolve_theme_root(shop, template_id)
-    rel_path = shop.template_path.to_s.sub(%r{\A/}, "")
+    # Get root_path from active_shop_theme (source of truth set by ProvisionShopTemplateJob)
+    rel_path = shop.active_shop_theme.root_path.to_s.sub(%r{\A/}, "")
     return nil if rel_path.blank?
 
     root = Rails.root.join(rel_path)
