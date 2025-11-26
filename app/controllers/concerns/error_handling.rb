@@ -4,10 +4,10 @@ module ErrorHandling
   extend ActiveSupport::Concern
 
   included do
-    rescue_from 'Template::TemplateFileService::SecurityError', with: :render_security_error
-    rescue_from 'Template::TemplateFileService::FileNotFoundError', with: :render_not_found
-    rescue_from 'Template::TemplateFileService::InvalidFileTypeError', with: :render_validation_error
-    rescue_from 'Template::TemplateFileService::FileTooLargeError', with: :render_validation_error
+    rescue_from 'TemplateFiles::TemplateFileService::SecurityError', with: :render_security_error
+    rescue_from 'TemplateFiles::TemplateFileService::FileNotFoundError', with: :render_not_found
+    rescue_from 'TemplateFiles::TemplateFileService::InvalidFileTypeError', with: :render_validation_error
+    rescue_from 'TemplateFiles::TemplateFileService::FileTooLargeError', with: :render_validation_error
     rescue_from ActiveRecord::RecordNotFound, with: :render_not_found
     rescue_from ActionController::ParameterMissing, with: :render_bad_request
   end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Template
+module TemplateFiles
   class TemplateFileService
     class SecurityError < StandardError; end
     class FileNotFoundError < StandardError; end
