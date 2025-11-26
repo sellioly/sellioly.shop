@@ -22,7 +22,13 @@ class CatalogRepository
       Rails.logger.info("CatalogRepository: Making API call for product handle=#{handle}, shop_id=#{shop_id}, domain=#{domain}")
       res = @api.product_by_handle(handle: handle, shop_id: shop_id, domain: domain)
       Rails.logger.info("CatalogRepository: Product API response ok?=#{res.ok?}, status=#{res.status}, error=#{res.error}")
-      res.ok? ? res.json : nil
+      
+      if res.ok? && res.json.is_a?(Hash)
+        # Laravel ProductResource wraps response in { "data": {...} }
+        res.json['data'] || res.json
+      else
+        nil
+      end
     end
     tag(:product, hit, shop_id, domain, handle)
     data
@@ -37,7 +43,13 @@ class CatalogRepository
       Rails.logger.info("CatalogRepository: Making API call for collection handle=#{handle}, shop_id=#{shop_id}, domain=#{domain}")
       res = @api.collection_by_handle(handle: handle, shop_id: shop_id, domain: domain)
       Rails.logger.info("CatalogRepository: Collection API response ok?=#{res.ok?}, status=#{res.status}, error=#{res.error}")
-      res.ok? ? res.json : nil
+      
+      if res.ok? && res.json.is_a?(Hash)
+        # Laravel CollectionResource wraps response in { "data": {...} }
+        res.json['data'] || res.json
+      else
+        nil
+      end
     end
     tag(:collection, hit, shop_id, domain, handle)
     data
@@ -102,7 +114,13 @@ class CatalogRepository
       Rails.logger.info("CatalogRepository: Making API call for similar_products handle=#{handle}, shop_id=#{shop_id}, domain=#{domain}")
       res = @api.similar_products_by_handle(handle: handle, shop_id: shop_id, domain: domain)
       Rails.logger.info("CatalogRepository: SimilarProducts API response ok?=#{res.ok?}, status=#{res.status}, error=#{res.error}")
-      res.ok? ? res.json : nil
+      
+      if res.ok? && res.json.is_a?(Hash)
+        # Laravel ProductPreviewResource::collection wraps response in { "data": [...] }
+        res.json['data'] || []
+      else
+        nil
+      end
     end
     tag(:similar_products, hit, shop_id, domain, handle)
     data || []
