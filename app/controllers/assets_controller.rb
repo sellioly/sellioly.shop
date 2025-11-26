@@ -19,7 +19,8 @@ class AssetsController < ActionController::Base
       filepath = "#{filepath}.#{params[:format]}"
     end
 
-    shop = Shop.find_by(id: shop_id)
+    # shop_id in URL is external_store_id (ULID from Laravel), not Ruby Shop.id
+    shop = Shop.find_by(external_store_id: shop_id)
     return head :not_found unless shop&.active_shop_theme&.root_path.present?
 
     # 1) resolve theme root from the active shop theme (ProvisionShopTemplateJob sets root_path on ShopTheme)
@@ -119,16 +120,19 @@ class AssetsController < ActionController::Base
 
   def resolve_theme_root(shop, template_id)
     # Get root_path from active_shop_theme (source of truth set by ProvisionShopTemplateJob)
-    rel_path = shop.active_shop_theme.root_path.to_s.sub(%r{\A/}, "")
+    shop_theme = shop.active_shop_theme
+    return nil unless shop_theme
+
+    rel_path = shop_theme.root_path.to_s.sub(%r{\A/}, "")
     return nil if rel_path.blank?
 
     root = Rails.root.join(rel_path)
     return nil unless File.directory?(root)
 
-    # Optional safety: ensure template_id matches folder slug when provided
+    # Optional safety: ensure template_id (external_template_id ULID) matches when provided
     if template_id.present?
-      slug = root.basename.to_s
-      return nil unless slug.start_with?(template_id)
+      # template_id is external_template_id (ULID), compare with shop_theme.external_template_id
+      return nil unless shop_theme.external_template_id == template_id
     end
 
     root
