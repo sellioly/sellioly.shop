@@ -99,7 +99,7 @@ module Shops
     def build_context_from_store(store:, domain:, cookies: {})
       shop_id     = store.external_store_id
       template_id = store.active_external_template_id
-      theme_path  = File.join(Rails.root.to_s, store.template_path.to_s)
+      theme_path  = File.join(Rails.root.to_s, store.active_shop_theme.root_path.to_s)
 
       # 1) Shop info (name, currency, logo, description)
       shop = @catalog.get_shop_info(shop_id: shop_id)

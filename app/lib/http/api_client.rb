@@ -229,8 +229,11 @@ module Http
 
     def safe_store_id
       # Resolve the store id at request time. We guard with &. to avoid NoMethodError if StoreContext is not loaded in some environments.
-      StoreContext&.store_id&.to_s
+      id = StoreContext&.store_id&.to_s
+      Rails.logger.warn("ApiClient: StoreContext.store_id is nil!") if id.nil?
+      id
     rescue NameError
+      Rails.logger.warn("ApiClient: StoreContext not available")
       nil
     end
 
@@ -238,6 +241,9 @@ module Http
       attempts = 0
       begin
         attempts += 1
+        url = url_for(path)
+        request_headers = default_headers.merge(headers)
+        Rails.logger.info("ApiClient: #{verb.upcase} #{url} params=#{redact(params)} headers=#{redact(request_headers)} attempt=#{attempts}")
         log_debug("HTTP #{verb.upcase} #{path} params=#{redact(params)} body=#{redact(body)} headers=#{redact(headers)} attempt=#{attempts}")
 
         response =
@@ -256,14 +262,19 @@ module Http
             end
           end
 
-        build_result(response)
+        result = build_result(response)
+        Rails.logger.info("ApiClient: Response status=#{result.status}, ok?=#{result.ok?}, error=#{result.error}")
+        result
       rescue *RETRYABLE_ERRORS => e
+        Rails.logger.error("ApiClient: Retryable error on attempt #{attempts}: #{e.class} - #{e.message}")
         if attempts <= @retries
           backoff_sleep(attempts)
           retry
         end
+        Rails.logger.error("ApiClient: Max retries reached, returning error")
         Result.new(ok?: false, status: 599, json: nil, error: e.message, headers: {})
       rescue StandardError => e
+        Rails.logger.error("ApiClient: StandardError on attempt #{attempts}: #{e.class} - #{e.message}")
         Result.new(ok?: false, status: 599, json: nil, error: e.message, headers: {})
       end
     end

@@ -19,7 +19,9 @@ class CatalogRepository
     version = Cache::CatalogVersion.for_product(shop_id: shop_id, product_handle: handle)
     key = Cache::Keyspace.catalog(shop_id: shop_id, domain: domain, type: :product, id: handle, version: version)
     hit, data = @cache.fetch_json(key: key, ttl: CATALOG_TTL.product, negative_ttl: CATALOG_TTL.negative) do
+      Rails.logger.info("CatalogRepository: Making API call for product handle=#{handle}, shop_id=#{shop_id}, domain=#{domain}")
       res = @api.product_by_handle(handle: handle, shop_id: shop_id, domain: domain)
+      Rails.logger.info("CatalogRepository: Product API response ok?=#{res.ok?}, status=#{res.status}, error=#{res.error}")
       res.ok? ? res.json : nil
     end
     tag(:product, hit, shop_id, domain, handle)
@@ -32,7 +34,9 @@ class CatalogRepository
     version = Cache::CatalogVersion.for_collection(shop_id: shop_id, collection_handle: handle)
     key = Cache::Keyspace.catalog(shop_id: shop_id, domain: domain, type: :collection, id: handle, version: version)
     hit, data = @cache.fetch_json(key: key, ttl: CATALOG_TTL.collection, negative_ttl: CATALOG_TTL.negative) do
+      Rails.logger.info("CatalogRepository: Making API call for collection handle=#{handle}, shop_id=#{shop_id}, domain=#{domain}")
       res = @api.collection_by_handle(handle: handle, shop_id: shop_id, domain: domain)
+      Rails.logger.info("CatalogRepository: Collection API response ok?=#{res.ok?}, status=#{res.status}, error=#{res.error}")
       res.ok? ? res.json : nil
     end
     tag(:collection, hit, shop_id, domain, handle)
@@ -45,7 +49,9 @@ class CatalogRepository
     version = Cache::CatalogVersion.for_menu(shop_id: shop_id, menu_handle: handle)
     key = Cache::Keyspace.catalog(shop_id: shop_id, domain: domain, type: :menu, id: handle, version: version)
     hit, data = @cache.fetch_json(key: key, ttl: CATALOG_TTL.menu, negative_ttl: CATALOG_TTL.negative) do
+      Rails.logger.info("CatalogRepository: Making API call for menu handle=#{handle}, shop_id=#{shop_id}, domain=#{domain}")
       res = @api.menu_by_handle(handle: handle, shop_id: shop_id, domain: domain)
+      Rails.logger.info("CatalogRepository: Menu API response ok?=#{res.ok?}, status=#{res.status}, error=#{res.error}")
       res.ok? ? res.json : nil
     end
     tag(:menu, hit, shop_id, domain, handle)
@@ -57,7 +63,9 @@ class CatalogRepository
     version = Cache::CatalogVersion.for_metadata(shop_id: shop_id)
     key = Cache::Keyspace.catalog(shop_id: shop_id, domain: domain, type: :metadata, id: "store", version: version)
     hit, data = @cache.fetch_json(key: key, ttl: CATALOG_TTL.metadata, negative_ttl: CATALOG_TTL.negative) do
+      Rails.logger.info("CatalogRepository: Making API call for metadata shop_id=#{shop_id}, domain=#{domain}")
       res = @api.metadata(shop_id: shop_id, domain: domain)
+      Rails.logger.info("CatalogRepository: Metadata API response ok?=#{res.ok?}, status=#{res.status}, error=#{res.error}")
       if res.ok? && res.json.is_a?(Array)
         # Transform array format to old hash format for backward compatibility
         # New format: [{namespace, key, value, ...}, ...]
@@ -75,7 +83,9 @@ class CatalogRepository
     # For shop_info we don't have a domain key in your current flow; we scope to shop only.
     key = "v:#{CatalogVersion.current}:shop:#{shop_id}:info"
     hit, data = @cache.fetch_json(key: key, ttl: CATALOG_TTL.shop_info, negative_ttl: CATALOG_TTL.negative) do
+      Rails.logger.info("CatalogRepository: Making API call for shop_info shop_id=#{shop_id}")
       res = @api.shop_info(shop_id: shop_id)
+      Rails.logger.info("CatalogRepository: ShopInfo API response ok?=#{res.ok?}, status=#{res.status}, error=#{res.error}")
       res.ok? ? res.json : nil
     end
     tag(:shop_info, hit, shop_id, nil, "info")
@@ -89,7 +99,9 @@ class CatalogRepository
     version = Cache::CatalogVersion.for_product(shop_id: shop_id, product_handle: handle)
     key = Cache::Keyspace.catalog(shop_id: shop_id, domain: domain, type: :similar_products, id: handle, version: version)
     hit, data = @cache.fetch_json(key: key, ttl: CATALOG_TTL.product, negative_ttl: CATALOG_TTL.negative) do
+      Rails.logger.info("CatalogRepository: Making API call for similar_products handle=#{handle}, shop_id=#{shop_id}, domain=#{domain}")
       res = @api.similar_products_by_handle(handle: handle, shop_id: shop_id, domain: domain)
+      Rails.logger.info("CatalogRepository: SimilarProducts API response ok?=#{res.ok?}, status=#{res.status}, error=#{res.error}")
       res.ok? ? res.json : nil
     end
     tag(:similar_products, hit, shop_id, domain, handle)
@@ -112,7 +124,9 @@ class CatalogRepository
     )
 
     hit, data = @cache.fetch_json(key: key, ttl: CATALOG_TTL.collection, negative_ttl: CATALOG_TTL.negative) do
+      Rails.logger.info("CatalogRepository: Making API call for collection_products handle=#{handle}, shop_id=#{shop_id}, domain=#{domain}, filters=#{normalized.inspect}")
       res = @api.products_by_collection(handle: handle, shop_id: shop_id, domain: domain, filters: normalized)
+      Rails.logger.info("CatalogRepository: CollectionProducts API response ok?=#{res.ok?}, status=#{res.status}, error=#{res.error}")
       res.ok? ? res.json : nil
     end
 
