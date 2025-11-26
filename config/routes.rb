@@ -13,18 +13,17 @@ Rails.application.routes.draw do
     post 'api/theme/verify', action: 'verify_theme', controller: 'template'
     post 'api/template/import', action: 'import_template', controller: 'template'
     post 'api/template/publish', action: 'publish_template', controller: 'template'
-    get 'api/template/download', action: 'request_template', controller: 'template'
-    post 'api/template/:page', action: 'request_template_page', controller: 'template'
-    get 'api/assets', action: 'request_asset_content', controller: 'template'
-    put 'api/assets', action: 'update_asset_content', controller: 'template'
-    post 'api/assets', action: 'request_assets_template', controller: 'template'
-    
-    # NEW: File operations
-    post 'api/template/assets/file', action: 'create_asset_file', controller: 'template'
+    get  'api/template/download', action: 'request_template', controller: 'template'
+
+    post   'api/template/:page', action: 'request_template_page', controller: 'template'
+    get    'api/template/assets', action: 'request_asset_content', controller: 'template'
+    put    'api/template/assets', action: 'update_asset_content', controller: 'template'
+    post   'api/template/assets', action: 'request_assets_template', controller: 'template'
+    post   'api/template/assets/file', action: 'create_asset_file', controller: 'template'
     delete 'api/template/assets/file', action: 'delete_asset_file', controller: 'template'
-    post 'api/template/assets/directory', action: 'create_asset_directory', controller: 'template'
-    patch 'api/template/assets/file', action: 'move_asset_file', controller: 'template'
-    post 'api/template/assets/upload', action: 'upload_asset_file', controller: 'template'
+    post   'api/template/assets/directory', action: 'create_asset_directory', controller: 'template'
+    patch  'api/template/assets/file', action: 'move_asset_file', controller: 'template'
+    post   'api/template/assets/upload', action: 'upload_asset_file', controller: 'template'
 
     post 'api/events', to: 'events#create'
 
