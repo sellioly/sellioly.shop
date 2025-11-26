@@ -19,18 +19,23 @@ class AssetsController < ActionController::Base
       filepath = "#{filepath}.#{params[:format]}"
     end
 
-    # 1) resolve theme root
-    theme_root = Rails.root.join("storage", shop_id, template_id)
-    return head :not_found unless File.directory?(theme_root)
+    shop = Shop.find_by(id: shop_id)
+    return head :not_found unless shop&.template_path.present?
+
+    # 1) resolve theme root from the shop record (ProvisionShopTemplateJob sets template_path)
+    theme_root = resolve_theme_root(shop, template_id)
+    return head :not_found unless theme_root
+    assets_root = theme_root.join("assets")
+    return head :not_found unless File.directory?(assets_root)
 
     # 2) sanitize and resolve path (no traversal)
     safe_rel = sanitize_relative_path(filepath)
     return head :not_found if safe_rel.nil?
 
-    absolute = theme_root.join("assets", safe_rel)
+    absolute = assets_root.join(safe_rel)
 
     # Ensure final path is inside theme_root/assets
-    return head :not_found unless inside_dir?(absolute, theme_root.join("assets"))
+    return head :not_found unless inside_dir?(absolute, assets_root)
     return head :not_found unless File.file?(absolute)
 
     # 3) content type
@@ -110,5 +115,21 @@ class AssetsController < ActionController::Base
     headers["Access-Control-Allow-Origin"] = "*"
     headers["Vary"] = "Origin"
     # If you need credentials/cookies for assets (usually not), set ACA-Credentials too.
+  end
+
+  def resolve_theme_root(shop, template_id)
+    rel_path = shop.template_path.to_s.sub(%r{\A/}, "")
+    return nil if rel_path.blank?
+
+    root = Rails.root.join(rel_path)
+    return nil unless File.directory?(root)
+
+    # Optional safety: ensure template_id matches folder slug when provided
+    if template_id.present?
+      slug = root.basename.to_s
+      return nil unless slug.start_with?(template_id)
+    end
+
+    root
   end
 end
