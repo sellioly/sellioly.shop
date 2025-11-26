@@ -86,7 +86,16 @@ services:
       - traefik.http.routers.shop-apex.priority=1100
       - traefik.http.routers.shop-apex.service=shop
 
-      # 3) Catch-all: accept ANY hostname -> HTTP-01 (auto certs for customers)
+      # 3) Wildcard *.sellioly.com storefronts -> DNS-01 via Cloudflare (REQUIRED for wildcard certs)
+      - traefik.http.routers.shop-wildcard.rule=HostRegexp(`^[^.]+\.sellioly\.com$`)
+      - traefik.http.routers.shop-wildcard.ruleSyntax=v3
+      - traefik.http.routers.shop-wildcard.entrypoints=websecure
+      - traefik.http.routers.shop-wildcard.tls=true
+      - traefik.http.routers.shop-wildcard.tls.certresolver=le_cf
+      - traefik.http.routers.shop-wildcard.priority=1000
+      - traefik.http.routers.shop-wildcard.service=shop
+
+      # 4) Catch-all: accept ANY other hostname -> HTTP-01 (for customer domains)
       - traefik.http.routers.shop-any.rule=HostRegexp(`^.+$`)
       - traefik.http.routers.shop-any.ruleSyntax=v3
       - traefik.http.routers.shop-any.entrypoints=websecure
