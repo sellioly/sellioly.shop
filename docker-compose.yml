@@ -92,6 +92,7 @@ services:
       - traefik.http.routers.shop-wildcard.entrypoints=websecure
       - traefik.http.routers.shop-wildcard.tls=true
       - traefik.http.routers.shop-wildcard.tls.certresolver=le_cf
+      - traefik.http.routers.shop-wildcard.tls.domains[0].main=*.sellioly.com # ADD THIS LINE
       - traefik.http.routers.shop-wildcard.priority=1000
       - traefik.http.routers.shop-wildcard.service=shop
 
