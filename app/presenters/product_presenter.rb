@@ -13,11 +13,11 @@
 # Returned shape:
 # {
 #   "product" => {
-#     "id","handle","title","vendor","description_html",
+#     "id","handle","title","description_html","status","published_at",
 #     "options"  => [{ "id","name","values":[...] }, ...],
 #     "variants" => [
 #       {
-#         "id","title","sku","available",
+#         "id","title","sku","barcode","position","available","inventory_quantity",
 #         "price_cents","compare_at_cents",
 #         "options"   => { "Color"=>"blue", ... },
 #         "image"     => { "id","src","alt","width","height" } | nil,
@@ -26,6 +26,9 @@
 #       }, ...
 #     ],
 #     "media"       => [ { "id","src","alt","width","height" }, ... ],
+#     "collections" => [ { "id","handle","title" }, ... ],
+#     "collection"  => { "id","handle","title" } | nil, # Primary/first collection
+#     "seo"         => { "title","description","canonical_url","robots" } | nil,
 #     "price_range" => { "min"=>..., "max"=>... } | nil,
 #     "available"   => true/false,
 #     "on_sale"     => true/false,
@@ -73,10 +76,14 @@ class ProductPresenter
         "handle"           => base["handle"],
         "title"            => base["title"],
         "description_html" => base["description_html"],
-        "vendor"           => base["vendor"],
+        "status"           => base["status"],
+        "published_at"     => base["published_at"],
         "options"          => base["options"],
         "variants"         => variants,
         "media"            => base["media"],
+        "collections"      => base["collections"],
+        "collection"       => base["collection"],
+        "seo"              => base["seo"],
         "price_range"      => price_range,
         "available"        => !!available,
         "on_sale"          => !!on_sale,
@@ -99,17 +106,23 @@ class ProductPresenter
 
   def normalize_product(p)
     media = normalize_media(p)
+    collections_data = normalize_collections(p)
+    seo_data = normalize_seo(p)
 
     {
       "id"               => p["id"],
       "handle"           => p["handle"],
       "title"            => p["title"],
-      "vendor"           => p["vendor"],
-      "description_html" => p["body_html"].to_s,
+      "status"           => p["status"],
+      "published_at"     => p["published_at"],
+      "description_html" => (p["description"] || p["body_html"] || "").to_s, # Support both new and old field names
       "options"          => normalize_options(p),
       # variants depend on media (for image composition)
       "variants"         => normalize_variants(p, media),
-      "media"            => media
+      "media"            => media,
+      "collections"      => collections_data["collections"],
+      "collection"       => collections_data["collection"],
+      "seo"              => seo_data
     }
   end
 
@@ -143,7 +156,10 @@ class ProductPresenter
         "id"               => v["id"],
         "title"            => v["title"],
         "sku"              => v["sku"],
+        "barcode"          => v["barcode"],
+        "position"         => v["position"],
         "available"        => infer_available(v),
+        "inventory_quantity" => v["inventory_quantity"],
         "price_cents"      => to_cents(v["price"]),
         "compare_at_cents" => to_cents(v["compare_at_price"]),
         "options"          => opts,                 # {"Color"=>"black", ...}
@@ -155,17 +171,14 @@ class ProductPresenter
   end
 
   def normalize_media(p)
-    images = Array(p["images"])
-    # Ensure default_image is present in media if missing
-    if p["default_image"].is_a?(Hash) && !images.any? { |img| img["id"].to_s == p["default_image"]["id"].to_s }
-      images = [p["default_image"], *images]
-    end
+    # Use new "media" field, fallback to "images" for backward compatibility
+    images = Array(p["media"] || p["images"])
 
     images.map do |img|
       {
         "id"     => img["id"],
-        "src"    => img["src"],
-        "alt"    => p["title"].to_s,
+        "src"    => img["url"] || img["src"], # Map url to src (media now has full URLs from Laravel)
+        "alt"    => img["alt"] || p["title"].to_s, # Use alt from media object (from ProductMedia pivot)
         "width"  => img["width"],
         "height" => img["height"]
       }
@@ -201,6 +214,32 @@ class ProductPresenter
   def normalize_option_name(name)
     s = name.to_s.strip
     s.empty? ? s : s[0].upcase + s[1..]
+  end
+
+  def normalize_collections(p)
+    collections = Array(p["collections"] || [])
+    {
+      "collections" => collections.map do |c|
+        {
+          "id" => c["id"],
+          "handle" => c["handle"],
+          "title" => c["title"]
+        }
+      end,
+      "collection" => collections.first # Primary/first collection for breadcrumb convenience
+    }
+  end
+
+  def normalize_seo(p)
+    seo = p["seo"]
+    return nil unless seo.is_a?(Hash)
+
+    {
+      "title" => seo["title"],
+      "description" => seo["description"],
+      "canonical_url" => seo["canonical_url"],
+      "robots" => seo["robots"]
+    }
   end
 
   # ---------- Selection / Indices ----------
