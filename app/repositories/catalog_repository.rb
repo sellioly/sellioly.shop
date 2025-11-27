@@ -98,7 +98,13 @@ class CatalogRepository
       Rails.logger.info("CatalogRepository: Making API call for shop_info shop_id=#{shop_id}")
       res = @api.shop_info(shop_id: shop_id)
       Rails.logger.info("CatalogRepository: ShopInfo API response ok?=#{res.ok?}, status=#{res.status}, error=#{res.error}")
-      res.ok? ? res.json : nil
+      
+      if res.ok? && res.json.is_a?(Hash)
+        # Laravel StoreResource wraps response in { "data": {...} }
+        res.json['data'] || res.json
+      else
+        nil
+      end
     end
     tag(:shop_info, hit, shop_id, nil, "info")
     data
