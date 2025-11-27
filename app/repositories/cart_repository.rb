@@ -3,7 +3,8 @@
 class CartRepository < BaseRepository
   # يعيد دائمًا Http::Result
   def show(cart_id:, currency: nil)
-    @api.cart_show(cart_id: cart_id, currency: currency)
+    result = @api.cart_show(cart_id: cart_id, currency: currency)
+    result.json.is_a?(Hash) ? result.json['data'] : nil
   end
 
   def add_line(cart_id:, currency:, variant_id:, quantity:, properties: {}, idempotency_key: nil)
