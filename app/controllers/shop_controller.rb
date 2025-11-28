@@ -186,9 +186,10 @@ class ShopController < ApplicationController
     cart_id = request.cookies['cart_id'] || cookies['cart_id'] || cookies[:cart_id] || nil
 
     # GET cart snapshot (idempotent, cheap)
-    cart = cart_repo.show(cart_id: cart_id)
+    result = cart_repo.show(cart_id: cart_id)
+    cart = result.ok? ? result.json : nil
 
-    if cart
+    if cart && cart.is_a?(Hash) && cart['id'].present?
       cart_id = cart['id']
       cookies[:cart_id] = {
         value: cart_id,
