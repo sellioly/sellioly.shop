@@ -210,12 +210,12 @@ class ShopController < ApplicationController
 
   def default_empty_cart(cart_id)
     {
-      'id'         => cart_id,
-      'currency'   => @args['currency'],
-      'lines'      => [],
-      'subtotal'   => 0,
-      'total'      => 0,
-      'updated_at' => Time.now.utc.iso8601
+      'id'            => cart_id,
+      'currency'      => @args['currency'] || 'USD',
+      'lines'         => [],
+      'subtotal_cents' => 0,
+      'total_cents'   => 0,
+      'total_items'   => 0
     }
   end
 
