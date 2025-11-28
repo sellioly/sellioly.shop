@@ -73,7 +73,8 @@ Rails.application.routes.draw do
     post   '/api/checkout_sessions/:id/place', to: 'checkout_sessions#place'
 
     # ----------------------- Shop pages
-    get '/collections/:handle', action: 'collection', controller: 'shop'
+    get '/collections/:collection', action: 'collection', controller: 'shop'
+    get '/api/collections/:collection/products', action: 'collection_products_json', controller: 'shop'
     get '/products/:product', action: 'product', controller: 'shop'
     get '/checkout', action: 'checkout', controller: 'shop'
     get '/cart', action: 'cart', controller: 'shop'

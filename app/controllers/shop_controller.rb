@@ -60,13 +60,13 @@ class ShopController < ApplicationController
     repo = CatalogRepository.new
 
     # 1. Get collection info
-    collection = repo.get_collection(handle: params[:handle], shop_id: @shop_id, domain: @domain)
+    collection = repo.get_collection(handle: params[:collection], shop_id: @shop_id, domain: @domain)
     return render_with_renderer('404.json', status: :not_found) unless collection
 
     # 2. Get products belonging to that collection (accepts filters)
     filters = request.query_parameters.presence || {}
     products = repo.get_collection_products(
-      handle: params[:handle],
+      handle: params[:collection],
       shop_id: @shop_id,
       domain: @domain,
       filters: filters
@@ -80,6 +80,29 @@ class ShopController < ApplicationController
     }
 
     render_with_renderer('collection.json', extra_ctx: extra_ctx)
+  end
+
+  def collection_products_json
+    repo = CatalogRepository.new
+
+    # Get collection info (for validation)
+    collection = repo.get_collection(handle: params[:collection], shop_id: @shop_id, domain: @domain)
+    return render json: { error: 'Collection not found' }, status: :not_found unless collection
+
+    # Get products with filters from query params
+    filters = request.query_parameters.presence || {}
+    products = repo.get_collection_products(
+      handle: params[:collection],
+      shop_id: @shop_id,
+      domain: @domain,
+      filters: filters
+    )
+
+    # Return JSON response (products data structure from CatalogRepository)
+    render json: {
+      data: products&.dig('data') || [],
+      meta: products&.dig('meta') || {}
+    }
   end
 
   def cart
